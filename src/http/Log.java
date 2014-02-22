@@ -40,7 +40,7 @@ public class Log {
 	 * @param ligneLog correspond 
 	 * @throws IOException 
 	 */
-	synchronized static void ajouterEntree(String ligneLog){
+	synchronized static void ajouterEntree(String pligneLog){
 		FileWriter fw;
 		try {
 			fw = new FileWriter (PATH,true);
@@ -49,7 +49,7 @@ public class Log {
                         String format = "dd/MM/yy H:mm:ss"; 
                         java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat( format ); 
                         java.util.Date date = new java.util.Date(); 
-                        fichier.println(formater.format(date)+" : "+ligneLog);
+                        fichier.println(formater.format(date)+" : "+pligneLog);
                          
 		} catch (IOException e) {
 			e.getMessage();	

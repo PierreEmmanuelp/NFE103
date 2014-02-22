@@ -29,8 +29,8 @@ public class Client implements Runnable{
             thread = new Thread(this);
         }
 	
-        public void traiteRequete(Socket socket){
-            this.socket = socket;
+        public void traiteRequete(Socket psocket){
+            this.socket = psocket;
 		thread = new Thread(this);//Création du thread dédié à ce client
 		try {//création des reader et writer
 			in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
@@ -64,14 +64,7 @@ public class Client implements Runnable{
             thread.stop();
             this.free = true;
 	}
-	
-	/**
-	 * analyse la requête reçue sur le socket.
-	 * @param requete requête reçue sur le socket
-	 */
-	private void analyse(String requete){
-		
-	}
+
 	
 	/**
 	 * Envoie un message sur le socket du client
