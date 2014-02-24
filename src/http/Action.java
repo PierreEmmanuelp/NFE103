@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package http;
 
 /**
- *
- * @author htruchard
+ * Représente une action http
+ * @author htruchard, Pierre-Emmanuel Pourquier
+ * @version 1.0
  */
 public enum Action {
     // Les objets énumérés sont forcément au début de la déclaration
