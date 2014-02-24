@@ -4,9 +4,9 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 /**
- * représente le processus serveur qui attends les connexion sur le port 80
+ * représente le processus serveur qui attends les connexion sur le port PORT
  * @author Pierre-Emmanuel Pourquier
- * @version 13.7.3
+ * @version 1.0
  *
  */
 public class Serveur {
