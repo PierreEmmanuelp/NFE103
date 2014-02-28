@@ -4,7 +4,7 @@
   
 <configuration>       
 	<!-- Port d'écoute du serveur -->
-	<port>6666</port>
+	<port>8080</port>
 	<!-- Nombre de thread dans le pool -->
 	<threadpool>50</threadpool>
 	<!-- Chemin du fichier de log -->
