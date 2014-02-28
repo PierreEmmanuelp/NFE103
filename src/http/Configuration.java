@@ -24,7 +24,7 @@ public class Configuration {
     * contructeur de la classe. 
     */
     public Configuration(){
-        pathParametres="/home/morgan/Documents/NFE103/parametres.xml";
+        pathParametres="parametres.xml";
         Element racine = parser();
         String portValue = racine.getChild("port").getText();
         this.port = Integer.parseInt(portValue);
