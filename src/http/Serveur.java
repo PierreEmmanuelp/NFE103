@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  */
 public class Serveur {
-	int PORT = 6666; //port d'ecoute du serveur
+	int PORT = 8080; //port d'ecoute du serveur
         int poolThread = 50;
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
