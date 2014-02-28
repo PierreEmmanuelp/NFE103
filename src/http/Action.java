@@ -17,7 +17,6 @@ public enum Action {
         PUT(7),
         PATCH(8),
         DELETE(9),
-        HARD(10),
 	;
 	private int num;
 	
