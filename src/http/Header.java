@@ -12,6 +12,7 @@ public class Header {
     private Host host;
     private String cible;
     private Version version;
+    private String User_Agent;
     /*private int port;
     private String path;
     private String query;
@@ -47,6 +48,14 @@ public class Header {
 
     public Version getVersion() {
         return version;
+    }
+
+    public String getUser_Agent() {
+        return User_Agent;
+    }
+
+    public void setUser_Agent(String User_Agent) {
+        this.User_Agent = User_Agent;
     }
 
     
