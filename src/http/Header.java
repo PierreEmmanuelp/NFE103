@@ -1,5 +1,7 @@
 package http;
 
+import http.headers.*;
+
 /**
  *
  * @author Pierre-Emmanuel Pourquier, Hervé TRUCHARD
@@ -9,9 +11,8 @@ public class Header {
     private Action action;
     private Host host;
     private String cible;
-
-    /*private int port;
     private Version version;
+    /*private int port;
     private String path;
     private String query;
     private String file;
@@ -38,6 +39,14 @@ public class Header {
 
     public void setCible(String cible) {
         this.cible = cible;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public Version getVersion() {
+        return version;
     }
 
     
