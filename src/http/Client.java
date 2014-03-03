@@ -66,6 +66,8 @@ public class Client implements Runnable{
                 requete.setContent(new Content(/*TODO : contructeur de content avec un str strContent*/));
             }
             
+        //TODO reponse = new Response(requete);
+            
         } catch (IOException ex) {
             Log.ajouterEntree("impossible de lire le socket dans client.java",LogLevel.SYSTEM);
         }
