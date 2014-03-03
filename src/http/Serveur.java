@@ -27,7 +27,7 @@ public class Serveur {
                 Client client = new Client();
                 clients.add(client);              
             }
-            Log.ajouterEntree("pool de thread créé");
+            Log.ajouterEntree("pool de thread créé",LogLevel.SYSTEM);
 	}
         
         
@@ -36,7 +36,7 @@ public class Serveur {
 	 */
 	public void start(){
 		try {
-                    Log.ajouterEntree("serveur en ligne");
+                    Log.ajouterEntree("serveur en ligne",LogLevel.SYSTEM);
                     System.out.println("http server online");
                     while (true){ // attente en boucle d'une connexion
                         Client client = this.getFreeClient(); // un client se connecte, on le renvoit sur un thread libre
@@ -46,7 +46,7 @@ public class Serveur {
                 } catch (IOException e) {
                     System.out.println("Serveur indisponible : socket libre? ");
                     e.printStackTrace();
-                    Log.ajouterEntree("erreur impossible de démarrer le serveur");
+                    Log.ajouterEntree("erreur impossible de démarrer le serveur",LogLevel.SYSTEM);
 		}			
         }
         
@@ -56,6 +56,7 @@ public class Serveur {
         public void stop(){
             try {
                 this.servSocket.close();
+                Log.ajouterEntree("extinction du serveur",LogLevel.SYSTEM);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
