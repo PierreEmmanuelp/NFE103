@@ -40,7 +40,7 @@ public class Client implements Runnable{
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
              e.getMessage();
-             Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java");
+             Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java",LogLevel.SYSTEM);
         }   
         thread.start();//démarrage du thread
     }
@@ -66,7 +66,7 @@ public class Client implements Runnable{
                 content=(ligneSocket);
             }
         } catch (IOException ex) {
-            Log.ajouterEntree("impossible de lire le socket dans client.java");
+            Log.ajouterEntree("impossible de lire le socket dans client.java",LogLevel.SYSTEM);
         }
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
