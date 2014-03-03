@@ -52,19 +52,20 @@ public class Client implements Runnable{
     public void run() {
         String ligneSocket=null; // recevra ligne à ligne les information du socket
         ArrayList<String> header=new ArrayList(); // recevra l'ensemble de la requete du socket correspondant au header
-        String content; //recevra le content de la requete 
+        String strContent; //recevra le content de la requete 
         Request requete; // requete http 
         Response reponse; // reponse http (qui dépend de la requete)
         try {
             while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){
                 header.add(ligneSocket);
             }
-            System.out.println("fin header");
             requete = new Request(header);
             if(requete.besoinContent()==true){ 
                 ligneSocket=in.readLine();
-                content=(ligneSocket);
+                strContent=(ligneSocket);
+                requete.setContent(new Content(/*TODO : contructeur de content avec un str strContent*/));
             }
+            
         } catch (IOException ex) {
             Log.ajouterEntree("impossible de lire le socket dans client.java",LogLevel.SYSTEM);
         }
