@@ -14,7 +14,7 @@ import java.io.PrintWriter;
  * @version 1.0
  */
 public class Log {
-	static String PATH="/home/pierre-emmanuel/http.log";
+	static String PATH="/home/pierre-emmanuel/";
 	
 	
 	/**
@@ -40,21 +40,23 @@ public class Log {
 	 * @param ligneLog correspond 
 	 * @throws IOException 
 	 */
-	synchronized static void ajouterEntree(String pligneLog){
+	synchronized static void ajouterEntree(String pligneLog,LogLevel plog){
 		FileWriter fw;
 		try {
-			fw = new FileWriter (PATH,true);
+			fw = new FileWriter (PATH+plog+".log",true);
 			BufferedWriter bw = new BufferedWriter (fw);
                         PrintWriter fichier = new PrintWriter (bw);
                         String format = "dd/MM/yy H:mm:ss"; 
                         java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat( format ); 
                         java.util.Date date = new java.util.Date(); 
                         fichier.println(formater.format(date)+" : "+pligneLog);
+                        fichier.close();
                          
 		} catch (IOException e) {
 			e.getMessage();	
 			System.out.println("erreur log");
 		}
+               
 
 	}
 	
