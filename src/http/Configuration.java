@@ -1,16 +1,17 @@
 package http;
 
 import java.io.*;
+import java.util.List;
+import java.util.Iterator;
 
 //This product includes software developed by the JDOM Project
 import org.jdom2.*;
-import org.jdom2.input.*;
-import org.jdom2.output.*;
+import org.jdom2.input.*;import org.jdom2.output.*;
 
 /**
  *
  * @author Pinatel Morgan
- * @version 1.0
+ * @version 2.0
  */
 public class Configuration {
     
@@ -19,6 +20,7 @@ public class Configuration {
     private int poolThread;
     private int port;
     private String pathLog;
+    private Hosts hosts;
 
     /**
     * contructeur de la classe. 
@@ -31,6 +33,25 @@ public class Configuration {
         String poolThreadValue = racine.getChild("threadpool").getText();
         this.poolThread = Integer.parseInt(poolThreadValue);
         this.pathLog = racine.getChild("pathlog").getText();
+        this.hosts = new Hosts();
+        Element hostsElement = racine.getChild("hosts");
+        List<Element> hostList = hostsElement.getChildren("host");
+        Iterator<Element> i = hostList.iterator();		
+        while(i.hasNext()){
+            Element element = (Element)i.next();
+            Attribute name = element.getAttribute("name");
+            Attribute path = element.getAttribute("path");
+            File f = new File (path.getValue());
+            String pathValue;
+            if (f.exists()){
+                  pathValue = path.getValue();
+            }else{
+                  pathValue = "error 404";
+            }
+            Host host = new Host(name.getValue() ,pathValue);
+            this.hosts.addHost(host);
+        }
+        
     }
     
     /**
@@ -97,7 +118,16 @@ public class Configuration {
     {
         return pathLog;
     }
-
+    
+    /**
+    * permet de récupérer la liste des hôtes
+    * @return la liste des hôtes
+    */
+    public Hosts getHosts() 
+    {
+        return hosts;
+    }
+    
     /**
     * permet de définir le nombre de thread défini pour le pool
     * @param pPoolThread
