@@ -8,13 +8,13 @@ import javax.activation.MimetypesFileTypeMap;
  */
 public class Mime {
     
-   private String pCheminCible;
+   private String pFichier;
    
     public String extractTypeMime(){
         
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 
-        String mimeType = mimeTypesMap.getContentType(pCheminCible);
+        String mimeType = mimeTypesMap.getContentType(pFichier);
 
             return  mimeType;
             }
