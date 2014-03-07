@@ -16,7 +16,7 @@ import java.io.LineNumberReader;
  * @author htruchard
  * @return contenu
  */
-public class FileContent {
+public class FileContent extends Content{
     private Mime mime;
 
    
