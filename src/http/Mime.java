@@ -1,4 +1,5 @@
 package http;
+import javax.activation.MimetypesFileTypeMap;
 
 /**
  *
@@ -6,5 +7,16 @@ package http;
  * @version 1.0
  */
 public class Mime {
+    
+   private String pCheminCible;
+   
+    public String extractTypeMime(){
+        
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+
+        String mimeType = mimeTypesMap.getContentType(pCheminCible);
+
+            return  mimeType;
+            }
     
 }
