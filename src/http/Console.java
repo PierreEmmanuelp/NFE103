@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Scanner;
-import org.apache.torque.util.Criteria;
-import org.apache.torque.TorqueException;
+//import org.apache.torque.util.Criteria;
+//import org.apache.torque.TorqueException;
 
 /**
  *
@@ -37,7 +37,7 @@ public class Console implements Runnable{
             connexion();
         try {
 			while((commande=sconsole.nextLine()) !=null && logged==true){
-				switch (commande){
+/*				switch (commande){
 					case "/quit":quit();break;//ok
 					case "/ls":listerHost();break;//ok
 					case "/mk":ajouterHost();break;
@@ -46,7 +46,7 @@ public class Console implements Runnable{
 					case "/author":lsAuthor();break;//ok
 					case "/logout":deconnexion();break;// ok
 					default:lsCommande();break;
-				}
+				}*/
 			}
 		
 		} catch (Exception e) {
@@ -63,20 +63,21 @@ public class Console implements Runnable{
             String login = sc.nextLine();
             System.out.println("rentrez votre password");
             String password = sc.nextLine();
-            Criteria cr = new Criteria();
-            cr.add("utilisateur","login",login);
-            cr.add("utilisateur","password",password);
-            cr.add("utilisateur","admin",true);
-            try {
-                    if(UtilisateurPeer.doSelect(cr).isEmpty()==false){
-                            logged = true;
-                            System.out.println("Bienvenue, "+ UtilisateurPeer.doSelect(cr).get(0).getPrenom());
-                            Log.ajouterEntree("login admin de "+login);
-                    }
-            } catch (TorqueException e1) {
-                    Log.ajouterEntree("Problème avec Torque");
+            //Criteria cr = new Criteria();
+//            cr.add("utilisateur","login",login);
+//            cr.add("utilisateur","password",password);
+//            cr.add("utilisateur","admin",true);
+            //try {
+//                    if(UtilisateurPeer.doSelect(cr).isEmpty()==false){
+//                            logged = true;
+//                            System.out.println("Bienvenue, "+ UtilisateurPeer.doSelect(cr).get(0).getPrenom());
+//                            Log.ajouterEntree("login admin de "+login);
+//                    }
+            //} 
+            //catch (TorqueException e1) {
+//                    Log.ajouterEntree("Problème avec Torque");
             }
-    }
+   // }
     
     /**
      * liste les commandes disponible sur le serveur
@@ -97,7 +98,7 @@ public class Console implements Runnable{
     private void ajouterHost(){
             Scanner sc = new Scanner(System.in);
 
-            try{
+//            try{
 //		Vol vol = new Vol();
 //		System.out.println("code aita de départ?");
 //		String aitadpt = sc.nextLine();
@@ -127,11 +128,11 @@ public class Console implements Runnable{
 //		enchere.setDateDebutEnchere(dateDeb);
 //		enchere.setPrixReserve(prixRes);
 //		enchere.setPrixAtteint(1);
-            }
-            catch (TorqueException e) {
+           // }
+//            catch (TorqueException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
-            }
+              //      e.printStackTrace();
+            //}
 
     }
 
