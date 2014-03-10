@@ -10,11 +10,19 @@ public class Response {
     /**
      * header
      */
-    public static Header header;
+    private static Header headerQuest;
     /**
-     * 
+     * header
      */
-    public static Content Content;
+    private static Header headerRep;    
+    /**
+     * Content
+     */
+    private static Content ContentRep;
+     /**
+     * Content
+     */
+    private static Content ContentQuest;
     /**
      * 
      */
@@ -23,44 +31,39 @@ public class Response {
      * CRLF
      */
     public final static String CRLF = "\r\n";
-    /**
-     * Protocol.
-     */
-    public final static String PROTOCOL = "HTTP/1.0 ";
+//    /**
+//     * Protocol.
+//     */
+//    public final static String PROTOCOL = "HTTP/1.0 ";
     /**
      * All OK.
      */
-    public final static String OK = "200 OK";
+    private final static String OK = "200 OK";
     /**
      * Bad request.
      */
-    public final static String BAD_REQUEST = "400 Bad Request";
+    private final static String BAD_REQUEST = "400 Bad Request";
     /**
      * Forbidden request.
      */
-    public final static String FORBIDDEN = "403 Forbidden";
+    private final static String FORBIDDEN = "403 Forbidden";
     /**
      * Resource not found.
      */
-    public final static String NOT_FOUND = "404 Not Found";
+    private final static String NOT_FOUND = "404 Not Found";
     /**
      * Resource internal system error.
      */
-    public final static String INTERNAL_ERROR = "500 Internal Server Error";
+    private final static String INTERNAL_ERROR = "500 Internal Server Error";
     
-    public String lireFichier(String var) {
 
-        return null;
-        
-    }
-
-    public void genereResponse() {
-        
-    }
-
-    public String pRequest(Request request) {
+    public String genereResponse(String request) {
         
         return request.toString();
-    
     }
+    
+    public String genererErreur500() {
+        return this.genereResponse(INTERNAL_ERROR);
+    }
+
 }
