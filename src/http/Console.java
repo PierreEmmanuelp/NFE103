@@ -25,7 +25,7 @@ public class Console implements Runnable{
 		thread.start();
 		this.serveur = serveur;
 		System.out.println("interpréteur de commande en attente");
-		Log.ajouterEntree("commande ok");
+		Log.ajouterEntree("commande ok", LogLevel.SYSTEM);
 	}
         
     @Override
@@ -142,7 +142,7 @@ public class Console implements Runnable{
        
     private void quit(){
 		System.out.println("deconnexion");
-		Log.ajouterEntree("serveur quit");
+		Log.ajouterEntree("serveur quit", LogLevel.SYSTEM);
 		Log.terminerSessionLog();
 		System.exit(0);
 	}

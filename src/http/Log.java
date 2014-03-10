@@ -15,7 +15,8 @@ import java.io.PrintWriter;
  */
 public class Log {
 	static String PATH="/home/pierre-emmanuel/";
-	
+
+
 	
 	/**
 	 * initialise le buffer de sortie dans le fichier
