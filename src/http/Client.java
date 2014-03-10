@@ -4,7 +4,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
+//import java.util.Hashtable;
 
 
 /**
@@ -18,7 +19,6 @@ public class Client implements Runnable{
 	private DataOutputStream out = null;//écrit dans le socket
 	private BufferedReader in;//lit le socket
         private Boolean free = true;//si le socket est occupé
-
 
     /**
      * créer le client dans le système pour répondre à un requete http
@@ -73,9 +73,9 @@ public class Client implements Runnable{
         }
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
-         Response response = new Response();
-                    
-        envoyer(response.genereResponse("Status: HTTP/1.1 200 OK \n\r<br> Hello World !<br> votre request était : "+header));
+       
+        Response response = new Response();
+        envoyer(response.genereResponse("<br> Hello World !<br> votre request était : "+header));
         
         try {
             out.close();
@@ -94,7 +94,7 @@ public class Client implements Runnable{
      */
     protected void envoyer(String data){
         try {
-            out.writeChars(data);
+            out.writeBytes(data); // Writes out the string to the underlying output stream as a sequence of bytes.
             out.flush();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
