@@ -20,7 +20,7 @@ public class FileContent extends Content{
     private Mime mime;
 
    
-    private String contenu;
+    //private String contenu;
     private String pCheminCible;
     
     
