@@ -10,7 +10,7 @@ import java.io.*;
  */
 public class Content {
     
-    private String contenu;
+    protected String contenu;
     
     
     public String getContenu() {
