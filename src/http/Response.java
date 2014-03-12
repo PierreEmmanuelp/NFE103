@@ -63,7 +63,7 @@ public class Response {
      * Current header.
      */
     private Hashtable HeadersRep = new Hashtable();
-    private String hostpath = "c:\\temp\\"; // TODO depuis host
+    private String hostpath = "/Users/ben/Desktop"; // TODO depuis host
 
     /**
      * Constructeur
@@ -86,12 +86,12 @@ public class Response {
         this.HeadersRep.put("Content-Type", "text/HTML; charset=iso-8859-1"); // Mime type
         this.HeadersRep.put("Content-Length", Length); // length of chain
 
-        String line = http.headers.Version.HTTP_1_0 + " " + Code + CRLF;
-        String key;
+        String line = "HTTP/1.1 " + Code + CRLF;
+        String key = "";
         Enumeration e = this.HeadersRep.keys();
         while (e.hasMoreElements()) {
             key = (String) e.nextElement();
-            line += key + ": " + this.HeadersRep.get(key) + CRLF;
+            line += key + ":" + this.HeadersRep.get(key) + CRLF;
         }
         line += CRLF;
         return line;
