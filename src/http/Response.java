@@ -114,7 +114,7 @@ public class Response {
         
         switch (file.getStatus()) {
             case 200:
-                response = this.headerRep(file.getLength(),this.OK) + request + file.getContenu();
+                response = this.headerRep(file.getLength(),this.OK) + file.getContenu();
                 break;
             case 404:
                 response = this.headerRep("400",this.NOT_FOUND) + "<h1>" + this.NOT_FOUND + "</h1>";
