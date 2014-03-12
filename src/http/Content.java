@@ -11,7 +11,12 @@ import java.io.*;
 public class Content {
     
     protected String contenu;
-    
+
+    public Content() { // Constructeur de Content (enlever null)
+        
+        contenu = "";
+        
+    }   
     
     public String getContenu() {
         return contenu;
