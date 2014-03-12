@@ -68,7 +68,8 @@ public class Response {
     /**
      * Constructeur
      */
-    public Response() {
+    public Response(Header reqHeader) {
+        this.headerQuest = reqHeader;
     }
 
     /**
@@ -97,13 +98,13 @@ public class Response {
 
     }
 
-    public String genereResponse(String request) {
+    public String genereResponse(String request) { // TODO virer String request
 
         String response = "";
         if (request != this.INTERNAL_ERROR) {
             
           // Si rien on met index.html  (add to param + path recupéré de host + header)
-          if (request.substring(request.length()-1).equals("/")) {
+          if (this.headerQuest.getCible().equals("/")) {
               request = request + "index.html";
           }
             
