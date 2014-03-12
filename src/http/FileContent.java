@@ -62,7 +62,7 @@ public class FileContent extends Content{
                                      System.out.println(e);                                  
                                     }
                             catch(Exception e){
-                                setStatus(404);
+                                setStatus(500);
                                 System.out.println(e);
                             }
           return contenu;      
