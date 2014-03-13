@@ -3,9 +3,9 @@ package http;
 import java.io.*;
 
 /**
- *récupère contenur requete
+ *récupère contenue requete
  * @author Pierre-Emmanuel Pourquier,Herve Truchard
- * @version 1.0
+ * @version 1.1
  * @return void
  */
 public class Content {
@@ -33,6 +33,9 @@ public class Content {
         return String.valueOf(this.contenu.length());
     }
 
-   
+    @Override
+    public String toString() {
+        return "Content{" + "contenu=" + contenu + '}';
+    }
    
 }

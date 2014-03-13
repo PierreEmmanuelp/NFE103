@@ -3,7 +3,7 @@ package http;
 import java.io.IOException;
 
 /**
- * @version 1.0
+ * @version 1.1
  * @author Pourquier Pierre-Emmanuel
  */
 public class Http {
@@ -17,6 +17,7 @@ public class Http {
         } catch (IOException e) {
             e.getMessage();
         }
+        Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
         Serveur serveur = new Serveur();
         serveur.start();
             

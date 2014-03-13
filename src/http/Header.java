@@ -1,23 +1,29 @@
 package http;
-
 import http.headers.*;
+import java.util.Hashtable;
 
 /**
  *
  * @author Pierre-Emmanuel Pourquier, Hervé TRUCHARD
- * @version 1.0
+ * @version 1.1
  */
 public class Header {
     private Action action;
     private Host host;
     private String cible;
     private Version version;
-    private String User_Agent;
-    /*private int port;
-    private String path;
-    private String query;
-    private String file;
-    private String reference; */
+    private Hashtable parametres;
+
+    public Header() {
+        this.parametres = new Hashtable();
+    }
+
+    
+    
+    public Hashtable getParametres() {
+        return parametres;
+    }
+    
     public Action getAction() {
         return action;
     }
@@ -50,14 +56,12 @@ public class Header {
         return version;
     }
 
-    public String getUser_Agent() {
-        return User_Agent;
+    @Override
+    public String toString() {
+        return "Header{" + "action=" + action + ", host=" + host + ", cible=" + cible + ", version=" + version + '}';
     }
 
-    public void setUser_Agent(String User_Agent) {
-        this.User_Agent = User_Agent;
-    }
-
+   
     
     
     
