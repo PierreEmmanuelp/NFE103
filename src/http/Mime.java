@@ -1,5 +1,5 @@
 package http;
-import javax.activation.MimetypesFileTypeMap;
+import org.apache.tika.Tika; // Utilisation de la library apache tika pour détecter le type mime
 
 /**
  *
@@ -8,15 +8,27 @@ import javax.activation.MimetypesFileTypeMap;
  */
 public class Mime {
     
-   private String pFichier;
+//   private String pFichier;
+   private String mediaType;
+
+    public Mime() {
+        this.mediaType = "";
+    }
    
-    public String extractTypeMime(){
+    public String extractTypeMime(String pFichier){
         
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-
-        String mimeType = mimeTypesMap.getContentType(pFichier);
-
-            return  mimeType;
-            }
-    
+        Tika tika = new Tika();
+        
+       try {
+            mediaType = tika.detect(pFichier);
+            System.out.println(mediaType);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+        
+       if (mediaType.equals("application/octet-stream")) {// TODO
+           mediaType = "text/html";
+       }
+            return  mediaType;
+    }
 }
