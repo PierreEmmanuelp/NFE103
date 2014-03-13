@@ -83,7 +83,7 @@ public class Response {
         String mimetostring;
         
         
-        if (!Code.substring(0,1).equals("4") || !Code.substring(0,1).equals("5")) { // si erreur
+        if (!Code.substring(0,1).equals("4") && !Code.substring(0,1).equals("5")) { // si erreur
                
             Mime Mime = new Mime();
             mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
