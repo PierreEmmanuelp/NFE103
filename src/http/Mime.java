@@ -26,6 +26,9 @@ public class Mime {
             System.err.println(e.getMessage());
         }
         
+       if (mediaType.equals("application/octet-stream")) {// TODO
+           mediaType = "text/html";
+       }
             return  mediaType;
     }
 }
