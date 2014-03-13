@@ -84,8 +84,7 @@ public class Response {
         
         
         if (!Code.substring(0,1).equals("4") || !Code.substring(0,1).equals("5")) { // si erreur
-            
-             System.out.println("ici"+Code.substring(0,1));
+               
             Mime Mime = new Mime();
             mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
         } else {
@@ -119,6 +118,7 @@ public class Response {
             // Si rien on met index.html  (add to param + path recupéré de host + header)
             if (this.headerQuest.getCible().equals("/")) {
                 request = request + "index.html";
+                //System.out.println("req -->" +request);
             }
 
             FileContent file = new FileContent();
