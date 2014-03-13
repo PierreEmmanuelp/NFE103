@@ -63,7 +63,7 @@ public class Response {
      * Current header.
      */
     private Hashtable HeadersRep = new Hashtable();
-    private String hostpath = "/Users/ben/Desktop"; // TODO depuis host
+    private String hostpath = "c:\\temp"; // TODO depuis host
 
     /**
      * Constructeur
@@ -73,18 +73,31 @@ public class Response {
     }
 
     /**
-     * Todo : construction du header
-     * Recupération du header
+     * Todo : construction du header Recupération du header
+     *
      * @return
      */
     private String headerRep(String Length, String Code) {
 
         Date date = new Date();
+        String mimetostring;
+        
+        
+        if (!Code.substring(0,1).equals("4") || !Code.substring(0,1).equals("5")) { // si erreur
+            
+             System.out.println("ici"+Code.substring(0,1));
+            Mime Mime = new Mime();
+            mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
+        } else {
+            mimetostring = "text/html";
+        }
 
         this.HeadersRep.put("Date", date);
         this.HeadersRep.put("Server", "CNAM_NFE103/1.0"); // see param
-        this.HeadersRep.put("Content-Type", "text/HTML; charset=iso-8859-1"); // Mime type
+        this.HeadersRep.put("Content-Type", mimetostring); // Mime type
+        //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
         this.HeadersRep.put("Content-Length", Length); // length of chain
+        this.HeadersRep.put("Connection", "Keep-Alive"); // length of chain
 
         String line = "HTTP/1.1 " + Code + CRLF;
         String key = "";
@@ -102,36 +115,36 @@ public class Response {
 
         String response = "";
         if (request != this.INTERNAL_ERROR) {
-            
-          // Si rien on met index.html  (add to param + path recupéré de host + header)
-          if (this.headerQuest.getCible().equals("/")) {
-              request = request + "index.html";
-          }
-            
-        FileContent file = new FileContent();
-        
-        file.openFile(this.hostpath + request);
-        
-        switch (file.getStatus()) {
-            case 200:
-                response = this.headerRep(file.getLength(),this.OK) + file.getContenu();
-                break;
-            case 404:
-                response = this.headerRep("400",this.NOT_FOUND) + "<h1>" + this.NOT_FOUND + "</h1>";
-                break;
-            case 403:
-                response = this.headerRep("400",this.FORBIDDEN) + "<h1>" + this.FORBIDDEN + "</h1>";
-                break;                
-            case 500:
-                response = this.headerRep("400",this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
-                break;
-            default:
-                response = this.headerRep("400",this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
-                System.out.println("Il faut davantage travailler.");
-        }
-        
+
+            // Si rien on met index.html  (add to param + path recupéré de host + header)
+            if (this.headerQuest.getCible().equals("/")) {
+                request = request + "index.html";
+            }
+
+            FileContent file = new FileContent();
+
+            file.openFile(this.hostpath + request);
+
+            switch (file.getStatus()) {
+                case 200:
+                    response = this.headerRep(file.getLength(), this.OK) + file.getContenu();
+                    break;
+                case 404:
+                    response = this.headerRep("400", this.NOT_FOUND) + "<h1>" + this.NOT_FOUND + "</h1>";
+                    break;
+                case 403:
+                    response = this.headerRep("400", this.FORBIDDEN) + "<h1>" + this.FORBIDDEN + "</h1>";
+                    break;
+                case 500:
+                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    break;
+                default:
+                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    System.out.println("Il faut davantage travailler.");
+            }
+
         } else {
-                response = this.headerRep("400",this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+            response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
         }
 
         return response;
