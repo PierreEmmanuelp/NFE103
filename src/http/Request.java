@@ -147,7 +147,7 @@ public class Request {
      * @return le host de la requête http
      */
     private Host parseHostHTTP(String pHeaderHTTP){
-        Host host = new Host();
+        Host host = new Host("test","temp");
         String strHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":"));
         return host;
     }
