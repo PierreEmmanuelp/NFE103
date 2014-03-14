@@ -4,7 +4,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
+//import java.util.Hashtable;
 
 
 /**
@@ -18,7 +19,6 @@ public class Client implements Runnable{
 	private DataOutputStream out = null;//écrit dans le socket
 	private BufferedReader in;//lit le socket
         private Boolean free = true;//si le socket est occupé
-
 
     /**
      * créer le client dans le système pour répondre à un requete http
@@ -53,8 +53,8 @@ public class Client implements Runnable{
         String ligneSocket=null; // recevra ligne à ligne les information du socket
         ArrayList<String> header=new ArrayList(); // recevra l'ensemble de la requete du socket correspondant au header
         String strContent; //recevra le content de la requete 
-        Request requete; // requete http 
-        Response reponse; // reponse http (qui dépend de la requete)
+        Request requete = null; // requete http 
+      //  Response reponse; // reponse http (qui dépend de la requete)
         try {
             while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){
                 header.add(ligneSocket);
@@ -73,10 +73,10 @@ public class Client implements Runnable{
         }
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
-     
-            
-    
-        envoyer("Status: HTTP/1.1 200 OK \n\r<br> Hello World !<br> votre request était : "+header);
+       
+        Response response = new Response(requete.getHeader());
+        envoyer(response.genereResponse(requete.getHeader().getCible()));
+        
         try {
             out.close();
             in.close();
@@ -94,7 +94,7 @@ public class Client implements Runnable{
      */
     protected void envoyer(String data){
         try {
-            out.writeChars(data);
+            out.writeBytes(data); // Writes out the string to the underlying output stream as a sequence of bytes.
             out.flush();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {

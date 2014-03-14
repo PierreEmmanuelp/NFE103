@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Correspond à une requete HTTP
  * @author Pierre-Emmanuel Pourquier
- * @version 1.0
+ * @version 1.1
  */
 public class Request {
     private Header header; //correspond au header de la requete http
@@ -35,7 +35,7 @@ public class Request {
         this.header.setCible(parseCibleHTTP(premierHead));
         this.header.setVersion(parseVersionHTTP(premierHead));
         
-        System.out.println("requete parsée dans le header : \naction : "+ this.header.getAction() + "\ncible : "+this.header.getCible() + "\nversion : " + this.header.getVersion());
+        //System.out.println("requete parsée dans le header : \naction : "+ this.header.getAction() + "\ncible : "+this.header.getCible() + "\nversion : " + this.header.getVersion());
                 
                 
         for(int i = 1; i< request.size();i++){
@@ -43,9 +43,10 @@ public class Request {
                 this.header.setHost(parseHostHTTP(request.get(i)));
             }
             else{
-             System.out.println("a parser : "+request.get(i));
+                this.parseArgument(request.get(i));
             }
         }
+        Log.ajouterEntree("Request{"+ this.header.toString() + this.content.toString()+"}", LogLevel.REQUEST);
     }
 
     /**
@@ -126,6 +127,11 @@ public class Request {
         return cible;
     }
     
+    /**
+     * parse la première enête http et extrait la version de celle-ci
+     * @param pHeaderHTTP la première entête d'une requête HTTP
+     * @return la version du protocole de la requête http
+     */
     private Version parseVersionHTTP(String pHeaderHTTP){
         Version version = http.headers.Version.HTTP_0_9;
         String header = pHeaderHTTP.substring(pHeaderHTTP.indexOf("HTTP/"));
@@ -135,9 +141,22 @@ public class Request {
         return version;
     }
     
+    /**
+     * parse la première entête http et extrait le host de celle-ci
+     * @param pHeaderHTTP la première entête d'une requête HTTP
+     * @return le host de la requête http
+     */
     private Host parseHostHTTP(String pHeaderHTTP){
         Host host = new Host();
         String strHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":"));
         return host;
+    }
+    
+    private void parseArgument(String pHeaderHTTP){
+        String key;
+        String value;
+        key = pHeaderHTTP.substring(0,pHeaderHTTP.indexOf(":"));
+        value = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":"),pHeaderHTTP.length());
+        this.header.getParametres().put(key,value);
     }
 }
