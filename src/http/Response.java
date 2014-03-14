@@ -141,25 +141,25 @@ public class Response {
                     break;
                 case 404:
                     response[0] = this.headerRep("400", this.NOT_FOUND); 
-                    response[2] = "<h1>" + this.NOT_FOUND + "</h1>";
+                    response[1] = "<h1>" + this.NOT_FOUND + "</h1>";
                     break;
                 case 403:
                     response[0] = this.headerRep("400", this.FORBIDDEN);
-                    response[2] =  "<h1>" + this.FORBIDDEN + "</h1>";
+                    response[1] =  "<h1>" + this.FORBIDDEN + "</h1>";
                     break;
                 case 500:
                     response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-                    response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
                     break;
                 default:
                     response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-                    response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
                     System.out.println("Il faut davantage travailler.");
             }
 
         } else {
             response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-            response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+            response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
         }
 
         return response;
