@@ -51,7 +51,6 @@ public class Configuration {
             Host host = new Host(name.getValue() ,pathValue);
             this.hosts.addHost(host);
         }
-        
     }
     
     /**

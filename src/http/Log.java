@@ -14,7 +14,7 @@ import java.io.PrintWriter;
  * @version 1.1
  */
 public class Log {
-	static String PATH="/var/log/http/";
+        static String path="/var/log/http/";
 	
 	
 	/**
@@ -22,7 +22,7 @@ public class Log {
 	 * @throws IOException 
 	 */
 	public Log() throws IOException {
-
+               path = http.Http.config.getPathLog();
 	}
 
 
@@ -31,7 +31,7 @@ public class Log {
 	 * @return the path
 	 */
 	public String getPATH() {
-		return PATH;
+		return path;
 	}
 	
 	
@@ -43,7 +43,7 @@ public class Log {
 	synchronized static void ajouterEntree(String pligneLog,LogLevel plog){
 		FileWriter fw;
 		try {
-			fw = new FileWriter (PATH+plog+".log",true);
+			fw = new FileWriter (path+plog+".log",true);
 			BufferedWriter bw = new BufferedWriter (fw);
                         PrintWriter fichier = new PrintWriter (bw);
                         String format = "dd/MM/yy H:mm:ss"; 
@@ -53,7 +53,7 @@ public class Log {
                         fichier.close();
                          
 		} catch (IOException e) {
-			e.getMessage();	
+			e.printStackTrace();
 			System.out.println("erreur log");
 		}
                
@@ -66,7 +66,7 @@ public class Log {
 	synchronized static void terminerSessionLog(){
 		FileWriter fw;
 		try {
-			fw = new FileWriter (PATH,true);
+			fw = new FileWriter (path,true);
 			BufferedWriter bw = new BufferedWriter (fw);
                         PrintWriter fichier = new PrintWriter (bw);
                         fichier.println("\n\n");      

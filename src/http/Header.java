@@ -16,9 +16,7 @@ public class Header {
 
     public Header() {
         this.parametres = new Hashtable();
-    }
-
-    
+    }    
     
     public Hashtable getParametres() {
         return parametres;
@@ -60,10 +58,4 @@ public class Header {
     public String toString() {
         return "Header{" + "action=" + action + ", host=" + host + ", cible=" + cible + ", version=" + version + '}';
     }
-
-   
-    
-    
-    
-    
 }
