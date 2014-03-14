@@ -10,13 +10,16 @@ import java.util.ArrayList;
  *
  */
 public class Serveur {
-	int PORT = 8081; //port d'ecoute du serveur
-        int poolThread = 50;
+	int PORT; //port d'ecoute du serveur
+        int poolThread;
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
         Hosts hosts;
 	
 	public Serveur(){
+            this.PORT = http.Http.config.getPORT();
+            this.poolThread = http.Http.config.getPoolThread();
+            
             clients = new ArrayList();
             hosts = new Hosts();
             try {
