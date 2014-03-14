@@ -97,6 +97,11 @@ public class Serveur {
             
             return hosts;
         }
+        
+        public int getPoolThread()
+        {
+            return poolThread;
+        }
 }	
 
 	

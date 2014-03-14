@@ -13,10 +13,12 @@ public class Http {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         
         //chargement de la configuration
         config = new Configuration();
         
+
         try {
             log = new Log();
         } catch (IOException e) {
@@ -24,8 +26,8 @@ public class Http {
         }
         Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
         Serveur serveur = new Serveur();
-        serveur.start();
-            
+        Console console=new Console(serveur);
+        serveur.start();  
     }
     
 }
