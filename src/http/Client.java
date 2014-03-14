@@ -82,6 +82,7 @@ public class Client implements Runnable{
         
         try {
             in.close();
+            out.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -94,13 +95,13 @@ public class Client implements Runnable{
      * Envoie un message sur le socket du client
      * @param data texte a envoyer
      */
-    protected void envoyer(Object[] data, BufferedInputStream stream) {
+    protected void envoyer(String[] data, BufferedInputStream stream) {
         try {
            
         // ecriture du header    
-            out.writeBytes(data[0].toString());
+            out.writeBytes(data[0]);
             
-                if ("OK".equals(data[1].toString())) {
+                if ("OK".equals(data[1])) {
             
           byte buf[] = new byte[1024];  
            int cpt;
@@ -108,10 +109,10 @@ public class Client implements Runnable{
           while((cpt = stream.read(buf,0,1024)) != -1) {
             // On écrit dans notre deuxième fichier avec l'objet adéquat
             out.write(buf);         
-          }  
-        }
+           }  
+         }
             out.flush();
-            out.close();
+
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
             ex.printStackTrace();
