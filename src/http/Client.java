@@ -1,6 +1,9 @@
 package http;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -74,8 +77,8 @@ public class Client implements Runnable{
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
        
-        Response response = new Response(requete.getHeader());
-        envoyer(response.genereResponse(requete.getHeader().getCible()));
+      //  Response response = new Response(requete.getHeader());
+        envoyer("");//response.genereResponse(requete.getHeader().getCible()));
         
         try {
             out.close();
@@ -94,7 +97,22 @@ public class Client implements Runnable{
      */
     protected void envoyer(String data){
         try {
-            out.writeBytes(data); // Writes out the string to the underlying output stream as a sequence of bytes.
+           
+            out.writeBytes("HTTP/1.1  200\r\n");
+            out.writeBytes("Content-Type:image/png\r\n");
+            out.writeBytes("\r\n");
+   
+          File file = new File("/var/www/test.png");
+          BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+            byte buf[] = new byte[1024];
+            
+           int len;
+           
+          while((len = in.read(buf,0,1024)) != -1) {
+            // On écrit dans notre deuxième fichier avec l'objet adéquat
+            out.write(buf);         
+          }  
+          
             out.flush();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
