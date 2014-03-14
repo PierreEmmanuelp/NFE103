@@ -97,22 +97,23 @@ public class Client implements Runnable{
      */
     protected void envoyer(String[] data, BufferedInputStream stream) {
         try {
-           
-        // ecriture du header    
-            out.writeBytes(data[0]);
-            
-                if ("OK".equals(data[1])) {
-            
-          byte buf[] = new byte[1024];  
-           int cpt;
-           
-          while((cpt = stream.read(buf,0,1024)) != -1) {
-            // On écrit dans notre deuxième fichier avec l'objet adéquat
-            out.write(buf);         
-           }  
-         }
-            out.flush();
 
+            // ecriture du header    
+            out.writeBytes(data[0]);
+
+            if ("OK".equals(data[1])) { // si content
+
+                byte buffer[] = new byte[1024];
+                int cpt;// compteur
+
+                while ((cpt = stream.read(buffer, 0, 1024)) != -1) {
+                    out.write(buffer);
+                }
+                            stream.close();
+            } else {
+                out.writeBytes(data[1]);
+            }
+            out.flush();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
             ex.printStackTrace();

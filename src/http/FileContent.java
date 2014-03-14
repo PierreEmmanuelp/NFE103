@@ -35,9 +35,12 @@ public class FileContent extends Content {
         try {
 
             File file = new File(this.pCheminCible); // Ouverture file
+            if (file.exists()){
             this.filestream = new BufferedInputStream(new FileInputStream(file)); //file dans stream
             setLength(file.length());
-
+            setStatus(200);
+            setMime();
+            } else {setStatus(404);}
         } catch (FileNotFoundException e) {
             setStatus(404);
             this.filestream = null;
@@ -47,8 +50,7 @@ public class FileContent extends Content {
             setStatus(500);
             System.out.println(e);
         }
-        setStatus(200);
-        setMime();
+
 
     }
 
