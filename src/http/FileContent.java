@@ -34,7 +34,7 @@ public class FileContent extends Content {
 
     public void openFile(String pCheminCible) {
         this.pCheminCible = pCheminCible;
-        readFile();
+       readFile();
 
     }
 
@@ -68,7 +68,7 @@ public class FileContent extends Content {
         }
         return contenu;
     }
-    public  String envoyerFichier() throws Exception {
+    private  String envoyerFichier() throws Exception {
     FileInputStream fis = null;
     FileOutputStream fos = null;
     int n;
