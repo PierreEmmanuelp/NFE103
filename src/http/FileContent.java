@@ -7,8 +7,10 @@
 package http;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+
 
 /**
  * Classe permettant la creation du contenu de la reponse
@@ -19,8 +21,8 @@ import java.io.LineNumberReader;
 public class FileContent extends Content{
     private Mime mime;
 
-   
-    private String contenu;
+   private int status;
+    //private String contenu;
     private String pCheminCible;
     
     
@@ -51,11 +53,17 @@ public class FileContent extends Content{
                                          }
                                         
 					//forcer l'ecriture du contenu du tampon dans le fichier
-					
-                                        System.out.println("le contenu" +contenu );
+					setStatus(200);
+                                        System.out.println(getStatus() + "le contenu " +contenu );
                                        
-                                    }catch(Exception e){
-                                
+                                    } 
+                                 catch (FileNotFoundException e){   
+                                     setStatus(404);
+                                     System.out.println(e);                                  
+                                    }
+                            catch(Exception e){
+                                setStatus(500);
+                                System.out.println(e);
                             }
           return contenu;      
     }
@@ -65,6 +73,14 @@ public class FileContent extends Content{
 
     public void setMime(Mime mime) {
         this.mime = mime;
+    }
+    
+    private void setStatus(int code) {
+        this.status = code;
+    }
+    
+    public int getStatus() {
+        return this.status;
     }
     
 }

@@ -11,12 +11,11 @@ import java.io.PrintWriter;
 /**
  * Représente un fichier de log 
  * @author Pierre-Emmanuel.Pourquier
- * @version 1.0
+ * @version 1.1
  */
 public class Log {
-	static String PATH="/home/pierre-emmanuel/";
-
-
+	static String PATH="/var/log/http/";
+	
 	
 	/**
 	 * initialise le buffer de sortie dans le fichier

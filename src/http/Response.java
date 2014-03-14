@@ -1,4 +1,5 @@
 package http;
+
 import java.util.Date;
 import java.util.*;
 
@@ -9,6 +10,7 @@ import java.util.*;
  * @version 1.0
  */
 public class Response {
+
     /**
      * header
      */
@@ -16,17 +18,17 @@ public class Response {
     /**
      * header
      */
-    private static Header headerRep;    
+//    private static Header headerRep;    
     /**
      * Content
      */
-    private static Content ContentRep;
-     /**
+//    private static Content ContentRep;
+    /**
      * Content
      */
     private static Content ContentQuest;
     /**
-     * 
+     *
      */
     public static String request;
     /**
@@ -58,45 +60,96 @@ public class Response {
      */
     private final static String INTERNAL_ERROR = "500 Internal Server Error";
     /**
-    * Current header.
-    */
-    protected Hashtable myHeaders = new Hashtable();
-   
-    
-    /**
-     * Todo : construction du header + response 
-     * @return 
+     * Current header.
      */
+    private Hashtable HeadersRep = new Hashtable();
+    private String hostpath = "c:\\temp"; // TODO depuis host
 
-    private String headerRep() {
-                        
-     Date date = new Date();
-         
-      //this.myHeaders.put("Status","HTTP/1.0 200 OK");
-      //this.myHeaders.put("200","OK");
-      this.myHeaders.put("Date",date); 
-      this.myHeaders.put("Server","CNAM_NFE103/1.0"); // see param
-      this.myHeaders.put("Content-Type","text/HTML"); // Mime type
-      this.myHeaders.put("Content-Length","1234"); // length of chain
-      
-      String line = this.PROTOCOL + this.OK;
-      String key;
-      Enumeration e = this.myHeaders.keys();
-      while(e.hasMoreElements())
-      {
-         key = (String)e.nextElement();
-         line += key + ": " + this.myHeaders.get(key) + CRLF;
-      }
-      line += CRLF;
-      return line;
-      
-    }  
-    
-    public String genereResponse(String request) {
-        
-        return this.headerRep() + request.toString();
+    /**
+     * Constructeur
+     */
+    public Response(Header reqHeader) {
+        this.headerQuest = reqHeader;
     }
- 
+
+    /**
+     * Todo : construction du header Recupération du header
+     *
+     * @return
+     */
+    private String headerRep(String Length, String Code) {
+
+        Date date = new Date();
+        String mimetostring;
+        
+        
+        if (!Code.substring(0,1).equals("4") && !Code.substring(0,1).equals("5")) { // si erreur
+               
+            Mime Mime = new Mime();
+            mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
+        } else {
+            mimetostring = "text/html";
+        }
+
+        this.HeadersRep.put("Date", date);
+        this.HeadersRep.put("Server", "CNAM_NFE103/1.0"); // see param
+        this.HeadersRep.put("Content-Type", mimetostring); // Mime type
+        //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
+        this.HeadersRep.put("Content-Length", Length); // length of chain
+        this.HeadersRep.put("Connection", "Keep-Alive"); // length of chain
+
+        String line = "HTTP/1.1 " + Code + CRLF;
+        String key = "";
+        Enumeration e = this.HeadersRep.keys();
+        while (e.hasMoreElements()) {
+            key = (String) e.nextElement();
+            line += key + ":" + this.HeadersRep.get(key) + CRLF;
+        }
+        line += CRLF;
+        return line;
+
+    }
+
+    public String genereResponse(String request) { // TODO virer String request
+
+        String response = "";
+        if (request != this.INTERNAL_ERROR) {
+
+            // Si rien on met index.html  (add to param + path recupéré de host + header)
+            if (this.headerQuest.getCible().equals("/")) {
+                request = request + "index.html";
+                //System.out.println("req -->" +request);
+            }
+
+            FileContent file = new FileContent();
+
+            file.openFile(this.hostpath + request);
+
+            switch (file.getStatus()) {
+                case 200:
+                    response = this.headerRep(file.getLength(), this.OK) + file.getContenu();
+                    break;
+                case 404:
+                    response = this.headerRep("400", this.NOT_FOUND) + "<h1>" + this.NOT_FOUND + "</h1>";
+                    break;
+                case 403:
+                    response = this.headerRep("400", this.FORBIDDEN) + "<h1>" + this.FORBIDDEN + "</h1>";
+                    break;
+                case 500:
+                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    break;
+                default:
+                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    System.out.println("Il faut davantage travailler.");
+            }
+
+        } else {
+            response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+        }
+
+        return response;
+    }
+
     public String genererErreur500() {
         return this.genereResponse(INTERNAL_ERROR);
     }

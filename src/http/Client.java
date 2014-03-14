@@ -53,7 +53,7 @@ public class Client implements Runnable{
         String ligneSocket=null; // recevra ligne à ligne les information du socket
         ArrayList<String> header=new ArrayList(); // recevra l'ensemble de la requete du socket correspondant au header
         String strContent; //recevra le content de la requete 
-        Request requete; // requete http 
+        Request requete = null; // requete http 
       //  Response reponse; // reponse http (qui dépend de la requete)
         try {
             while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){
@@ -74,8 +74,8 @@ public class Client implements Runnable{
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
        
-        Response response = new Response();
-        envoyer(response.genereResponse("<br> Hello World !<br> votre request était : "+header));
+        Response response = new Response(requete.getHeader());
+        envoyer(response.genereResponse(requete.getHeader().getCible()));
         
         try {
             out.close();
