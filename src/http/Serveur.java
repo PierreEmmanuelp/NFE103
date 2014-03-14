@@ -14,6 +14,7 @@ public class Serveur {
         int poolThread = 50;
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
+        Host host;
 	
 	public Serveur(){
             clients = new ArrayList();
@@ -87,5 +88,11 @@ public class Serveur {
 	public int getPORT() {
 		return PORT;
 	}
+        
+        public Host getHost(){
+            
+            return host;
+        }
 }	
+
 	
