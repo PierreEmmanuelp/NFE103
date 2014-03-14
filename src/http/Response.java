@@ -100,7 +100,8 @@ public class Response {
         //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
         this.HeadersRep.put("Content-Length", Length); // length of chain
         //this.HeadersRep.put("Content-Length", Length); // length of chain
-        this.HeadersRep.put("Connection", "Keep-Alive"); // length of chain
+    //    this.HeadersRep.put("Connection", "Keep-Alive;timeout=15, max=100"); // length of chain
+        this.HeadersRep.put("Connection", "close"); // length of chain
 
         String line = "HTTP/1.1 " + Code + CRLF;
         String key = "";
@@ -114,11 +115,11 @@ public class Response {
 
     }
 
-    public Object[] genereResponse(String request) { // TODO virer String request
+    public String[] genereResponse(String request) { // TODO virer String request
 
         //String response = "";
-         Object[] response;
-         response = new Object[2];
+         String[] response;
+         response = new String[2];
          
         if (request == null ? Response.INTERNAL_ERROR != null : !request.equals(Response.INTERNAL_ERROR)) {
 
