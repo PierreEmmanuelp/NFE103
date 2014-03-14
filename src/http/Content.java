@@ -1,11 +1,9 @@
 package http;
 
-import java.io.*;
-
 /**
  *récupère contenue requete
- * @author Pierre-Emmanuel Pourquier,Herve Truchard
- * @version 1.1
+ * @author Pierre-Emmanuel Pourquier,Herve Truchard, Benjamin Pierrot
+ * @version 1.2
  * @return void
  */
 public class Content {
@@ -24,13 +22,6 @@ public class Content {
 
     public void setContenu(String contenu) {
         this.contenu = contenu;
-    }
-/**
- * getLength : Retourne la taille du fichier
- * @return String taille du fichier pour construction du header 
- */    
-    public String getLength() {
-        return String.valueOf(this.contenu.length());
     }
 
     @Override

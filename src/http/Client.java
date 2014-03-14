@@ -77,11 +77,10 @@ public class Client implements Runnable{
         
         //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
        
-      //  Response response = new Response(requete.getHeader());
-        envoyer("");//response.genereResponse(requete.getHeader().getCible()));
+        Response response = new Response(requete.getHeader());
+        envoyer(response.genereResponse(requete.getHeader().getCible()),response.getStream());
         
         try {
-            out.close();
             in.close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -95,25 +94,24 @@ public class Client implements Runnable{
      * Envoie un message sur le socket du client
      * @param data texte a envoyer
      */
-    protected void envoyer(String data){
+    protected void envoyer(Object[] data, BufferedInputStream stream) {
         try {
            
-            out.writeBytes("HTTP/1.1  200\r\n");
-            out.writeBytes("Content-Type:image/png\r\n");
-            out.writeBytes("\r\n");
-   
-          File file = new File("/var/www/test.png");
-          BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-            byte buf[] = new byte[1024];
+        // ecriture du header    
+            out.writeBytes(data[0].toString());
             
-           int len;
+                if ("OK".equals(data[1].toString())) {
+            
+          byte buf[] = new byte[1024];  
+           int cpt;
            
-          while((len = in.read(buf,0,1024)) != -1) {
+          while((cpt = stream.read(buf,0,1024)) != -1) {
             // On écrit dans notre deuxième fichier avec l'objet adéquat
             out.write(buf);         
           }  
-          
+        }
             out.flush();
+            out.close();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
             ex.printStackTrace();

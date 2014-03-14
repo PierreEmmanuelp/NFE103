@@ -1,13 +1,13 @@
 package http;
 
-import java.util.Date;
+import java.io.BufferedInputStream;
 import java.util.*;
 
 /**
  * Correspond à un réponse HTTP
  *
- * @author Pierre-Emmanuel Pourquier
- * @version 1.0
+ * @author Pierre-Emmanuel Pourquier, Benjamin Pierrot
+ * @version 1.1
  */
 public class Response {
 
@@ -23,6 +23,8 @@ public class Response {
      * Content
      */
 //    private static Content ContentRep;
+    
+    private BufferedInputStream pstream;
     /**
      * Content
      */
@@ -63,13 +65,14 @@ public class Response {
      * Current header.
      */
     private Hashtable HeadersRep = new Hashtable();
-    private String hostpath = "c:\\temp"; // TODO depuis host
+    private String hostpath = "/var/www/"; // TODO depuis host
 
     /**
      * Constructeur
      */
     public Response(Header reqHeader) {
         this.headerQuest = reqHeader;
+        this.pstream = null;
     }
 
     /**
@@ -96,6 +99,7 @@ public class Response {
         this.HeadersRep.put("Content-Type", mimetostring); // Mime type
         //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
         this.HeadersRep.put("Content-Length", Length); // length of chain
+        //this.HeadersRep.put("Content-Length", Length); // length of chain
         this.HeadersRep.put("Connection", "Keep-Alive"); // length of chain
 
         String line = "HTTP/1.1 " + Code + CRLF;
@@ -110,13 +114,16 @@ public class Response {
 
     }
 
-    public String genereResponse(String request) { // TODO virer String request
+    public Object[] genereResponse(String request) { // TODO virer String request
 
-        String response = "";
-        if (request != this.INTERNAL_ERROR) {
+        //String response = "";
+         Object[] response;
+         response = new Object[2];
+         
+        if (request == null ? Response.INTERNAL_ERROR != null : !request.equals(Response.INTERNAL_ERROR)) {
 
             // Si rien on met index.html  (add to param + path recupéré de host + header)
-            if (this.headerQuest.getCible().equals("/")) {
+            if (Response.headerQuest.getCible().equals("/")) {
                 request = request + "index.html";
                 //System.out.println("req -->" +request);
             }
@@ -127,30 +134,47 @@ public class Response {
 
             switch (file.getStatus()) {
                 case 200:
-                    response = this.headerRep(file.getLength(), this.OK) + file.getContenu();
+                    response[0] = this.headerRep(file.getLength().toString(),this.OK) ;
+                    response[1] = "OK";
+                    setStream(file.getFileContent());
                     break;
                 case 404:
-                    response = this.headerRep("400", this.NOT_FOUND) + "<h1>" + this.NOT_FOUND + "</h1>";
+                    response[0] = this.headerRep("400", this.NOT_FOUND); 
+                    response[2] = "<h1>" + this.NOT_FOUND + "</h1>";
                     break;
                 case 403:
-                    response = this.headerRep("400", this.FORBIDDEN) + "<h1>" + this.FORBIDDEN + "</h1>";
+                    response[0] = this.headerRep("400", this.FORBIDDEN);
+                    response[2] =  "<h1>" + this.FORBIDDEN + "</h1>";
                     break;
                 case 500:
-                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[0] = this.headerRep("400", this.INTERNAL_ERROR);
+                    response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
                     break;
                 default:
-                    response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[0] = this.headerRep("400", this.INTERNAL_ERROR);
+                    response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
                     System.out.println("Il faut davantage travailler.");
             }
 
         } else {
-            response = this.headerRep("400", this.INTERNAL_ERROR) + "<h1>" + this.INTERNAL_ERROR + "</h1>";
+            response[0] = this.headerRep("400", this.INTERNAL_ERROR);
+            response[2] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
         }
 
         return response;
     }
 
-    public String genererErreur500() {
-        return this.genereResponse(INTERNAL_ERROR);
+    public void genererErreur500() {
+        this.genereResponse(INTERNAL_ERROR);
     }
-}
+    
+    private void setStream(BufferedInputStream stream) {
+       this.pstream = stream;
+    }
+    
+    public BufferedInputStream getStream() {
+        return pstream;
+     }
+} 
+            
+

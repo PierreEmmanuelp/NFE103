@@ -1,134 +1,66 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package http;
 
-import  java.io.File ; 
-import  java.io.IOException ; 
-import  java.net.URL ; 
-import  javax.imageio.ImageIO ; 
-import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
 
 /**
  * Classe permettant la creation du contenu de la reponse
  *
- * @version 1.0
- * @author htruchard
+ * @version 1.999
+ * @author htruchard + pierrot
  * @return contenu
  */
 public class FileContent extends Content {
 
-    private Mime mime;
-
+    private String mime;
+    protected BufferedInputStream filestream;
     private int status;
+    private Long FileLenght;
     //private String contenu;
     private String pCheminCible;
-    
-    private String Contenu;
-    
-  
 
+    // private String Contenu;
     public void openFile(String pCheminCible) {
         this.pCheminCible = pCheminCible;
-       image();
+        this.filestream = null;
+        this.FileLenght = null;
+        envoyerFichier();
 
     }
 
-    /*enregistrement d un fichier dans une variable de classe*/
-    private String readFile() {
-
-        String myLine="";
+    private void envoyerFichier() {
 
         try {
-            //création des flux
-            InputStreamReader in = new InputStreamReader(new FileInputStream(this.pCheminCible));
 
-            LineNumberReader llog = new LineNumberReader(in);
-				//copie du fichier
-
-            while ((myLine = llog.readLine()) != null) {
-                // --- Ajout de la ligne au contenu
-                contenu += myLine;
-            }
-
-            //forcer l'ecriture du contenu du tampon dans le fichier
-            setStatus(200);
-            System.out.println(getStatus() + "le contenu " + contenu);
+            File file = new File(this.pCheminCible); // Ouverture file
+            this.filestream = new BufferedInputStream(new FileInputStream(file)); //file dans stream
+            setLength(file.length());
 
         } catch (FileNotFoundException e) {
             setStatus(404);
+            this.filestream = null;
             System.out.println(e);
         } catch (Exception e) {
+            this.filestream = null;
             setStatus(500);
             System.out.println(e);
         }
-        return contenu;
-    }
-    private  String envoyerFichier() throws Exception {
-    FileInputStream fis = null;
-    FileOutputStream fos = null;
-    int n;
+        setStatus(200);
+        setMime();
 
-        try {
-          byte buf[] = new byte[1024];
-          int taille = 0;
-
-          fis = new FileInputStream(this.pCheminCible);
-          fos = new FileOutputStream(contenu);
-          while ((n = fis.read(buf)) >= 0) {
-            // On écrit dans notre deuxième fichier avec l'objet adéquat
-            fos.write(buf);
-            
-          }
-          return contenu;
-           } finally {
-            if (fis != null) {
-                 try {
-                fis.close();
-                        } catch (Exception e) {}
-                            }
-                 if (fos != null) {
-                    try {
-                     fos.close();
-                    } catch (Exception e) {
-                }
-            }
-        }
     }
-    private BufferedImage image(){
-        BufferedImage image =  null ; 
-        FileInputStream fis = null;
-        
-        try  { 
-            
-            fis = new FileInputStream(this.pCheminCible); 
-            image = ImageIO. read ( fis ) ;
-  
-           
-            
- 
-        } 
-        catch  ( IOException e )  { 
-        	e. printStackTrace ( ) ; 
-        } 
-        return  image;
-    } 
-    
-    public Mime getMime() {
+
+    public String getMime() {
         return mime;
     }
 
-    public void setMime(Mime mime) {
-        this.mime = mime;
+    private void setMime() {
+
+        Mime Mime = new Mime();
+        this.mime = Mime.extractTypeMime(this.pCheminCible);
+
     }
 
     private void setStatus(int code) {
@@ -139,4 +71,20 @@ public class FileContent extends Content {
         return this.status;
     }
 
+    public BufferedInputStream getFileContent() {
+        return this.filestream;
+    }
+
+    private void setLength(Long length) {
+        this.FileLenght = length;
+    }
+
+    /**
+     * getLength : Retourne la taille du fichier
+     *
+     * @return Long taille du fichier pour construction du header
+     */
+    public Long getLength() {
+        return this.FileLenght;
+    }
 }

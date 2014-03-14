@@ -3,19 +3,18 @@ import org.apache.tika.Tika; // Utilisation de la library apache tika pour déte
 
 /**
  *
- * @author Pierre-Emmanuel Pourquier
- * @version 1.0
+ * @author Pierre-Emmanuel Pourquier, Benjamin Pierrot
+ * @version 2.0
  */
 public class Mime {
     
-//   private String pFichier;
-   private String mediaType;
+   private static String mediaType;
 
     public Mime() {
         this.mediaType = "";
     }
    
-    public String extractTypeMime(String pFichier){
+    public static String extractTypeMime(String pFichier){
         
         Tika tika = new Tika();
         
