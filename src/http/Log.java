@@ -53,7 +53,7 @@ public class Log {
                         fichier.close();
                          
 		} catch (IOException e) {
-			e.getMessage();	
+			e.printStackTrace();
 			System.out.println("erreur log");
 		}
                
