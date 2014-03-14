@@ -10,14 +10,15 @@ import java.util.ArrayList;
  *
  */
 public class Serveur {
-	int PORT = 8080; //port d'ecoute du serveur
+	int PORT = 8081; //port d'ecoute du serveur
         int poolThread = 50;
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
-        Host host;
-	
+        Hosts hosts;
+        	
 	public Serveur(){
             clients = new ArrayList();
+            hosts = new Hosts();
             try {
                  servSocket = new ServerSocket(PORT);//creation de la socket
             } catch (IOException ex) {
@@ -89,9 +90,14 @@ public class Serveur {
 		return PORT;
 	}
         
-        public Host getHost(){
+        public Hosts getHost(){
             
-            return host;
+            return hosts;
+        }
+        
+        public int getPoolThread()
+        {
+            return poolThread;
         }
 }	
 

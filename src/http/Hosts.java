@@ -23,6 +23,25 @@ public class Hosts {
          this.hostList.add(pHost);
     }
     
+    public void removeHost(Host host)
+    {
+        this.hostList.remove(host);
+    }
+    
+    public Host getHost(String pName)
+    {
+        Iterator<Host> i = hostList.iterator();
+        while(i.hasNext())
+        {
+            Host host = (Host)i.next();
+            if(host.getName().equals(pName))
+            {
+                return host;
+            }
+        }
+        return null;
+    }
+    
      /**
     * permet de récupérer le nom de l'hôte
     * @param pName
