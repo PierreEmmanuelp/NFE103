@@ -5,6 +5,11 @@
  */
 package http;
 
+import  java.io.File ; 
+import  java.io.IOException ; 
+import  java.net.URL ; 
+import  javax.imageio.ImageIO ; 
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -34,7 +39,7 @@ public class FileContent extends Content {
 
     public void openFile(String pCheminCible) {
         this.pCheminCible = pCheminCible;
-       readFile();
+       image();
 
     }
 
@@ -99,6 +104,25 @@ public class FileContent extends Content {
             }
         }
     }
+    private BufferedImage image(){
+        BufferedImage image =  null ; 
+        FileInputStream fis = null;
+        
+        try  { 
+            
+            fis = new FileInputStream(this.pCheminCible); 
+            image = ImageIO. read ( fis ) ;
+  
+           
+            
+ 
+        } 
+        catch  ( IOException e )  { 
+        	e. printStackTrace ( ) ; 
+        } 
+        return  image;
+    } 
+    
     public Mime getMime() {
         return mime;
     }
