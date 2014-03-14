@@ -8,5 +8,10 @@
 	<!-- Nombre de thread dans le pool -->
 	<threadpool>50</threadpool>
 	<!-- Chemin du fichier de log -->
-	<pathlog>/home/morgan/Bureau/NFE103/log.txt</pathlog>
+	<pathlog>/home/morgan/Documents/NFE103/log.txt</pathlog>
+	<hosts>
+		<host name="chuo" path="/home/morgan/Documents/Chuo/"/>
+		<host name="minato" path="/home/morgan/Documents/Minato/"/>
+		<host name="shinjuku" path="/home/morgan/Documents/Shinjuku/"/>
+	</hosts>
 </configuration>
