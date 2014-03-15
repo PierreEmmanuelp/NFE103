@@ -18,7 +18,6 @@ public class Console implements Runnable{
     BufferedReader consoleIn;
     Serveur serveur;
     Boolean logged = false;
-    Http htpp;
     
     public Console(Serveur serveur){
             this.consoleIn = new BufferedReader(new InputStreamReader(System.in));
@@ -47,9 +46,9 @@ public class Console implements Runnable{
                     case "/setThread" : modifierThread(); break;
                     case "/author":lsAuthor();break;//ok
                     case "/quit":quit();break;//ok
-                    //case "/start" : start();break;
-                    //case "/stop" : stop();break;
-                    //case "/restart" : restart();break;
+                    case "/start" : start();break;
+                    case "/stop" : stop();break;
+                    case "/restart" : restart();break;
                     default:
                         System.out.println("Ce que vous venez de saisir n'est pas une commande valide ! Veuillez réessayer en saisissant une de ces commandes ! \n");
                         lsCommande();
@@ -201,16 +200,21 @@ public class Console implements Runnable{
     {
         Scanner sc = new Scanner(System.in);
         try{
-            System.out.println("Sur quel port d'écoute voulez vous connecté le serveur ? ");
+            int portActuel = Http.config.getPORT();
+            System.out.println("Le port d'écoute du serveur est actuellement le " + portActuel );
+            System.out.println("Sur quel port d'écoute voulez vous connecté le serveur pour les connexions futures ? ");
             String port = sc.nextLine();
             
-            
+            Http.config.setPort(Integer.parseInt(port));
+            System.out.println("Le nouveau port d'écoute est " + port + " : enregistrement dans la configuration OK !");
         }
         catch(Exception e)
         {
-            
+            e.printStackTrace();
+            Log.ajouterEntree("L'enregistrement du nouveau port d'écoute n'as pas fonctionné", LogLevel.SYSTEM);
         }
     }
+    
     
     /**
      * Afficher le nombre de thread en marche sur le systeme
@@ -232,7 +236,21 @@ public class Console implements Runnable{
      */
     private void modifierThread()
     {
-        
+        Scanner sc = new Scanner(System.in);
+        try{
+            int nbThreadActuel = Http.config.getPoolThread();
+            System.out.println("Le nombre de thread qui se démarre sur le serveur actuellement est de " + nbThreadActuel );
+            System.out.println("Combien voulez vous démarré de thread pour les connexions futures ? ");
+            String nbThread = sc.nextLine();
+            
+            Http.config.setPoolThread(Integer.parseInt(nbThread));
+            System.out.println("Le nombre de thread qui se démarrera à la connexion du serveur sera dorénavant de " + nbThread + " : enregistrement dans la configuration OK !");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            Log.ajouterEntree("L'enregistrement du nouveau nombre de thread à démarré n'as pas fonctionné", LogLevel.SYSTEM);
+        }
     }
     
     
@@ -248,5 +266,65 @@ public class Console implements Runnable{
      */
     private void lsAuthor(){
 	System.out.println("Author :\nPinatel Morgan\nTruchard Hervé\nPourquier Pierre-Emmanuel\nPierrot Benjamin\nNogier Marine ");
+    }
+    
+    /**
+     * Démmaré le serveur
+     */
+    private void start()
+    {
+        try{
+            if(serveur == null)
+            {
+               serveur.start(); 
+               System.out.println("Le serveur vient d'être démarré");
+            }
+            else
+            {
+                System.out.println("Le serveur est déjà démarré");
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Log.ajouterEntree("La connexion du serveur n'a pas fonctionné", LogLevel.SYSTEM);
+        }
+    }
+    
+    /**
+     * Redémarré le serveur
+     */
+    private void restart()
+    {
+        try{
+            
+            serveur.stop();
+            serveur.start();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Log.ajouterEntree("Le redémarrage du serveur n'a pas fonctionné", LogLevel.SYSTEM);
+        }
+    }
+    
+    /**
+     * Stoppé le serveur
+     */
+    private void stop()
+    {
+        try{
+            if(serveur != null)
+            {
+                serveur.stop();
+                System.out.println("Le système est bien arrêté");
+            }
+            else
+            {
+                System.out.println("Le système est déjà arrêté");
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Log.ajouterEntree("L'arrêt du serveur n'a pas fonctionné", LogLevel.SYSTEM);
+        }
     }
 }
