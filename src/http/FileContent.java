@@ -35,12 +35,18 @@ public class FileContent extends Content {
         try {
 
             File file = new File(this.pCheminCible); // Ouverture file
-            if (file.exists()){
+
+            if (file.exists() && file.canRead()){
             this.filestream = new BufferedInputStream(new FileInputStream(file)); //file dans stream
             setLength(file.length());
             setStatus(200);
             setMime();
-            } else {setStatus(404);}
+            } else {
+              if (!file.canRead()){
+                setStatus(403);  
+              } else {                
+                setStatus(404);}
+            }
         } catch (FileNotFoundException e) {
             setStatus(404);
             this.filestream = null;
