@@ -111,7 +111,12 @@ public class Client implements Runnable{
                 }
                             stream.close();
             } else {
+                if(data[1] != null){
+                    System.out.println(data[1]);
                 out.writeBytes(data[1]);
+                } else {
+                out.writeBytes("<h1>404 Not Found</h1>");    
+                }
             }
             out.flush();
             //System.out.println("envoyé : " + data);TODO delete
