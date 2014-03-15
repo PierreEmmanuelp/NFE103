@@ -42,7 +42,7 @@ public class FileContent extends Content {
             setStatus(200);
             setMime();
             } else {
-              if (!file.canRead()){
+              if (file.exists() && !file.canRead()){
                 setStatus(403);  
               } else {                
                 setStatus(404);}
