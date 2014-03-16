@@ -6,7 +6,8 @@ import java.util.Iterator;
 
 //This product includes software developed by the JDOM Project
 import org.jdom2.*;
-import org.jdom2.input.*;import org.jdom2.output.*;
+import org.jdom2.input.*;
+import org.jdom2.output.*;
 
 /**
  *
