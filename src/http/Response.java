@@ -65,13 +65,14 @@ public class Response {
      * Current header.
      */
     private Hashtable HeadersRep = new Hashtable();
-    private String hostpath = "/var/www/"; // TODO depuis host
+    private String hostpath; // TODO depuis host
 
     /**
      * Constructeur
      */
     public Response(Header reqHeader) {
         this.headerQuest = reqHeader;
+        this.hostpath = reqHeader.getHost().getPath();//ajout du host
         this.pstream = null;
     }
 
