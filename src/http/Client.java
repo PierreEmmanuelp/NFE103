@@ -40,8 +40,7 @@ public class Client implements Runnable{
             in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-             e.getMessage();
-             Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java",LogLevel.SYSTEM);
+             Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java" +  e.getMessage(),LogLevel.SYSTEM);
         }   
         thread.start();//démarrage du thread
     }
@@ -55,7 +54,7 @@ public class Client implements Runnable{
         ArrayList<String> header=new ArrayList(); // recevra l'ensemble de la requete du socket correspondant au header
         String strContent; //recevra le content de la requete 
         Request requete = null; // requete http 
-      //  Response reponse; // reponse http (qui dépend de la requete)
+
         try {
             while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){
                 header.add(ligneSocket);
@@ -66,8 +65,7 @@ public class Client implements Runnable{
                 strContent=(ligneSocket);
                 requete.setContent(new Content(/*TODO : contructeur de content avec un str strContent*/));
             }
-            
-        //TODO reponse = new Response(requete);
+         
             
         } catch (IOException ex) {
             Log.ajouterEntree("impossible de lire le socket dans client.java",LogLevel.SYSTEM);
@@ -82,7 +80,7 @@ public class Client implements Runnable{
             in.close();
             out.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.ajouterEntree("erreur de fermeture des stream in / out du socket", LogLevel.ERROR);
         }
         thread.stop();
         this.free = true;
@@ -119,7 +117,8 @@ public class Client implements Runnable{
             out.flush();
             //System.out.println("envoyé : " + data);TODO delete
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.ajouterEntree("erreur envoyer socket"+ex.getMessage(),LogLevel.SYSTEM);
+            //ex.printStackTrace();//TODO : suppr la trace
         }
     }
 
