@@ -10,18 +10,20 @@ import java.util.ArrayList;
  *
  */
 public class Serveur {
-	int PORT; //port d'ecoute du serveur
-        int poolThread;
+	int PORT = 8080; //port d'ecoute du serveur
+        int poolThread = 50;
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
         Hosts hosts;
 	
-	public Serveur(){
-            this.PORT = http.Http.config.getPORT();
-            this.poolThread = http.Http.config.getPoolThread();
-            
+	public Serveur(){  
             clients = new ArrayList();
-            hosts = new Hosts();
+            
+            // récupération de la configuration depuis le fichier XML
+            this.PORT = http.Http.config.getPORT();
+            this.poolThread = http.Http.config.getPoolThread(); 
+            hosts = http.Http.config.getHosts();
+            
             try {
                  servSocket = new ServerSocket(PORT);//creation de la socket
             } catch (IOException ex) {
