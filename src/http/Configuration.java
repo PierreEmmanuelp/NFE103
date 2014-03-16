@@ -11,8 +11,8 @@ import org.jdom2.output.*;
 
 /**
  *
- * @author Pinatel Morgan
- * @version 2.0
+ * @author Morgan Pinatel
+ * @version 2.1
  */
 public class Configuration {
     
@@ -72,7 +72,7 @@ public class Configuration {
     }
      
     /**
-    * permet de modifier les paramètres
+    * permet de récupérer la racine
     */
     private Element parser(){
         Element racine = new Element("configuration"); 
@@ -92,6 +92,35 @@ public class Configuration {
         return racine;
     }
 
+    /**
+    * permet d'enregistrer le hotes dans le fichier de paramètres
+    */
+    public void upHosts(){
+        Element racine = parser();
+        Element hostsElement = racine.getChild("hosts");
+        hostsElement.removeChildren("host");
+        Iterator<Host> i = this.hosts.getHostList().iterator();		
+        while(i.hasNext()){
+            Host host = (Host)i.next();
+            String hostName = host.getName();
+            String hostPath = host.getPath();  
+            Element theHost = new Element("host");
+            hostsElement.addContent(theHost);
+            Attribute attName = new Attribute("name",hostName);
+            Attribute attPath = new Attribute("path",hostPath);
+            theHost.setAttribute(attName);
+            theHost.setAttribute(attPath);
+        }
+        XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
+        try
+        {
+            sortie.output(document, new FileOutputStream(pathParametres));
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }
+    }
+    
     /**
     * permet de récupérer le nombre de thread défini pour le pool
     * @return un nombre de thread
