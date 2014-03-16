@@ -4,14 +4,12 @@
   
 <configuration>       
 	<!-- Port d'écoute du serveur -->
-	<port>6666</port>
+	<port>8081</port>
 	<!-- Nombre de thread dans le pool -->
 	<threadpool>50</threadpool>
 	<!-- Chemin du fichier de log -->
-	<pathlog>/home/morgan/Documents/NFE103/log.txt</pathlog>
+	<pathlog>/var/log/http/</pathlog>
 	<hosts>
-		<host name="chuo" path="/home/morgan/Documents/Chuo/"/>
-		<host name="minato" path="/home/morgan/Documents/Minato/"/>
-		<host name="shinjuku" path="/home/morgan/Documents/Shinjuku/"/>
+		<host name="chuo" path="/var/www"/>
 	</hosts>
 </configuration>
