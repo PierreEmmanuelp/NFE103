@@ -27,7 +27,8 @@ public class Serveur {
             try {
                  servSocket = new ServerSocket(PORT);//creation de la socket
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Log.ajouterEntree("impossible de créer le socket"+ex.getMessage(), LogLevel.ERROR);
+                System.out.println("Erreur interne : socket indisponible");
             }
             int i;
             for(i=0;i<=poolThread;i++){//creation du pool de thread
@@ -52,8 +53,7 @@ public class Serveur {
 			 
                 } catch (IOException e) {
                     System.out.println("Serveur indisponible : socket libre? ");
-                    e.printStackTrace();
-                    Log.ajouterEntree("erreur impossible de démarrer le serveur",LogLevel.SYSTEM);
+                    Log.ajouterEntree("erreur impossible de démarrer le serveur : socket indisponible"+e.getMessage(),LogLevel.SYSTEM);
 		}			
         }
         
@@ -65,7 +65,7 @@ public class Serveur {
                 this.servSocket.close();
                 Log.ajouterEntree("extinction du serveur",LogLevel.SYSTEM);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Log.ajouterEntree("Impossible d'éteindre le serveur",LogLevel.SYSTEM);
             }
         }
         
