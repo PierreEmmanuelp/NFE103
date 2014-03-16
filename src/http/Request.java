@@ -34,13 +34,12 @@ public class Request {
         this.header.setAction(parseActionHTTP(premierHead));
         this.header.setCible(parseCibleHTTP(premierHead));
         this.header.setVersion(parseVersionHTTP(premierHead));
-        
-        //System.out.println("requete parsée dans le header : \naction : "+ this.header.getAction() + "\ncible : "+this.header.getCible() + "\nversion : " + this.header.getVersion());
-                
-                
+         
         for(int i = 1; i< request.size();i++){
-            if(request.get(i).startsWith("Host:")){
-                this.header.setHost(parseHostHTTP(request.get(i)));
+            if(request.get(i).startsWith("Host:")){//si c'est un host
+                String nameHost = this.parseHostHTTP(request.get(i));//récupération du nom du host
+                Host host = http.Serveur.getHost().getHost(nameHost);//récupération de ce nom dans les hosts connus
+                this.header.setHost(host);//ajout dub host au header
             }
             else{
                 this.parseArgument(request.get(i));
@@ -146,10 +145,10 @@ public class Request {
      * @param pHeaderHTTP la première entête d'une requête HTTP
      * @return le host de la requête http
      */
-    private Host parseHostHTTP(String pHeaderHTTP){
-        Host host = new Host("test","temp");
-        String strHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":"));
-        return host;
+    private String parseHostHTTP(String pHeaderHTTP){
+        String nomHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":")+2);  
+        System.out.println(nomHost);
+        return nomHost;
     }
     
     private void parseArgument(String pHeaderHTTP){
