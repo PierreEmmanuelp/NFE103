@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Paramètres de configuration du serveur HTTP multi-thread -->
-  
-<configuration>       
-	<!-- Port d'écoute du serveur -->
-	<port>8081</port>
-	<!-- Nombre de thread dans le pool -->
-	<threadpool>50</threadpool>
-	<!-- Chemin du fichier de log -->
-	<pathlog>/var/log/http/</pathlog>
-	<hosts>
-		<host name="chuo" path="/var/www"/>
-	</hosts>
+
+<configuration>
+  <!-- Port d'écoute du serveur -->
+  <port>8081</port>
+  <!-- Nombre de thread dans le pool -->
+  <threadpool>50</threadpool>
+  <!-- Chemin du fichier de log -->
+  <pathlog>/var/log/http/</pathlog>
+  <hosts>
+    <host name="www1.fr:8081" path="/var/www1/" />
+    <host name="www2.fr:8081" path="/var/www2/" />
+  </hosts>
 </configuration>
