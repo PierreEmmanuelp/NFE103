@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.*;
-//import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -25,7 +26,8 @@ public class Client implements Runnable{
      * créer le client dans le système pour répondre à un requete http
      */
     public Client(){
-        thread = new Thread(this);
+        this.thread = new Thread(this);
+        this.thread.start();
     }
 	
     /**
@@ -35,14 +37,7 @@ public class Client implements Runnable{
     public void traiteRequete(Socket psocket){
         this.free = false;// le client va être occupé
         this.socket = psocket;
-        thread = new Thread(this);//Création du thread dédié à ce client
-        try {//création des reader et writer
-            in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
-            out = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-             Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java" +  e.getMessage(),LogLevel.SYSTEM);
-        }   
-        thread.start();//démarrage du thread
+   
     }
 
     /**
@@ -55,35 +50,54 @@ public class Client implements Runnable{
         String strContent; //recevra le content de la requete 
         Request requete = null; // requete http 
 
-        try {
-            while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){
-                header.add(ligneSocket);
+        
+        while(true){     
+            Boolean attendre = true;  
+            while(attendre){//position d'attente. Seule l'interrupt pourra réveiller le thread
+                try {
+                    this.free = true;//le thread est libre, il dort
+                    //System.out.println(this.thread.getName() +"a été endormi");//TODO SUPPR LA TRACE
+                    this.thread.sleep(100000);
+                } catch (InterruptedException ex) {
+                    this.free=false;//le client devient occupé
+                    break; // Sortie de la boucle infinie attendre
+                }       
             }
-            requete = new Request(header);
-            if(requete.besoinContent()==true){ 
-                ligneSocket=in.readLine();
-                strContent=(ligneSocket);
-                requete.setContent(new Content(/*TODO : contructeur de content avec un str strContent*/));
-            }
-         
             
-        } catch (IOException ex) {
-            Log.ajouterEntree("impossible de lire le socket dans client.java",LogLevel.SYSTEM);
-        }
-        
-        //si tout s'est bien passé header contient l'ensemble des données reçues. Vérifions puis parsons :
-       
-        Response response = new Response(requete.getHeader());
-        envoyer(response.genereResponse(requete.getHeader().getCible()),response.getStream());
-        
-        try {
-            in.close();
-            out.close();
-        } catch (IOException ex) {
-            Log.ajouterEntree("erreur de fermeture des stream in / out du socket", LogLevel.ERROR);
-        }
-        thread.stop();
-        this.free = true;
+                System.out.println(this.thread.getName() +"a été réveillé");//TODO SUPPR LA TRACE
+            //le thread est réveillé
+                try {//création des reader et writer
+                    in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+                    out = new DataOutputStream(socket.getOutputStream());
+                } catch (IOException e) {
+                    Log.ajouterEntree("Impossible de créer le reader et le writter dans client.java" +  e.getMessage(),LogLevel.SYSTEM);
+                   }
+                try {//lecture dans le socket
+                    while((ligneSocket=in.readLine())!=null && ligneSocket.length()>0){//lecture des lignes de header
+                        header.add(ligneSocket);
+                    }
+                requete = new Request(header);
+                if(requete.besoinContent()==true){ //lecture du content (en cas de post)
+                    ligneSocket=in.readLine();
+                    strContent=(ligneSocket);
+                    requete.setContent(new Content(/*TODO : contructeur de content avec un str strContent*/));
+                }
+                } catch (IOException ex) {
+                    Log.ajouterEntree("impossible de lire le socket dans client.java" + ex.getMessage(),LogLevel.SYSTEM);
+                }
+            
+                //construction de la reponse (en fonction du header de la requete)
+                Response response = new Response(requete.getHeader());
+                envoyer(response.genereResponse(requete.getHeader().getCible()),response.getStream());//envoi de la réponse dans le socket
+            
+                //il n'y a plus de traitements a exécuter => fermeture des stream ouverts
+                try {
+                    in.close();
+                    out.close();
+                } catch (IOException ex) {
+                    Log.ajouterEntree("erreur de fermeture des stream in / out du socket", LogLevel.ERROR);
+                }          
+            }
     }
 
 
@@ -145,12 +159,16 @@ public class Client implements Runnable{
      * @return if the socket is free
      */
     public Boolean getFree(){
-        return this.free;
+        return this.thread.isAlive();
     }
 
     @Override
     public String toString(){
             return this.socket.getInetAddress().toString();
+    }
+    
+    public Thread getThread() {
+        return thread;
     }
 
 }
