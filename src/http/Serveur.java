@@ -2,6 +2,7 @@ package http;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import debug.Trace;
 
 /**
  * représente le processus serveur qui attends les connexion sur le port PORT
@@ -15,6 +16,7 @@ public class Serveur {
         ServerSocket servSocket;
 	ArrayList<Client> clients;//tableau des clients en cours de connexion
         static Hosts hosts;
+        int lastIndex=0;//représente le dernier thread utilisé
 	
 	public Serveur(){  
             clients = new ArrayList();
@@ -28,10 +30,10 @@ public class Serveur {
                  servSocket = new ServerSocket(PORT);//creation de la socket
             } catch (IOException ex) {
                 Log.ajouterEntree("impossible de créer le socket"+ex.getMessage(), LogLevel.ERROR);
-                System.out.println("Erreur interne : socket indisponible");
+                Trace.trace("Erreur interne : socket indisponible");
             }
             int i;
-            for(i=0;i<=poolThread;i++){//creation du pool de thread
+            for(i = 0;i <= this.poolThread ;i++){//creation du pool de thread
                 Client client = new Client();
                 clients.add(client);              
             }
@@ -45,14 +47,14 @@ public class Serveur {
 	public void start(){
 		try {
                     Log.ajouterEntree("serveur en ligne",LogLevel.SYSTEM);
-                    System.out.println("http server online");
+                    Trace.trace("http server online");
                     while (true){ // attente en boucle d'une connexion
                         Client client = this.getFreeClient(); // un client se connecte, on le renvoit sur un thread libre*
                         client.traiteRequete(servSocket.accept());
                         client.getThread().interrupt();     
                     }		 
                 } catch (IOException e) {
-                    System.out.println("Serveur indisponible : socket libre? ");
+                    Trace.trace("Serveur indisponible : socket libre? ");
                     Log.ajouterEntree("erreur impossible de démarrer le serveur : socket indisponible"+e.getMessage(),LogLevel.SYSTEM);
 		}			
         }
@@ -75,15 +77,23 @@ public class Serveur {
          * @return 
          */
         private Client getFreeClient(){
-            int i = 0;
-            boolean traite = false;
-            while(traite)
-            for(i=0;i<=clients.size(); i++){
+            int i,index;
+            index = -1;
+            boolean trouve = false;
+            i = this.lastIndex + 1;
+            while(trouve==false && i < this.clients.size()){
                 if(clients.get(i).getFree()==true){
-                    traite=true;
+                    trouve=true;
+                    index = i;  
+                    this.lastIndex = i;
+                }
+                i = i+1;
+                if(i >= this.clients.size()){
+                    this.lastIndex = 0;
+                    i=0;
                 }
             }
-            return clients.get(i);
+        return clients.get(index);
         }
 
 	
