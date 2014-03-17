@@ -1,4 +1,5 @@
 package http;
+import debug.Trace;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -6,9 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 /**
  * Représente un client et réagit au requêtes reçues par celui-ci
@@ -16,7 +14,7 @@ import java.util.logging.Logger;
  * @version 2.0
  */
 public class Client implements Runnable{
-	private Thread thread; // contiendra le thread du client
+	private final Thread thread; // contiendra le thread du client
 	private Socket socket; // recevra le socket liant au client
 	private DataOutputStream out = null;//écrit dans le socket
 	private BufferedReader in;//lit le socket
@@ -56,7 +54,7 @@ public class Client implements Runnable{
             while(attendre){//position d'attente. Seule l'interrupt pourra réveiller le thread
                 try {
                     this.free = true;//le thread est libre, il dort
-                    //System.out.println(this.thread.getName() +"a été endormi");//TODO SUPPR LA TRACE
+                    //Trace.trace(this.thread.getName() +"a été endormi");//TODO SUPPR LA TRACE
                     this.thread.sleep(100000);
                 } catch (InterruptedException ex) {
                     this.free=false;//le client devient occupé
@@ -64,7 +62,7 @@ public class Client implements Runnable{
                 }       
             }
             
-                System.out.println(this.thread.getName() +"a été réveillé");//TODO SUPPR LA TRACE
+                Trace.trace(this.thread.getName() +"a été réveillé");//TODO SUPPR LA TRACE
             //le thread est réveillé
                 try {//création des reader et writer
                     in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
@@ -122,14 +120,14 @@ public class Client implements Runnable{
                             stream.close();
             } else {
                 if(data[1] != null){
-                    System.out.println(data[1]);
-                out.writeBytes(data[1]);
+                    Trace.trace(data[1]);
+                    out.writeBytes(data[1]);
                 } else {
                 out.writeBytes("<h1>404 Not Found</h1>");    
                 }
             }
             out.flush();
-            //System.out.println("envoyé : " + data);TODO delete
+            //Trace.trace("envoyé : " + data);
         } catch (IOException ex) {
             Log.ajouterEntree("erreur envoyer socket"+ex.getMessage(),LogLevel.SYSTEM);
             //ex.printStackTrace();//TODO : suppr la trace
