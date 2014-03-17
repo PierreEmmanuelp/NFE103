@@ -1,4 +1,5 @@
 package http;
+import debug.Trace;
 import org.apache.tika.Tika; // Utilisation de la library apache tika pour détecter le type mime
 
 /**
@@ -20,7 +21,7 @@ public class Mime {
         
        try {
             mediaType = tika.detect(pFichier);
-            System.out.println(mediaType);
+            Trace.trace(mediaType);
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
