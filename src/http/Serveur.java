@@ -47,10 +47,10 @@ public class Serveur {
                     Log.ajouterEntree("serveur en ligne",LogLevel.SYSTEM);
                     System.out.println("http server online");
                     while (true){ // attente en boucle d'une connexion
-                        Client client = this.getFreeClient(); // un client se connecte, on le renvoit sur un thread libre
+                        Client client = this.getFreeClient(); // un client se connecte, on le renvoit sur un thread libre*
                         client.traiteRequete(servSocket.accept());
-                    }
-			 
+                        client.getThread().interrupt();     
+                    }		 
                 } catch (IOException e) {
                     System.out.println("Serveur indisponible : socket libre? ");
                     Log.ajouterEntree("erreur impossible de démarrer le serveur : socket indisponible"+e.getMessage(),LogLevel.SYSTEM);
@@ -78,9 +78,8 @@ public class Serveur {
             int i = 0;
             boolean traite = false;
             while(traite)
-            for(i=0;i<=poolThread; i++){
+            for(i=0;i<=clients.size(); i++){
                 if(clients.get(i).getFree()==true){
-                    
                     traite=true;
                 }
             }
