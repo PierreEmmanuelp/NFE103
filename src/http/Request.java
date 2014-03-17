@@ -147,15 +147,16 @@ public class Request {
      */
     private String parseHostHTTP(String pHeaderHTTP){
         String nomHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":")+2);  
-        System.out.println(nomHost);
         return nomHost;
     }
     
     private void parseArgument(String pHeaderHTTP){
         String key;
         String value;
+        if(pHeaderHTTP.contains(":")){
         key = pHeaderHTTP.substring(0,pHeaderHTTP.indexOf(":"));
         value = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":"),pHeaderHTTP.length());
         this.header.getParametres().put(key,value);
+        }
     }
 }
