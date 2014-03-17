@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Paramètres de configuration du serveur HTTP multi-thread -->
-  
-<configuration>       
-	<!-- Port d'écoute du serveur -->
-	<port>8080</port>
-	<!-- Nombre de thread dans le pool -->
-	<threadpool>50</threadpool>
-	<!-- Chemin du fichier de log -->
-	<pathlog>/home/morgan/Bureau/NFE103/log.txt</pathlog>
+
+<configuration>
+  <!-- Port d'écoute du serveur -->
+  <port>8081</port>
+  <!-- Nombre de thread dans le pool -->
+  <threadpool>50</threadpool>
+  <!-- Chemin du fichier de log -->
+  <pathlog>c:\http\</pathlog>
+  <hosts>
+    <host name="localhost:8081" path="c:\http\" />
+    <host name="www2.fr:8081" path="c:\http\" />
+  </hosts>
 </configuration>
