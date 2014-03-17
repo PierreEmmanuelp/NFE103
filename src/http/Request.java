@@ -1,5 +1,6 @@
 package http;
 
+import debug.Trace;
 import http.headers.*;
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class Request {
     private void analyseRequest(){
         //première ligne : action
         String premierHead = request.get(0);
-        System.out.println(premierHead);
+        Trace.trace(premierHead);
         this.header.setAction(parseActionHTTP(premierHead));
         this.header.setCible(parseCibleHTTP(premierHead));
         this.header.setVersion(parseVersionHTTP(premierHead));
