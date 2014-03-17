@@ -54,7 +54,7 @@ public class Client implements Runnable{
             while(attendre){//position d'attente. Seule l'interrupt pourra réveiller le thread
                 try {
                     this.free = true;//le thread est libre, il dort
-                    //Trace.trace(this.thread.getName() +"a été endormi");//TODO SUPPR LA TRACE
+                    Trace.trace(this.thread.getName() +"a été endormi");//TODO SUPPR LA TRACE
                     this.thread.sleep(100000);
                 } catch (InterruptedException ex) {
                     this.free=false;//le client devient occupé
