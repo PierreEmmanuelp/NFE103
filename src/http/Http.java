@@ -13,7 +13,7 @@ public class Http {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        debug.Trace.debug = false;//mode débug activé : sortie console utilisable
         
         //chargement de la configuration
         config = new Configuration();
