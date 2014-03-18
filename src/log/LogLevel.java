@@ -1,5 +1,5 @@
 
-package http;
+package log;
 
 /**
  * Représente la gravité d'un log

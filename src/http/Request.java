@@ -1,7 +1,9 @@
 package http;
-
+import log.Log;
+import log.LogLevel;
 import debug.Trace;
-import http.headers.*;
+import http.headers.Action;
+import http.headers.Version;
 import java.util.ArrayList;
 
 /**

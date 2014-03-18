@@ -1,7 +1,7 @@
 /**
  * Fichier de log de l'application
  */
-package http;
+package log;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class Log {
     * @param pligne correspond à la ligne à écrire
     * @param pLvl correspond au niveau du fichier à écrire
     */
-    static synchronized void ajouterEntree(final String pligne, final LogLevel pLvl) {
+    public static synchronized void ajouterEntree(final String pligne, final LogLevel pLvl) {
         FileWriter fw;
         try {
             fw = new FileWriter(path + pLvl + ".log", true);
@@ -64,7 +64,7 @@ public class Log {
     /**.
      * termine la session des log et ferme les flux
      */
-    static synchronized void terminerSessionLog() {
+    public static synchronized void terminerSessionLog() {
         FileWriter fw;
         try {
             fw = new FileWriter(path, true);

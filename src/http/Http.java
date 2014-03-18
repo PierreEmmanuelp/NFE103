@@ -1,6 +1,7 @@
 package http;
 import java.io.IOException;
-
+import log.Log;
+import log.LogLevel;
 /**
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel

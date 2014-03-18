@@ -3,7 +3,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import debug.Trace;
-
+import log.Log;
+import log.LogLevel;
 /**.
  * représente le processus serveur qui attend les connexion sur le port PORT
  * @author Pierre-Emmanuel Pourquier

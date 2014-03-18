@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.*;
+import log.Log;
+import log.LogLevel;
 
 /**
  * Représente un client et réagit au requêtes reçues par celui-ci

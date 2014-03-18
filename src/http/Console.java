@@ -1,5 +1,6 @@
 package http;
-
+import log.Log;
+import log.LogLevel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
