@@ -99,8 +99,11 @@ public class Request {
      * @return le type d'action | null si aucune action
      */
     private Action parseActionHTTP(String pHeaderHTTP){
+        String headerHTTP="";
         Action action=null;
-        String headerHTTP = pHeaderHTTP.substring(0,pHeaderHTTP.indexOf(" ")); 
+        if (pHeaderHTTP.indexOf(" ") != -1) {
+          headerHTTP = pHeaderHTTP.substring(0,pHeaderHTTP.indexOf(" ")); 
+        }
          //TODO : vérifier que tout le monde est en 1.7
         //TODO : remplacer apr un switch sur STRING
         if(headerHTTP.equals("GET")){action = Action.GET;}else{
@@ -122,8 +125,13 @@ public class Request {
      */
     private String parseCibleHTTP(String pHeaderHTTP){
         String cible="";
-        String headerHTTP = pHeaderHTTP.substring(pHeaderHTTP.indexOf("/"));
-        cible = headerHTTP.substring(0,headerHTTP.indexOf(" "));
+        String headerHTTP="";
+        if (pHeaderHTTP.indexOf("/") != -1) {
+            headerHTTP = pHeaderHTTP.substring(pHeaderHTTP.indexOf("/"));
+        }
+        if (pHeaderHTTP.indexOf(" ") != -1) {
+            cible = headerHTTP.substring(0, headerHTTP.indexOf(" "));
+        }
         return cible;
     }
     
@@ -134,7 +142,10 @@ public class Request {
      */
     private Version parseVersionHTTP(String pHeaderHTTP){
         Version version = http.headers.Version.HTTP_0_9;
-        String header = pHeaderHTTP.substring(pHeaderHTTP.indexOf("HTTP/"));
+        String header="";
+        if (pHeaderHTTP.indexOf("HTTP/") != -1){
+            header = pHeaderHTTP.substring(pHeaderHTTP.indexOf("HTTP/"));
+        }
         if(header.equals("HTTP/1.1")){version = Version.HTTP_1_1;}else{
         if(header.equals("HTTP/1.0")){version = Version.HTTP_1_0;}else{
         if(header.equals("HTTP/0.9")){version = Version.HTTP_0_9;}}}
@@ -147,7 +158,10 @@ public class Request {
      * @return le host de la requête http
      */
     private String parseHostHTTP(String pHeaderHTTP){
-        String nomHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":")+2);  
+        String nomHost="";
+        if (pHeaderHTTP.indexOf(":") != -1){
+            nomHost = pHeaderHTTP.substring(pHeaderHTTP.indexOf(":")+2);  
+        }
         return nomHost;
     }
     
