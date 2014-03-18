@@ -13,12 +13,25 @@ import java.io.FileNotFoundException;
  * @return contenu
  */
 public class FileContent extends Content {
-
+    /**
+     *
+     */
     private String mime;
-    protected BufferedInputStream filestream;
+     /**
+     *
+     */
+    private BufferedInputStream filestream;
+     /**
+     *
+     */
     private int status;
+    /**
+     *
+     */
     private Long FileLenght;
-    //private String contenu;
+    /**
+     *
+     */
     private String pCheminCible;
 
     // private String Contenu;
@@ -30,22 +43,27 @@ public class FileContent extends Content {
 
     }
 
+    /**
+     *
+     */
     private void envoyerFichier() {
 
         try {
 
             File file = new File(this.pCheminCible); // Ouverture file
 
-            if (file.exists() && file.canRead()){
-            this.filestream = new BufferedInputStream(new FileInputStream(file)); //file dans stream
-            setLength(file.length());
-            setStatus(200);
-            setMime();
+            if (file.exists() && file.canRead()) {
+                //file dans stream
+           this.filestream = new BufferedInputStream(new FileInputStream(file));
+                setLength(file.length());
+                setStatus(200);
+                setMime();
             } else {
-              if (file.exists() && !file.canRead()){
-                setStatus(403);  
-              } else {                
-                setStatus(404);}
+                if (file.exists() && !file.canRead()) {
+                    setStatus(403);
+                } else {
+                    setStatus(404);
+                }
             }
         } catch (FileNotFoundException e) {
             setStatus(404);
@@ -60,38 +78,61 @@ public class FileContent extends Content {
 
     }
 
-    public String getMime() {
+    /**
+     *
+     * @return String
+     */
+    public final String getMime() {
         return mime;
     }
 
+    /**
+     *
+     */
     private void setMime() {
 
-        this.mime = Mime.extractTypeMime(this.pCheminCible);//Mime(this.pCheminCible);
+        this.mime = Mime.extractTypeMime(this.pCheminCible);
 
     }
 
-    private void setStatus(int code) {
+    /**
+     *
+     * @param code int
+     */
+    private void setStatus(final int code) {
         this.status = code;
     }
 
-    public int getStatus() {
+    /**
+     *
+     * @return int
+     */
+    public final int getStatus() {
         return this.status;
     }
 
-    public BufferedInputStream getFileContent() {
+    /**
+     *
+     * @return BufferedInputStream
+     */
+    public final BufferedInputStream getFileContent() {
         return this.filestream;
     }
 
-    private void setLength(Long length) {
+    /**
+     *
+     * @param length Long
+     */
+    private void setLength(final Long length) {
         this.FileLenght = length;
     }
 
     /**
-     * getLength : Retourne la taille du fichier
+     * getLength : Retourne la taille du fichier.
      *
      * @return Long taille du fichier pour construction du header
      */
-    public Long getLength() {
+    public final Long getLength() {
         return this.FileLenght;
     }
 }
