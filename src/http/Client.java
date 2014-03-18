@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
 import log.Log;
 import log.LogLevel;
 
@@ -136,8 +136,7 @@ public class Client implements Runnable {
      * @param stream le stream à envoyer
      */
     protected final void envoyer(final String[] data, final BufferedInputStream stream) {
-        int bufferSize;
-        bufferSize = 1024;
+        final int bufferSize = 1024;
         try {
             // ecriture du header
             out.writeBytes(data[0]);
