@@ -128,9 +128,10 @@ public class Request {
         String headerHTTP="";
         if (pHeaderHTTP.indexOf("/") != -1) {
             headerHTTP = pHeaderHTTP.substring(pHeaderHTTP.indexOf("/"));
-        }
+       
         if (pHeaderHTTP.indexOf(" ") != -1) {
             cible = headerHTTP.substring(0, headerHTTP.indexOf(" "));
+            } 
         }
         return cible;
     }
