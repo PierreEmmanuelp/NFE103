@@ -45,7 +45,7 @@ public class LogTest {
         try {
             Log instance = new Log();
             String expResult = "/home/pierre-emmanuel/";
-            String result = instance.getPATH();
+            String result = instance.getPath();
             assertEquals(expResult, result);
         } catch (IOException ex) {
             Logger.getLogger(LogTest.class.getName()).log(Level.SEVERE, null, ex);
