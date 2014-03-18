@@ -57,7 +57,9 @@ public class Serveur {
                 //creation de la socket
                 servSocket = new ServerSocket(this.port);
             } catch (IOException ex) {
-                Log.ajouterEntree("impossible de créer le socket" + ex.getMessage(), LogLevel.ERROR);
+                String msg;
+                msg = "impossible de créer le socket" + ex.getMessage();
+                Log.ajouterEntree(msg, LogLevel.ERROR);
                 Trace.trace("Erreur interne : socket indisponible");
             }
             int i;
@@ -85,7 +87,9 @@ public class Serveur {
                 }
             } catch (IOException e) {
                 Trace.trace("Serveur indisponible : socket libre? ");
-                Log.ajouterEntree("socket indisponible"+e.getMessage(),LogLevel.SYSTEM);
+                String msg;
+                msg = "socket indisponible" + e.getMessage();
+                Log.ajouterEntree(msg, LogLevel.SYSTEM);
             }
     }
 
@@ -97,7 +101,9 @@ public class Serveur {
             this.servSocket.close();
             Log.ajouterEntree("extinction du serveur", LogLevel.SYSTEM);
         } catch (IOException ex) {
-            Log.ajouterEntree("Impossible de stopper le serveur", LogLevel.SYSTEM);
+            String msg;
+            msg = "Impossible de stopper le serveur" + ex.getMessage();
+            Log.ajouterEntree(msg, LogLevel.SYSTEM);
         }
     }
 
