@@ -125,13 +125,10 @@ public class Request {
      */
     private String parseCibleHTTP(String pHeaderHTTP){
         String cible="";
-        String headerHTTP="";
-        if (pHeaderHTTP.indexOf("/") != -1) {
+        String headerHTTP;
+        if (pHeaderHTTP.indexOf("/") != -1 && pHeaderHTTP.indexOf(" ") != -1) {
             headerHTTP = pHeaderHTTP.substring(pHeaderHTTP.indexOf("/"));
-       
-        if (pHeaderHTTP.indexOf(" ") != -1) {
-            cible = headerHTTP.substring(0, headerHTTP.indexOf(" "));
-            } 
+            cible = headerHTTP.substring(0, headerHTTP.indexOf(" ")); 
         }
         return cible;
     }

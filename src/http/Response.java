@@ -26,10 +26,6 @@ public class Response {
     
     private BufferedInputStream pstream;
     /**
-     * Content
-     */
-    private static Content ContentQuest;
-    /**
      *
      */
     public static String request;
@@ -65,14 +61,17 @@ public class Response {
      * Current header.
      */
     private Hashtable HeadersRep = new Hashtable();
-    private String hostpath; // TODO depuis host
+    private String hostpath;
 
     /**
      * Constructeur
      */
     public Response(Header reqHeader) {
-        this.headerQuest = reqHeader;
-        this.hostpath = reqHeader.getHost().getPath();//ajout du host
+        Response.headerQuest = reqHeader;
+        try {
+        this.hostpath = reqHeader.getHost().getPath();//ajout du host     
+        } catch (Exception e) { // TODO       
+        }       
         this.pstream = null;
     }
 
@@ -105,7 +104,7 @@ public class Response {
         this.HeadersRep.put("Connection", "close"); // length of chain
 
         String line = "HTTP/1.1 " + Code + CRLF;
-        String key = "";
+        String key;
         Enumeration e = this.HeadersRep.keys();
         while (e.hasMoreElements()) {
             key = (String) e.nextElement();
@@ -122,7 +121,7 @@ public class Response {
          String[] response;
          response = new String[2];
          
-        if (request == null ? Response.INTERNAL_ERROR != null : !request.equals(Response.INTERNAL_ERROR)) {
+        if (request == null ? Response.INTERNAL_ERROR != null : !request.equals(INTERNAL_ERROR)) {
 
             // Si rien on met index.html  (add to param + path recupéré de host + header)
             if (Response.headerQuest.getCible().equals("/")) {
@@ -136,31 +135,31 @@ public class Response {
 
             switch (file.getStatus()) {
                 case 200:
-                    response[0] = this.headerRep(file.getLength().toString(),this.OK) ;
+                    response[0] = this.headerRep(file.getLength().toString(),OK) ;
                     response[1] = "OK";
                     setStream(file.getFileContent());
                     break;
                 case 404:
-                    response[0] = this.headerRep("400", this.NOT_FOUND); 
-                    response[1] = "<h1>" + this.NOT_FOUND + "</h1>";
+                    response[0] = this.headerRep("400", NOT_FOUND); 
+                    response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
                     break;
                 case 403:
-                    response[0] = this.headerRep("400", this.FORBIDDEN);
-                    response[1] =  "<h1>" + this.FORBIDDEN + "</h1>";
+                    response[0] = this.headerRep("400", FORBIDDEN);
+                    response[1] =  "<h1>" + FORBIDDEN + "</h1>";
                     break;
                 case 500:
-                    response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-                    response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[0] = this.headerRep("400", INTERNAL_ERROR);
+                    response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
                     break;
                 default:
-                    response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-                    response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+                    response[0] = this.headerRep("400", INTERNAL_ERROR);
+                    response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
                     System.out.println("Il faut davantage travailler.");
             }
 
         } else {
-            response[0] = this.headerRep("400", this.INTERNAL_ERROR);
-            response[1] = "<h1>" + this.INTERNAL_ERROR + "</h1>";
+            response[0] = this.headerRep("400", INTERNAL_ERROR);
+            response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
         }
 
         return response;
