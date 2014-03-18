@@ -66,8 +66,7 @@ public class FileContent extends Content {
 
     private void setMime() {
 
-        Mime Mime = new Mime();
-        this.mime = Mime.extractTypeMime(this.pCheminCible);
+        this.mime = Mime.extractTypeMime(this.pCheminCible);//Mime(this.pCheminCible);
 
     }
 

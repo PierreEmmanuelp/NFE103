@@ -23,7 +23,6 @@ public class Response {
      * Content
      */
 //    private static Content ContentRep;
-    
     private BufferedInputStream pstream;
     /**
      *
@@ -69,27 +68,29 @@ public class Response {
     public Response(Header reqHeader) {
         Response.headerQuest = reqHeader;
         try {
-        this.hostpath = reqHeader.getHost().getPath();//ajout du host     
+            this.hostpath = reqHeader.getHost().getPath();//ajout du host     
         } catch (Exception e) { // TODO       
-        }       
+        }
         this.pstream = null;
     }
 
     /**
-     * Todo : construction du header Recupération du header
+     * Todo : construction du header Recupération du header.
      *
-     * @return
+     * @param Code
+     * @param Length
+     * @return String
      */
-    private String headerRep(String Length, String Code) {
+    private String headerRep(final String Length, String Code) {
 
         Date date = new Date();
         String mimetostring;
-        
-        
-        if (!Code.substring(0,1).equals("4") && !Code.substring(0,1).equals("5")) { // si erreur
-               
-            Mime Mime = new Mime();
-            mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
+
+
+        if (!Code.substring(0, 1).equals("4")
+                && !Code.substring(0, 1).equals("5")) { // si erreur
+
+         mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
         } else {
             mimetostring = "text/html";
         }
@@ -100,7 +101,8 @@ public class Response {
         //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
         this.HeadersRep.put("Content-Length", Length); // length of chain
         //this.HeadersRep.put("Content-Length", Length); // length of chain
-    //    this.HeadersRep.put("Connection", "Keep-Alive;timeout=15, max=100"); // length of chain
+        //this.HeadersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
+        // length of chain
         this.HeadersRep.put("Connection", "close"); // length of chain
 
         String line = "HTTP/1.1 " + Code + CRLF;
@@ -115,12 +117,16 @@ public class Response {
 
     }
 
-    public String[] genereResponse(String request) { // TODO virer String request
+    /**
+     *
+     * @param request
+     * @return response
+     */
+    public final String[] genereResponse(String request) {
 
-        //String response = "";
-         String[] response;
-         response = new String[2];
-         
+        String[] response;
+        response = new String[2];
+
         if (request == null ? Response.INTERNAL_ERROR != null : !request.equals(INTERNAL_ERROR)) {
 
             // Si rien on met index.html  (add to param + path recupéré de host + header)
@@ -135,17 +141,17 @@ public class Response {
 
             switch (file.getStatus()) {
                 case 200:
-                    response[0] = this.headerRep(file.getLength().toString(),OK) ;
+                    response[0] = this.headerRep(file.getLength().toString(), OK);
                     response[1] = "OK";
                     setStream(file.getFileContent());
                     break;
                 case 404:
-                    response[0] = this.headerRep("400", NOT_FOUND); 
+                    response[0] = this.headerRep("400", NOT_FOUND);
                     response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
                     break;
                 case 403:
                     response[0] = this.headerRep("400", FORBIDDEN);
-                    response[1] =  "<h1>" + FORBIDDEN + "</h1>";
+                    response[1] = "<h1>" + FORBIDDEN + "</h1>";
                     break;
                 case 500:
                     response[0] = this.headerRep("400", INTERNAL_ERROR);
@@ -165,17 +171,26 @@ public class Response {
         return response;
     }
 
-    public void genererErreur500() {
+    /**
+     * Générer erreur 500
+     */
+    public final void genererErreur500() {
         this.genereResponse(INTERNAL_ERROR);
     }
-    
+
+    /**
+     *
+     * @param stream
+     */
     private void setStream(BufferedInputStream stream) {
-       this.pstream = stream;
+        this.pstream = stream;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public BufferedInputStream getStream() {
         return pstream;
-     }
-} 
-            
-
+    }
+}

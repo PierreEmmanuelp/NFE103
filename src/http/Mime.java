@@ -1,4 +1,5 @@
 package http;
+
 import debug.Trace;
 import org.apache.tika.Tika;
 
@@ -7,28 +8,34 @@ import org.apache.tika.Tika;
  * @author Pierre-Emmanuel Pourquier, Benjamin Pierrot
  * @version 2.0
  */
-public class Mime {
-    
-   private static String mediaType;
+public final class Mime {
 
-    public Mime() {
-        mediaType = "";
+    /**
+     * constructeur.
+     */
+    protected Mime() {
+        super();
     }
-   
-    public static String extractTypeMime(String pFichier){
-        
+
+    /**
+     * @param pFichier String Url du fichier en entrée.
+     * @return String Type mime
+     */
+    public static String extractTypeMime(final String pFichier) {
+
+        String mediaType = "";
         Tika tika = new Tika();
-        
-       try {
+
+        try {
             mediaType = tika.detect(pFichier);
             Trace.trace(mediaType);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Trace.trace(e.getMessage());
         }
-        
-       if (mediaType.equals("application/octet-stream")) {// TODO
-           mediaType = "text/html";
-       }
-            return  mediaType;
+
+        if (mediaType.equals("application/octet-stream")) {
+            mediaType = "text/html";
+        }
+        return mediaType;
     }
 }
