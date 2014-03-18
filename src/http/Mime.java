@@ -1,6 +1,6 @@
 package http;
 import debug.Trace;
-import org.apache.tika.Tika; // Utilisation de la library apache tika pour détecter le type mime
+import org.apache.tika.Tika;
 
 /**
  *
@@ -12,7 +12,7 @@ public class Mime {
    private static String mediaType;
 
     public Mime() {
-        this.mediaType = "";
+        mediaType = "";
     }
    
     public static String extractTypeMime(String pFichier){
@@ -23,7 +23,7 @@ public class Mime {
             mediaType = tika.detect(pFichier);
             Trace.trace(mediaType);
         } catch(Exception e) {
-            System.err.println(e.getMessage());
+            Trace.trace(e.getMessage());
         }
         
        if (mediaType.equals("application/octet-stream")) {// TODO
