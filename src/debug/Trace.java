@@ -1,22 +1,38 @@
-
-
 package debug;
-
-/**
+/**.
  * Permet d'écrire dans la sortie standard si la variable debug est a true;
  * @author Pourquier Pierre-Emmanuel
  * @version 1.0
  */
 public class Trace {
-    /**
-     * true : sortie console activée | false : sortie désactivée
+    /**.
+     * Boolean debug : si le projet est en mode debug
      */
-    static public boolean debug = false;
-    
-    static public void trace(String strLigne){
-        if(Trace.debug==true){
+    private static boolean debug = false;
+
+    /**.
+    * Ecrit la ligne dans la sortie standard si this.debug = true
+    * @param strLigne ligne à écrire
+    */
+    public static void trace(final String strLigne) {
+        if (Trace.debug) {
             System.out.println(strLigne);
         }
     }
 
+    /**.
+     * exprime si le projet est en debug
+     * @return true si le debug est actif
+     */
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    /**.
+     * permet de spécifié si le debug ets actif.
+     * @param pdebug true si le projet est en debug
+     */
+    public static void setDebug(final boolean pdebug) {
+        Trace.debug = pdebug;
+    }
 }
