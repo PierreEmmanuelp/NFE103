@@ -1,5 +1,6 @@
 package http;
-import http.headers.*;
+import http.headers.Action;
+import http.headers.Version;
 import java.util.Hashtable;
 
 /**
