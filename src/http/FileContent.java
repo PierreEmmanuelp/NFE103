@@ -28,17 +28,20 @@ public class FileContent extends Content {
     /**
      *
      */
-    private Long FileLenght;
+    private Long fileLenght;
     /**
      *
      */
     private String pCheminCible;
 
-    // private String Contenu;
+   /**
+    * 
+    * @param pCheminCible 
+    */
     public void openFile(String pCheminCible) {
         this.pCheminCible = pCheminCible;
         this.filestream = null;
-        this.FileLenght = null;
+        this.fileLenght = null;
         envoyerFichier();
 
     }
@@ -124,7 +127,7 @@ public class FileContent extends Content {
      * @param length Long
      */
     private void setLength(final Long length) {
-        this.FileLenght = length;
+        this.fileLenght = length;
     }
 
     /**
@@ -133,6 +136,6 @@ public class FileContent extends Content {
      * @return Long taille du fichier pour construction du header
      */
     public final Long getLength() {
-        return this.FileLenght;
+        return this.fileLenght;
     }
 }
