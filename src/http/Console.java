@@ -2,7 +2,6 @@ package http;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.Scanner;
 //import org.apache.torque.util.Criteria;
 //import org.apache.torque.TorqueException;
@@ -200,12 +199,12 @@ public class Console implements Runnable{
     {
         Scanner sc = new Scanner(System.in);
         try{
-            int portActuel = Http.config.getPORT();
+            int portActuel = Http.getConfig().getPORT();
             System.out.println("Le port d'écoute du serveur est actuellement le " + portActuel );
             System.out.println("Sur quel port d'écoute voulez vous connecté le serveur pour les connexions futures ? ");
             String port = sc.nextLine();
             
-            Http.config.setPort(Integer.parseInt(port));
+            Http.getConfig().setPort(Integer.parseInt(port));
             System.out.println("Le nouveau port d'écoute est " + port + " : enregistrement dans la configuration OK !");
         }
         catch(Exception e)
@@ -238,12 +237,12 @@ public class Console implements Runnable{
     {
         Scanner sc = new Scanner(System.in);
         try{
-            int nbThreadActuel = Http.config.getPoolThread();
+            int nbThreadActuel = Http.getConfig().getPoolThread();
             System.out.println("Le nombre de thread qui se démarre sur le serveur actuellement est de " + nbThreadActuel );
             System.out.println("Combien voulez vous démarré de thread pour les connexions futures ? ");
             String nbThread = sc.nextLine();
             
-            Http.config.setPoolThread(Integer.parseInt(nbThread));
+            Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
             System.out.println("Le nombre de thread qui se démarrera à la connexion du serveur sera dorénavant de " + nbThread + " : enregistrement dans la configuration OK !");
         }
         catch(Exception e)
