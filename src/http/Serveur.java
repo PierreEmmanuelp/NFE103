@@ -22,7 +22,7 @@ public class Serveur {
         /** Contient les différent host gérés par ce serveur.*/
         private static Hosts hosts;
 
-        /** Dernier thread utilisé*/
+        /** Dernier thread utilisé.*/
         private int lastIndex;
 
         /** onstructeur de la classe serveur.
@@ -109,7 +109,7 @@ public class Serveur {
     }
 
     /** Renvoit le port d'écoute du serveur.
-    * @return le port 
+    * @return le port.
     */
     public final int getPORT() {
         return this.port;
