@@ -35,7 +35,7 @@ public class Request {
     private void analyseRequest() {
         //première ligne : action
         String premierHead = request.get(0);
-        Trace.trace(premierHead);
+        Http.syslog.trace(premierHead);
         this.header.setAction(parseActionHTTP(premierHead));
         this.header.setCible(parseCibleHTTP(premierHead));
         this.header.setVersion(parseVersionHTTP(premierHead));
@@ -51,7 +51,7 @@ public class Request {
         }
         String msg;
         msg = "Req{" + this.header.toString() + this.content.toString() + "}";
-        Log.ajouterEntree(msg, LogLevel.REQUEST);
+        Http.requestlog.info(msg);
     }
 
     /** Vérifie si la requete nécessite du contenu.

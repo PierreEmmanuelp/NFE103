@@ -15,55 +15,68 @@ import org.apache.log4j.PatternLayout;
  */
 public final class LogNew {
 
-    /**
-     * Log d'erreur system.
-     */
+    /** Log d'erreur system.*/
     private final Logger syslog;
 
-    /**
-     * Log des requete.
-     */
+    /** Log des requete. */
     private final Logger requestLog;
 
-    /**
-     * Level de log pour la console.
-     */
-    private final Level lvlconsole = Level.ALL;
+    /**Level de log pour la console system.*/
+    private final Level lvlconsole;
 
-    /**
-     * Constructeur.
-     */
+    /** Level de log pour la console Request.*/
+    private final Level lvlRequest;
+
+    /** Constructeur.*/
     public LogNew() {
+        this.lvlconsole = Level.DEBUG;
+        this.lvlRequest = Level.TRACE;
         this.syslog = Logger.getLogger("system");
         syslog.setLevel(Level.ALL);
         StringBuilder motifConsole = new StringBuilder();
         motifConsole.append("%d{HH:mm:ss} - [%p] - %m %n");
 
         StringBuilder motifFichier = new StringBuilder();
-        motifFichier.append("%d{yyyy-MM-dd HH:mm:ss:SSS}"
-                + " - [%p] - [%C] - %m %n");
+        motifFichier.append("%d{yyyy-MM-dd HH:mm:ss:SSS}");
+        motifFichier.append(" - [%p] - [%C] - %m %n");
         //paramétrage de ce qui sera visible sur la console
-        ConsoleAppender stdout = new ConsoleAppender();
-        stdout.setName("Console");
-        stdout.setLayout(new PatternLayout(motifConsole.toString()));
-        stdout.activateOptions();
-        stdout.setThreshold(lvlconsole);
-        syslog.addAppender(stdout);
+        ConsoleAppender sysOut = new ConsoleAppender();
+        sysOut.setName("SysConsole");
+        sysOut.setLayout(new PatternLayout(motifConsole.toString()));
+        sysOut.activateOptions();
+        sysOut.setThreshold(lvlconsole);
+        syslog.addAppender(sysOut);
 
         //paramétrage de ce qui sera visible dans le fichier de log
+        PatternLayout layout = new PatternLayout(motifFichier.toString());
+        String syspath = http.Http.getConfig().getPathLog() + "/system.log";
         try {
-            PatternLayout layout = new PatternLayout(motifFichier.toString());
-            String path = http.Http.getConfig().getPathLog() + "/SYSTEM.log";
-            FileAppender fileout = new FileAppender(layout, path, true);
-            fileout.setName("SYSTEM.LOG");
-            fileout.activateOptions();
-            fileout.setThreshold(Level.INFO);
-            syslog.addAppender(fileout);
+            FileAppender sysfileout = new FileAppender(layout, syspath, true);
+            sysfileout.setName("system.log");
+            sysfileout.activateOptions();
+            sysfileout.setThreshold(Level.INFO);
+            syslog.addAppender(sysfileout);
         } catch (IOException ex) {
             syslog.fatal("error log" + ex.getMessage());
         }
 
         requestLog = Logger.getLogger("request");
+        String reqpath = http.Http.getConfig().getPathLog() + "/request.log";
+        ConsoleAppender reqOut = new ConsoleAppender();
+        reqOut.setName("ReqConsole");
+        reqOut.setLayout(new PatternLayout(motifConsole.toString()));
+        reqOut.activateOptions();
+        reqOut.setThreshold(lvlRequest);
+        requestLog.addAppender(sysOut);
+        try {
+            FileAppender reqfileout = new FileAppender(layout, reqpath, true);
+            reqfileout.setName("system.log");
+            reqfileout.activateOptions();
+            reqfileout.setThreshold(Level.INFO);
+            requestLog.addAppender(reqfileout);
+        } catch (IOException e) {
+            requestLog.error("error request log " + e.getMessage());
+        }
     }
 
     /**
@@ -74,4 +87,20 @@ public final class LogNew {
     public Logger getSyslog() {
         return syslog;
     }
+
+    /** Obtient le log de requete.
+     * @return le log requete
+     */
+    public Logger getRequestLog() {
+        return requestLog;
+    }
+
+    /** Obtient le niveau actuel de log dans la console
+     * @return le lvl de log
+     */
+    public Level getLvlconsole() {
+        return lvlconsole;
+    }
+    
+    
 }

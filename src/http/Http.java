@@ -1,7 +1,6 @@
 package http;
 import java.io.IOException;
 import log.Log;
-import log.LogLevel;
 import log.LogNew;
 import org.apache.log4j.Logger;
 /** Charge la configuration, démarre les log puis le serveur.
@@ -14,6 +13,9 @@ public final class Http {
 
     /** fichier de log system.*/
     public static Logger syslog;
+
+    /** fichier de log system.*/
+    public static Logger requestlog;
 
     /** représente la configuration.*/
     private static Configuration config;
@@ -34,7 +36,9 @@ public final class Http {
         config = new Configuration();
 
         try {
-            syslog = new LogNew().getSyslog();
+            LogNew logn = new LogNew();
+            requestlog = logn.getRequestLog();
+            syslog = logn.getSyslog();
             log = new Log();
         } catch (IOException e) {
             e.getMessage();
