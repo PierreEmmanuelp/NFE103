@@ -7,69 +7,68 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Serveur {
-        /** Port d'écoute du server.*/
-	private final int port;
+    /** Port d'écoute du server.*/
+    private final int port;
 
-        /** Nombre de thread démarrés sur le serveur.*/
-        private final int poolThread;
+    /** Nombre de thread démarrés sur le serveur.*/
+    private final int poolThread;
 
-        /** Socket du serveur.*/
-        private ServerSocket servSocket;
+    /** Socket du serveur.*/
+    private ServerSocket servSocket;
 
-        /** Tableau de clients (thread).*/
-	private final ArrayList<Client> clients;
+    /** Tableau de clients (thread).*/
+    private final ArrayList<Client> clients;
 
-        /** Contient les différent host gérés par ce serveur.*/
-        private static Hosts hosts;
+    /** Contient les différent host gérés par ce serveur.*/
+    private static Hosts hosts;
 
-        /** Dernier thread utilisé.*/
-        private int lastIndex;
+    /** Dernier thread utilisé.*/
+    private int lastIndex;
 
-        /** onstructeur de la classe serveur.
-         */
-	public Serveur() {
-            this.lastIndex = 0;
-            clients = new ArrayList();
+    /** onstructeur de la classe serveur.
+    */
+    public Serveur() {
+        this.lastIndex = 0;
+        clients = new ArrayList();
 
-            // récupération de la configuration depuis le fichier XML
-            this.port = http.Http.getConfig().getPORT();
-            this.poolThread = http.Http.getConfig().getPoolThread();
-            hosts = http.Http.getConfig().getHosts();
+        // récupération de la configuration depuis le fichier XML
+        this.port = http.Http.getConfig().getPORT();
+        this.poolThread = http.Http.getConfig().getPoolThread();
+        hosts = http.Http.getConfig().getHosts();
 
-            try {
-                //creation de la socket
-                servSocket = new ServerSocket(this.port);
-            } catch (IOException ex) {
-                String msg;
-                msg = "impossible de créer le socket" + ex.getMessage();
-                Http.syslog.fatal(msg);
+        try {
+            //creation de la socket
+            servSocket = new ServerSocket(this.port);
+        } catch (IOException ex) {
+            String msg;
+            msg = "impossible de créer le socket" + ex.getMessage();
+            Http.syslog.fatal(msg);
+        }
+        int i;
+        //creation du pool de thread
+        for (i = 0; i <= this.poolThread; i++) {
+            Client client = new Client();
+            clients.add(client);
+        }
+        Http.syslog.debug("pool de thread créé");
+    }
+    /** Démarre le mode écoute du serveur.
+     */
+    public final void start() {
+        try {
+            Http.syslog.info("server online");
+            while (true) { // attente en boucle d'une connexion
+                Client client;
+                // un client se connecte, on le renvoit sur un thread libre
+                client = this.getFreeClient();
+                client.traiteRequete(servSocket.accept());
+                client.getThread().interrupt();
             }
-            int i;
-            //creation du pool de thread
-            for (i = 0; i <= this.poolThread; i++) {
-                Client client = new Client();
-                clients.add(client);
-            }
-            Http.syslog.debug("pool de thread créé");
-	}
-
-	/** Démarre le mode écoute du serveur.
-	 */
-	public final void start() {
-            try {
-                Http.syslog.info("server online");
-                while (true) { // attente en boucle d'une connexion
-                    Client client;
-                    // un client se connecte, on le renvoit sur un thread libre
-                    client = this.getFreeClient();
-                    client.traiteRequete(servSocket.accept());
-                    client.getThread().interrupt();
-                }
-            } catch (IOException e) {
-                String msg;
-                msg = "socket indisponible" + e.getMessage();
-                Http.syslog.fatal(msg);
-            }
+        } catch (IOException e) {
+            String msg;
+            msg = "socket indisponible" + e.getMessage();
+            Http.syslog.fatal(msg);
+        }
     }
 
     /** Arrête le serveur.
