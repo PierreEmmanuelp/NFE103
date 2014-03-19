@@ -47,11 +47,10 @@ public class Console implements Runnable {
         try {
             Thread.sleep(tempPause);
         } catch (InterruptedException ex) {
-            Logger.getLogger(
-                    Console.class.getName()).log(Level.SEVERE, null, ex);
+            Http.syslog.error("Mise en pause impossible");
         }
         String commande;
-        Trace.trace(
+        Http.syslog.info(
                 "tapez /? pour une liste des commandes supportées \n");
         Scanner sconsole;
         sconsole = new Scanner(System.in);
@@ -95,7 +94,7 @@ public class Console implements Runnable {
                         restart();
                         break;
                     default:
-                        Trace.trace(
+                        Http.syslog.trace(
                                 "Ce que vous venez de saisir "
                                         + "n'est pas une commande valide ! "
                                         + "Veuillez réessayer en saisissant "
@@ -106,9 +105,7 @@ public class Console implements Runnable {
             }
 
         } catch (Exception e) {
-            Log.ajouterEntree(
-                    "Le lecteur de la console ne fonctionne pas",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("Le lecteur de la console ne fonctionne pas");
         }
     }
 
@@ -116,16 +113,16 @@ public class Console implements Runnable {
      * liste les commandes disponible sur le serveur
      */
     private void lsCommande() {
-        Trace.trace("/? : Liste des commandes");
-        Trace.trace("/getHost : Liste des hosts du système");
-        Trace.trace("/addHost : Créer un host");
-        Trace.trace("/rmHost : Supprimer un host");
-        Trace.trace("/getPort : Affiche le port d'écoute du serveur");
-        Trace.trace("/setPort : Modifier le port d'écoute du serveur");
-        Trace.trace("/getThread : Affiche le nombre de thread démarré");
-        Trace.trace("/setThread : Modifier le nombre de thread démarré");
-        Trace.trace("/quit : Quitter le serveur");
-        Trace.trace("/author : Auteurs de l'application");
+        System.out.println("/? : Liste des commandes");
+        System.out.println("/getHost : Liste des hosts du système");
+        System.out.println("/addHost : Créer un host");
+        System.out.println("/rmHost : Supprimer un host");
+        System.out.println("/getPort : Affiche le port d'écoute du serveur");
+        System.out.println("/setPort : Modifier le port d'écoute du serveur");
+        System.out.println("/getThread : Affiche le nombre de thread démarré");
+        System.out.println("/setThread : Modifier le nombre de thread démarré");
+        System.out.println("/quit : Quitter le serveur");
+        System.out.println("/author : Auteurs de l'application");
     }
 
     /**.
@@ -133,17 +130,17 @@ public class Console implements Runnable {
      */
     private void listerHost() {
         try {
-            Trace.trace("Voici les hosts déjà connus :");
+            System.out.println("Voici les hosts déjà connus :");
             if (Serveur.getHost().getHostList() != null
                     && Serveur.getHost().getHostList().size() > 0) {
                 int i;
 
-                Trace.trace("Il y a actuellement "
+                System.out.println("Il y a actuellement "
                         + Serveur.getHost().getHostList().size()
                         + " host(s) dans le système.\n");
 
                 for (i = 0; i < Serveur.getHost().getHostList().size(); i++) {
-                    Trace.trace(i
+                    System.out.println(i
                             + ": Nom : "
                             + Serveur.getHost().getHostList().get(i).getName()
                             + " - Chemin : "
@@ -151,7 +148,7 @@ public class Console implements Runnable {
                             + "\n");
                 }
             } else {
-                Trace.trace("Il n'y a aucun host sur le système");
+                System.out.println("Il n'y a aucun host sur le système");
             }
         } catch (Exception e) {
             Log.ajouterEntree(e.toString(), LogLevel.SYSTEM);
@@ -164,13 +161,13 @@ public class Console implements Runnable {
     private void ajouterHost() {
         Scanner sc = new Scanner(System.in);
         try {
-            Trace.trace("Veuillez saisir le nom du host à ajouter");
+            System.out.println("Veuillez saisir le nom du host à ajouter");
             String nomHost = sc.nextLine();
-            Trace.trace("Le nom du host que vous aller créer est : "
+            System.out.println("Le nom du host que vous aller créer est : "
                     + nomHost + "\n");
-            Trace.trace("Veuillez saisir le chemin du host");
+            System.out.println("Veuillez saisir le chemin du host");
             String pathHost = sc.nextLine();
-            Trace.trace("Le chemin du host que vous aller créer est : "
+            System.out.println("Le chemin du host que vous aller créer est : "
                     + pathHost
                     + "\n");
 
@@ -178,7 +175,7 @@ public class Console implements Runnable {
             Serveur.getHost().addHost(host);
 
             if (Serveur.getHost().getHostList().size() > 0) {
-                Trace.trace("Le host "
+                System.out.println("Le host "
                         + nomHost
                         + " qui a comme chemin "
                         + pathHost
@@ -198,13 +195,13 @@ public class Console implements Runnable {
     private void supprimerHost() {
         Scanner sc = new Scanner(System.in);
         try {
-            Trace.trace("Quel host souhaitez-vous supprimer : taper son nom ");
+            System.out.println("Quel host souhaitez-vous supprimer : taper son nom ");
             String nomHost = sc.nextLine();
 
             // on recherche si le nom saisi appartient bien a un host
             Host host = Serveur.getHost().getHost(nomHost);
             if (host != null) {
-                Trace.trace("\nEst ce que vous êtes sur "
+                System.out.println("\nEst ce que vous êtes sur "
                         + "de vouloir supprimer le host "
                         + nomHost + " ? o/n ");
                 switch (sc.nextLine()) {
@@ -212,23 +209,23 @@ public class Console implements Runnable {
                         // si le systeme a bien un host pour le nom saisi
                         //on supprime le host
                         Serveur.getHost().removeHost(host);
-                        Trace.trace("Le host "
+                        System.out.println("Le host "
                                 + nomHost
                                 + " a bien été supprimé \n");
                         break;
                     case "n":
-                        Trace.trace("Suppression du host "
+                        System.out.println("Suppression du host "
                                 + nomHost
                                 + " a été annulée \n");
                         break;
                     default:
-                        Trace.trace("Ce caractère n'est pas pris en compte ! "
+                        System.out.println("Ce caractère n'est pas pris en compte ! "
                                 + "Veuillez recommencez !  \n");
                         supprimerHost();
                         break;
                 }
             } else {
-                Trace.trace("Le nom que vous avez saisi ne correspond "
+                System.out.println("Le nom que vous avez saisi ne correspond "
                         + "à aucun des hosts du système \n");
                 supprimerHost();
             }
@@ -244,7 +241,7 @@ public class Console implements Runnable {
     private void listerPort() {
         try {
             int port = serveur.getPORT();
-            Trace.trace("Actuellement le serveur est connecté "
+            System.out.println("Actuellement le serveur est connecté "
                     + "sur le port d'écoute "
                     + port
                     + "\n");
@@ -261,14 +258,14 @@ public class Console implements Runnable {
         Scanner sc = new Scanner(System.in);
         try {
             int portActuel = Http.getConfig().getPORT();
-            Trace.trace("Le port d'écoute du serveur est actuellement le "
+            System.out.println("Le port d'écoute du serveur est actuellement le "
                     + portActuel);
-            Trace.trace("Sur quel port d'écoute voulez vous connecté "
+            System.out.println("Sur quel port d'écoute voulez vous connecté "
                     + "le serveur pour les connexions futures ? ");
             String port = sc.nextLine();
 
             Http.getConfig().setPort(Integer.parseInt(port));
-            Trace.trace("Le nouveau port d'écoute est "
+            System.out.println("Le nouveau port d'écoute est "
                     + port
                     + " : enregistrement dans la configuration OK !");
         } catch (NumberFormatException e) {
@@ -285,7 +282,7 @@ public class Console implements Runnable {
     private void listerThread() {
         try {
             int poolThread = serveur.getPoolThread();
-            Trace.trace("Actuellement il y a "
+            System.out.println("Actuellement il y a "
                     + poolThread
                     + " thread de démarrés sur le serveur. \n");
         } catch (Exception e) {
@@ -302,15 +299,15 @@ public class Console implements Runnable {
         Scanner sc = new Scanner(System.in);
         try {
             int nbThreadActuel = Http.getConfig().getPoolThread();
-            Trace.trace("Le nombre de thread qui se démarre "
+            System.out.println("Le nombre de thread qui se démarre "
                     + "sur le serveur actuellement est de "
                     + nbThreadActuel);
-            Trace.trace("Combien voulez vous démarré de thread "
+            System.out.println("Combien voulez vous démarré de thread "
                     + "pour les connexions futures ? ");
             String nbThread = sc.nextLine();
 
             Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
-            Trace.trace("Le nombre de thread qui se démarrera "
+            System.out.println("Le nombre de thread qui se démarrera "
                     + "à la connexion du serveur sera dorénavant de "
                     + nbThread
                     + " : enregistrement dans la configuration OK !");
@@ -325,7 +322,7 @@ public class Console implements Runnable {
      * Afficher les auteurs de l'application
      */
     private void lsAuthor() {
-        Trace.trace("Author :"
+        System.out.println("Author :"
                 + "\nPinatel Morgan"
                 + "\nTruchard Hervé"
                 + "\nPourquier Pierre-Emmanuel"
@@ -340,9 +337,9 @@ public class Console implements Runnable {
         try {
             if (serveur == null) {
                 serveur.start();
-                Trace.trace("Le serveur vient d'être démarré");
+                System.out.println("Le serveur vient d'être démarré");
             } else {
-                Trace.trace("Le serveur est déjà démarré");
+                System.out.println("Le serveur est déjà démarré");
             }
         } catch (Exception e) {
             Log.ajouterEntree("La connexion du serveur "
@@ -372,9 +369,9 @@ public class Console implements Runnable {
         try {
             if (serveur != null) {
                 serveur.stop();
-                Trace.trace("Le système est bien arrêté");
+                System.out.println("Le système est bien arrêté");
             } else {
-                Trace.trace("Le système est déjà arrêté");
+                System.out.println("Le système est déjà arrêté");
             }
         } catch (Exception e) {
             Log.ajouterEntree("L'arrêt du serveur n'a pas fonctionné",
