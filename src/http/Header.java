@@ -1,7 +1,8 @@
 package http;
+
 import http.headers.Action;
 import http.headers.Version;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  *
@@ -9,54 +10,90 @@ import java.util.Hashtable;
  * @version 1.1
  */
 public class Header {
+    /**action http du header.*/
     private Action action;
-    private Host host;
-    private String cible;
-    private Version version;
-    private Hashtable parametres;
 
+    /**Host de ce header.*/
+    private Host host;
+
+    /**Cible (page) demandé pour ce header.*/
+    private String cible;
+
+    /**Version préconisée par el header.*/
+    private Version version;
+
+    /**Paramètres de ce header.*/
+    private HashMap parametres;
+
+    /**Constructeur de la classe.*/
     public Header() {
-        this.parametres = new Hashtable();
-    }    
-    
-    public Hashtable getParametres() {
+        this.parametres = new HashMap();
+    }
+
+    /**Renvoit les paramètres de ce header.
+     * @return les paramètres.
+     */
+    public final HashMap getParametres() {
         return parametres;
     }
-    
-    public Action getAction() {
+
+     /**Renvoit l'action de ce header.
+     * @return l'action.
+     */
+    public final Action getAction() {
         return action;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+     /**Enregistre l'action dans ce header.
+      *@param action l'action à enrigstrer.
+     */
+    public final void setAction(final Action paction) {
+        this.action = paction;
     }
 
-    public Host getHost() {
+     /**Renvoit le host de ce header.
+     * @return le host.
+     */
+    public final Host getHost() {
         return host;
     }
 
-    public void setHost(Host host) {
-        this.host = host;
+    /** Enregistre le host de ce header.
+     * @param host l'host à enregistrer
+     */
+    public final void setHost(final Host phost) {
+        this.host = phost;
     }
 
-    public String getCible() {
+     /**Renvoit la cible de ce header.
+     * @return la cible.
+     */
+    public final String getCible() {
         return cible;
     }
 
-    public void setCible(String cible) {
-        this.cible = cible;
+    /** Enregistre la cible de ce header.
+     * @param cible la cible à enregistrer
+     */
+    public final void setCible(final String pcible) {
+        this.cible = pcible;
     }
 
-    public void setVersion(Version version) {
-        this.version = version;
+    /**Enregistre la version de ce header. 
+     * @param version la version à enregistrer
+     */
+    public final void setVersion(final Version pversion) {
+        this.version = pversion;
     }
-
-    public Version getVersion() {
+     /**Renvoit la version de ce header.
+     * @return la version.
+     */
+    public final Version getVersion() {
         return version;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "Header{" + "action=" + action + ", host=" + host + ", cible=" + cible + ", version=" + version + '}';
     }
 }
