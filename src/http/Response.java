@@ -1,6 +1,5 @@
 package http;
 
-import debug.Trace;
 import java.io.BufferedInputStream;
 import java.util.Date;
 import java.util.Enumeration;
@@ -77,7 +76,7 @@ public class Response {
         try {
             this.hostpath = reqHeader.getHost().getPath(); //ajout du host
         } catch (Exception e) { // TODO
-            Trace.trace("Class response error ligne 80: " + e);
+            Http.syslog.error("error ligne 79: " + e);
         }
         this.pstream = null;
     }
@@ -141,9 +140,7 @@ public class Response {
 // Si rien on met index.html  (add to param + path recupéré de host + header)
             if (Response.headerQuest.getCible().equals("/")) {
                 request = request + "index.html";
-                if (Trace.isDebug()) {
-                    Trace.trace("Acces racine launch index.html");
-                }
+                Http.requestlog.trace("Acces racine launch index.html");
             }
 
             FileContent file = new FileContent();
@@ -171,7 +168,7 @@ public class Response {
             default:
                 response[0] = this.headerRep("400", INTERNAL_ERROR);
                 response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
-                Trace.trace("Erreur interne (response)");
+                Http.requestlog.error("Erreur interne (response)");
             }
 
         } else {
