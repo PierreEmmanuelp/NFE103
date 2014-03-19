@@ -95,12 +95,10 @@ public final class LogNew {
         return requestLog;
     }
 
-    /** Obtient le niveau actuel de log dans la console
+    /** Obtient le niveau actuel de log dans la console.
      * @return le lvl de log
      */
     public Level getLvlconsole() {
         return lvlconsole;
     }
-    
-    
 }
