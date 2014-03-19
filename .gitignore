@@ -1,4 +1,6 @@
 /nbproject/private/
 /build/
 parametres.xml
-/dist/
+/dist/lib
+/dist/NFE103.jar
+/dist/README.TXT
