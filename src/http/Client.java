@@ -29,6 +29,9 @@ public class Client implements Runnable {
     /** Si le thread est libre.*/
     private Boolean free = true;
 
+    /** Temp de pause du thread.*/
+    private final int tempPause = 100000;
+
     /** Créer le client et démarre le thread.*/
     public Client() {
         this.thread = new Thread(this);
@@ -59,7 +62,7 @@ public class Client implements Runnable {
                 try {
                     this.free = true; //le thread est libre, il dort
                     Http.syslog.trace(this.thread.getName() + "a été endormi");
-                    Thread.sleep(100000);
+                    Thread.sleep(tempPause);
                 } catch (InterruptedException ex) {
                     this.free = false; //le client devient occupé
                     break; // Sortie de la boucle infinie attendre
@@ -78,7 +81,8 @@ public class Client implements Runnable {
                 Http.syslog.error(msg);
             }
             try { //lecture dans le socket
-                while ((line = in.readLine()) != null && line.length() > 0) {
+                line = in.readLine();
+                while (line != null && line.length() > 0) {
                         header.add(line);
                     }
                 requete = new Request(header);
@@ -120,7 +124,8 @@ public class Client implements Runnable {
      * @param data texte a envoyer
      * @param stream le stream à envoyer
      */
-    protected final void envoyer(final String[] data, final BufferedInputStream stream) {
+    protected final void envoyer(final String[] data,
+            final BufferedInputStream stream) {
         final int bufferSize = 1024;
         try {
             // ecriture du header

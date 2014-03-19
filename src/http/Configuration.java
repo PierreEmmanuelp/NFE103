@@ -15,7 +15,7 @@ import org.jdom2.output.*;
  * @version 2.1
  */
 public class Configuration {
-    
+
     private final String pathParametres;
     private static org.jdom2.Document document;
     private int poolThread;
@@ -24,10 +24,10 @@ public class Configuration {
     private Hosts hosts;
 
     /**
-    * contructeur de la classe. 
-    */
-    public Configuration(){
-        pathParametres="parametres.xml";
+     * contructeur de la classe.
+     */
+    public Configuration() {
+        pathParametres = "parametres.xml";
         Element racine = parser();
         String portValue = racine.getChild("port").getText();
         this.port = Integer.parseInt(portValue);
@@ -37,55 +37,50 @@ public class Configuration {
         this.hosts = new Hosts();
         Element hostsElement = racine.getChild("hosts");
         List<Element> hostList = hostsElement.getChildren("host");
-        Iterator<Element> i = hostList.iterator();		
-        while(i.hasNext()){
-            Element element = (Element)i.next();
+        Iterator<Element> i = hostList.iterator();
+        while (i.hasNext()) {
+            Element element = (Element) i.next();
             Attribute name = element.getAttribute("name");
             Attribute path = element.getAttribute("path");
-            File f = new File (path.getValue());
+            File f = new File(path.getValue());
             String pathValue;
-            if (f.exists()){
-                  pathValue = path.getValue();
-            }else{
-                  pathValue = "error 404";
+            if (f.exists()) {
+                pathValue = path.getValue();
+            } else {
+                pathValue = "error 404";
             }
-            Host host = new Host(name.getValue() ,pathValue);
+            Host host = new Host(name.getValue(), pathValue);
             this.hosts.addHost(host);
         }
     }
-    
+
     /**
-    * permet de modifier les paramètres
-    */
-    private void modifier(String param, String child){
+     * permet de modifier les paramètres
+     */
+    private void modifier(String param, String child) {
         Element racine = parser();
         Element courant = racine.getChild(child);
         courant.setText(param);
         XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-        try
-        {
+        try {
             sortie.output(document, new FileOutputStream(pathParametres));
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
-     
+
     /**
-    * permet de récupérer la racine
-    */
-    private Element parser(){
-        Element racine = new Element("configuration"); 
+     * permet de récupérer la racine
+     */
+    private Element parser() {
+        Element racine = new Element("configuration");
         document = new Document(racine);
         SAXBuilder sxb = new SAXBuilder();
-        try
-        {
+        try {
             document = sxb.build(new File(pathParametres));
-        }
-        catch(JDOMException e){
+        } catch (JDOMException e) {
             System.out.println(e);
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e);
         }
         racine = document.getRootElement();
@@ -93,98 +88,96 @@ public class Configuration {
     }
 
     /**
-    * permet d'enregistrer le hotes dans le fichier de paramètres
-    */
-    public void upHosts(){
+     * permet d'enregistrer le hotes dans le fichier de paramètres
+     */
+    public void upHosts() {
         Element racine = parser();
         Element hostsElement = racine.getChild("hosts");
         hostsElement.removeChildren("host");
-        Iterator<Host> i = this.hosts.getHostList().iterator();		
-        while(i.hasNext()){
-            Host host = (Host)i.next();
+        Iterator<Host> i = this.hosts.getHostList().iterator();
+        while (i.hasNext()) {
+            Host host = (Host) i.next();
             String hostName = host.getName();
-            String hostPath = host.getPath();  
+            String hostPath = host.getPath();
             Element theHost = new Element("host");
             hostsElement.addContent(theHost);
-            Attribute attName = new Attribute("name",hostName);
-            Attribute attPath = new Attribute("path",hostPath);
+            Attribute attName = new Attribute("name", hostName);
+            Attribute attPath = new Attribute("path", hostPath);
             theHost.setAttribute(attName);
             theHost.setAttribute(attPath);
         }
         XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-        try
-        {
+        try {
             sortie.output(document, new FileOutputStream(pathParametres));
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
-    
+
     /**
-    * permet de récupérer le nombre de thread défini pour le pool
-    * @return un nombre de thread
-    */
-    public int getPoolThread() 
-    {
+     * permet de récupérer le nombre de thread défini pour le pool
+     *
+     * @return un nombre de thread
+     */
+    public int getPoolThread() {
         return poolThread;
     }
 
     /**
-    * permet de récupérer le port du socket
-    * @return le port du socket
-    */
-    public int getPORT() 
-    {
+     * permet de récupérer le port du socket
+     *
+     * @return le port du socket
+     */
+    public int getPORT() {
         return port;
     }
 
     /**
-    * permet de récupérer le chemin du fichier de log
-    * @return le chemin du fichier de log
-    */
-    public String getPathLog() 
-    {
+     * permet de récupérer le chemin du fichier de log
+     *
+     * @return le chemin du fichier de log
+     */
+    public String getPathLog() {
         return pathLog;
     }
-    
+
     /**
-    * permet de récupérer la liste des hôtes
-    * @return la liste des hôtes
-    */
-    public Hosts getHosts() 
-    {
+     * permet de récupérer la liste des hôtes
+     *
+     * @return la liste des hôtes
+     */
+    public Hosts getHosts() {
         return hosts;
     }
-    
+
     /**
-    * permet de définir le nombre de thread défini pour le pool
-    * @param pPoolThread
-    */
-    public void setPoolThread(int pPoolThread) 
-    {
-        this.poolThread=pPoolThread;
+     * permet de définir le nombre de thread défini pour le pool
+     *
+     * @param pPoolThread
+     */
+    public void setPoolThread(int pPoolThread) {
+        this.poolThread = pPoolThread;
         modifier(String.valueOf(this.poolThread), "threadpool");
     }
-   
+
     /**
-    * permet de définir le port du socket
-    * @param pPort
-    */
-    public void setPort(int pPort)
-    {
-        this.port=pPort;
+     * permet de définir le port du socket
+     *
+     * @param pPort
+     */
+    public void setPort(int pPort) {
+        this.port = pPort;
         modifier(String.valueOf(this.port), "port");
     }
-    
+
     /**
-    * permet de définir le chemin du fichier de log
-    * @param pPathLog
-    */
-    public void setPathLog(String pPathLog) 
-    {
-        this.pathLog=pPathLog;
+     * permet de définir le chemin du fichier de log
+     *
+     * @param pPathLog
+     */
+    public void setPathLog(String pPathLog) {
+        this.pathLog = pPathLog;
         modifier(this.pathLog, "pathlog");
     }
-    
+
 }
