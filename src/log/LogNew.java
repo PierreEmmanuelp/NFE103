@@ -28,7 +28,7 @@ public final class LogNew {
     /**
      * Level de log pour la console.
      */
-    private final Level lvlconsole = Level.INFO;
+    private final Level lvlconsole = Level.ALL;
 
     /**
      * Constructeur.
@@ -53,7 +53,7 @@ public final class LogNew {
         //paramétrage de ce qui sera visible dans le fichier de log
         try {
             PatternLayout layout = new PatternLayout(motifFichier.toString());
-            String path = http.Http.getConfig().getPathLog();
+            String path = http.Http.getConfig().getPathLog()+"/SYSTEM.log";
             FileAppender fileout = new FileAppender(layout, path, true);
             fileout.setName("SYSTEM.LOG");
             fileout.activateOptions();
