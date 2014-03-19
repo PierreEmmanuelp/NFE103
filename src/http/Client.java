@@ -68,7 +68,7 @@ public class Client implements Runnable {
                     break; // Sortie de la boucle infinie attendre
                 }
             }
-            Http.syslog.trace(this.thread.getName() + "a été réveillé");
+            Http.syslog.trace(this.thread.getName() + " a été réveillé");
             //le thread est réveillé
             try { //création des reader et writer
                 InputStreamReader is;
@@ -77,15 +77,16 @@ public class Client implements Runnable {
                 out = new DataOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 String msg;
-                msg = "stream in/out incréable" +  e.getMessage();
+                msg = "stream in/out incréable " +  e.getMessage();
                 Http.syslog.error(msg);
             }
             try { //lecture dans le socket
-                line = in.readLine();
-                while (line != null && line.length() > 0) {
-                        header.add(line);
-                    }
+                while ((line = in.readLine())!= null && line.length() > 0) {
+                    Http.syslog.trace(line);
+                    header.add(line);
+                }
                 requete = new Request(header);
+                header = null;
                 //lecture du content (en cas de post) :
                 if (requete.besoinContent()) {
                     line = in.readLine();
@@ -94,7 +95,7 @@ public class Client implements Runnable {
                 }
             } catch (IOException ex) {
                     String msg;
-                    msg = "Err lecture socket / client.java" + ex.getMessage();
+                    msg = "Err lecture socket" + ex.getMessage();
                     Http.syslog.error(msg);
             }
 
