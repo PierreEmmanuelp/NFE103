@@ -1,22 +1,17 @@
 
 package log;
 
-/**.
- * Représente la gravité d'un log
+/** Représente la gravité d'un log.
  * @author Pierre-Emmanuel Pourquier
  * @version 1.0
  */
 public enum LogLevel {
-    /**.
-     * log système
-     */
+    /** log système.*/
     SYSTEM,
-    /**.
-     * log d'erreur
-     */
+
+    /** log d'erreur.*/
     ERROR,
-    /**.
-     * log une requete
-     */
+
+    /** log une requete.*/
     REQUEST;
 }

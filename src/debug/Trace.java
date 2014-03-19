@@ -4,7 +4,7 @@ package debug;
  * @version 1.0
  */
 public class Trace {
-    /** Boolean debug : si le projet est en mode debug.
+    /** si le projet est en mode debug.
      */
     private static boolean debug = false;
 
@@ -17,14 +17,14 @@ public class Trace {
         }
     }
 
-    /** exprime si le projet est en debug.
+    /** Si le projet est en debug.
      * @return true si le debug est actif
      */
     public static boolean isDebug() {
         return debug;
     }
 
-    /** permet de spécifié si le debug est actif.
+    /** permet de spécifier si le debug est actif.
      * @param pdebug true si le projet est en debug
      */
     public static void setDebug(final boolean pdebug) {

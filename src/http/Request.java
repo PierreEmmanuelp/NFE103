@@ -6,29 +6,21 @@ import http.headers.Action;
 import http.headers.Version;
 import java.util.ArrayList;
 
-/**.
- * Correspond à une requete HTTP
+/** Requete HTTP.
  * @author Pierre-Emmanuel Pourquier
  * @version 1.1
  */
 public class Request {
-    /**.
-     * Header de la requete HTTP
-     */
+    /** Header de la requete HTTP.*/
     private final Header header;
 
-    /**.
-     * Contenu de la requete HTTP
-     */
+    /** Contenu de la requete HTTP.*/
     private Content content;
 
-    /**.
-     * Requete brute à analyser
-     */
+    /** Requete brute à analyser.*/
     private final ArrayList<String> request;
 
-    /**.
-     * Constructeur de la requete
+    /** Constructeur de la requete.
      * @param pRequete requete http à analyser
      */
     public Request(final ArrayList<String> pRequete) {
@@ -38,8 +30,7 @@ public class Request {
         analyseRequest();
     }
 
-    /**.
-     * parse request pour créer un header et un content
+    /** Parse request pour créer un header et un content.
      */
     private void analyseRequest() {
         //première ligne : action
@@ -63,8 +54,7 @@ public class Request {
         Log.ajouterEntree(msg, LogLevel.REQUEST);
     }
 
-    /**.
-     * vérifie si la requete nécessite du contenu
+    /** Vérifie si la requete nécessite du contenu.
      * @return true si besoin d'un content
      */
     public final boolean besoinContent() {
@@ -75,38 +65,35 @@ public class Request {
       //}
     }
 
-    /**.
-     * analyse le contenu
+    /** Analyse le contenu.
      * @param pContenu le contenu au format string de la requete http initiale
      */
     public final void analyseContent(final String pContenu) {
 
     }
 
-    /**.
-     * @return le header de la requete
+    /** Renvoit le Header correspondant à cette requête.
+     * @return le Header.
      */
     public final Header getHeader() {
         return header;
     }
 
-    /**.
-     * @return le contenu de la requete
+    /** Renvoit le Content correspondant à cette requête.
+     * @return le content.
      */
     public final Content getContent() {
         return content;
     }
 
-    /**.
-     * ajoute le contenu de la requete
-     * @param pcontent le contenu a ajouter
+    /** Ajoute le contenu à la requete.
+     * @param pcontent le contenu
      */
     public final void setContent(final Content pcontent) {
         this.content = pcontent;
     }
 
-    /**.
-     * parse la première ligne http et en extrait l'action
+    /** Parse la première ligne http et en extrait l'action.
      * @param pHeaderHTTP la première ligne du header contenant l'action
      * @return le type d'action | null si aucune action
      */
@@ -151,8 +138,7 @@ public class Request {
         return action;
     }
 
-    /**.
-     * parse la première enête http et extrait la cible de celle-ci
+    /** Parse la première enête http et extrait la cible de celle-ci.
      * @param pHeaderHTTP la première entête d'une requête HTTP
      * @return la cible de la requête http
      */
@@ -166,8 +152,7 @@ public class Request {
         return cible;
     }
 
-    /**.
-     * parse la première entête http et extrait la version de celle-ci
+    /** Parse la première entête http et extrait la version de celle-ci.
      * @param pHeaderHTTP la première entête d'une requête HTTP
      * @return la version du protocole de la requête http
      */
@@ -193,8 +178,7 @@ public class Request {
         return version;
     }
 
-    /**.
-     * parse la première entête http et extrait le host de celle-ci
+    /** Parse la première entête http et extrait le host de celle-ci.
      * @param pHeaderHTTP la première entête d'une requête HTTP
      * @return le host de la requête http
      */
@@ -206,8 +190,7 @@ public class Request {
         return nomHost;
     }
 
-    /**.
-     * parse une ligne de requête http et l'ajoute au hastable
+    /** Parse une ligne de requête http et l'ajoute au hastable.
      * @param pHeaderHTTP la ligne de requête à parser
     */
     private void parseArgument(final String pHeaderHTTP) {

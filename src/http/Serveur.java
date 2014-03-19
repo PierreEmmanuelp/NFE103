@@ -5,44 +5,30 @@ import java.util.ArrayList;
 import debug.Trace;
 import log.Log;
 import log.LogLevel;
-/**.
- * représente le processus serveur qui attend les connexion sur le port PORT
+/** Serveur http qui attend les connexions.
  * @author Pierre-Emmanuel Pourquier
  * @version 1.0
- *
  */
 public class Serveur {
-        /**.
-         * port du server
-         */
+        /** Port d'écoute du server.*/
 	private final int port;
 
-        /**.
-         * nombre de thread démarrer sur le serveur
-         */
+        /** Nombre de thread démarrés sur le serveur.*/
         private final int poolThread;
-        /**.
-         * socket du serveur
-         */
+
+        /** Socket du serveur.*/
         private ServerSocket servSocket;
 
-        /**.
-         * tableau de clients (thread)
-         */
+        /** Tableau de clients (thread).*/
 	private final ArrayList<Client> clients;
 
-        /**.
-         * contient les différent host gérés par ce serveur
-         */
+        /** Contient les différent host gérés par ce serveur.*/
         private static Hosts hosts;
 
-        /**.
-         * représente le dernier thread utilisé
-         */
+        /** Dernier thread utilisé*/
         private int lastIndex;
 
-        /**.
-         * Constructeur de la classe serveur
+        /** onstructeur de la classe serveur.
          */
 	public Serveur() {
             this.lastIndex = 0;
@@ -71,8 +57,7 @@ public class Serveur {
             Log.ajouterEntree("pool de thread créé", LogLevel.SYSTEM);
 	}
 
-	/**.
-	 * démarre le mode écoute du serveur
+	/** Démarre le mode écoute du serveur.
 	 */
 	public final void start() {
             try {
@@ -93,8 +78,7 @@ public class Serveur {
             }
     }
 
-    /**.
-    * arrête le serveur
+    /** Arrête le serveur.
     */
     public final void stop() {
         try {
@@ -107,8 +91,7 @@ public class Serveur {
         }
     }
 
-    /**.
-    *  return le premier thread disponible
+    /** Renvoit le premier thread disponible.
     * @return le thread
     */
     private Client getFreeClient() {
@@ -131,24 +114,22 @@ public class Serveur {
         return clients.get(index);
     }
 
-    /**.
-    * @return le port utilisé par le serveur
+    /** Renvoit le port d'écoute du serveur.
+    * @return le port 
     */
     public final int getPORT() {
         return this.port;
     }
 
-    /**.
-     * accesseurs des hosts géré par le serveur
-     * @return hosts les hosts
+    /** Renvoit les hosts gérer par ce serveur.
+     * @return les hosts.
      */
     public static Hosts getHost() {
         return hosts;
     }
 
-    /**.
-     * accesseur du nombre de thread lancés sur le serveur.
-     * @return  le nombre de threads utilisés
+    /** Renvoit le nombre de thread utilisés par ce serveur.
+     * @return  le nombre de threads.
      */
     public final int getPoolThread() {
         return poolThread;
