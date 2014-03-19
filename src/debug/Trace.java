@@ -3,10 +3,16 @@ package debug;
  * @author Pourquier Pierre-Emmanuel
  * @version 1.0
  */
-public class Trace {
+ public final class Trace {
     /** si le projet est en mode debug.
      */
     private static boolean debug = false;
+
+    /** Constructeur privé pour eviter une instanciation.
+     */
+    private Trace() {
+           throw new AssertionError("Instanciation d'une classe utilitaire");
+    }
 
     /** Ecrit la ligne dans la sortie standard si this.debug = true.
     * @param strLigne ligne à écrire
