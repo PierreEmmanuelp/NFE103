@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
-//import log.Log;
-//import log.LogLevel;
 
 /** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
@@ -77,12 +75,11 @@ public class Client implements Runnable {
                 out = new DataOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 String msg;
-                msg = "stream in/out incréable " +  e.getMessage();
+                msg = "imposible de créer le stream in/out " +  e.getMessage();
                 Http.syslog.error(msg);
             }
             try { //lecture dans le socket
                 while ((line = in.readLine())!= null && line.length() > 0) {
-                    Http.syslog.trace(line);
                     header.add(line);
                 }
                 requete = new Request(header);
