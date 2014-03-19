@@ -79,7 +79,7 @@ public class Client implements Runnable {
                 Http.syslog.error(msg);
             }
             try { //lecture dans le socket
-                while ((line = in.readLine())!= null && line.length() > 0) {
+                while ((line = in.readLine())!= null && line.length() > 0 ) {
                     header.add(line);
                 }
                 requete = new Request(header);
