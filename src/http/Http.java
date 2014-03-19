@@ -2,6 +2,8 @@ package http;
 import java.io.IOException;
 import log.Log;
 import log.LogLevel;
+import log.LogNew;
+import org.apache.log4j.Logger;
 /** Charge la configuration, démarre les log puis le serveur.
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel
@@ -9,6 +11,9 @@ import log.LogLevel;
 public final class Http {
     /**représente les fichiers de log.*/
     private static Log log;
+
+    /** fichier de log system.*/
+    public static Logger syslog;
 
     /** représente la configuration.*/
     private static Configuration config;
@@ -29,11 +34,13 @@ public final class Http {
         config = new Configuration();
 
         try {
+            syslog = new LogNew().getSyslog();
             log = new Log();
         } catch (IOException e) {
             e.getMessage();
         }
-        Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
+        syslog.info("Démarrage du serveur");
+        //Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
         Serveur serveur = new Serveur();
         Console console;
         console = new Console(serveur);

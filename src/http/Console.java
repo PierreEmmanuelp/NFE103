@@ -4,6 +4,8 @@ import log.LogLevel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import org.apache.torque.util.Criteria;
 //import org.apache.torque.TorqueException;
 
@@ -24,14 +26,19 @@ public class Console implements Runnable{
             thread = new Thread(this);
             thread.start();
             this.serveur = serveur;
-            System.out.println("interpréteur de commande en attente");
-            Log.ajouterEntree("commande ok", LogLevel.SYSTEM);
+
+            Http.syslog.info("Console en attente d'intructions");
     }
         
     @Override
     public void run() {
+        try {
+            thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String commande;
-        System.out.println("tapez /? pour une liste des commandes supportées \n \n");
+        System.out.println("tapez /? pour une liste des commandes supportées \n");
 	Scanner sconsole = new Scanner(System.in);
         try {
             while((commande=sconsole.nextLine()) !=null){

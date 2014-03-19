@@ -2,9 +2,6 @@ package http;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import debug.Trace;
-import log.Log;
-import log.LogLevel;
 /** Serveur http qui attend les connexions.
  * @author Pierre-Emmanuel Pourquier
  * @version 1.0
@@ -45,8 +42,7 @@ public class Serveur {
             } catch (IOException ex) {
                 String msg;
                 msg = "impossible de créer le socket" + ex.getMessage();
-                Log.ajouterEntree(msg, LogLevel.ERROR);
-                Trace.trace("Erreur interne : socket indisponible");
+                Http.syslog.fatal(msg);
             }
             int i;
             //creation du pool de thread
@@ -54,15 +50,14 @@ public class Serveur {
                 Client client = new Client();
                 clients.add(client);
             }
-            Log.ajouterEntree("pool de thread créé", LogLevel.SYSTEM);
+            Http.syslog.debug("pool de thread créé");
 	}
 
 	/** Démarre le mode écoute du serveur.
 	 */
 	public final void start() {
             try {
-                Log.ajouterEntree("serveur en ligne", LogLevel.SYSTEM);
-                Trace.trace("http server online");
+                Http.syslog.info("server online");
                 while (true) { // attente en boucle d'une connexion
                     Client client;
                     // un client se connecte, on le renvoit sur un thread libre
@@ -71,10 +66,9 @@ public class Serveur {
                     client.getThread().interrupt();
                 }
             } catch (IOException e) {
-                Trace.trace("Serveur indisponible : socket libre? ");
                 String msg;
                 msg = "socket indisponible" + e.getMessage();
-                Log.ajouterEntree(msg, LogLevel.SYSTEM);
+                Http.syslog.fatal(msg);
             }
     }
 
@@ -83,11 +77,11 @@ public class Serveur {
     public final void stop() {
         try {
             this.servSocket.close();
-            Log.ajouterEntree("extinction du serveur", LogLevel.SYSTEM);
+            Http.syslog.info("extinction du serveur");
         } catch (IOException ex) {
             String msg;
             msg = "Impossible de stopper le serveur" + ex.getMessage();
-            Log.ajouterEntree(msg, LogLevel.SYSTEM);
+            Http.syslog.error(msg);
         }
     }
 

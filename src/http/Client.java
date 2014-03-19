@@ -1,5 +1,4 @@
 package http;
-import debug.Trace;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -7,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
-import log.Log;
-import log.LogLevel;
+//import log.Log;
+//import log.LogLevel;
 
 /** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
@@ -59,14 +58,14 @@ public class Client implements Runnable {
             while (attendre) {
                 try {
                     this.free = true; //le thread est libre, il dort
-                    //Trace.trace(this.thread.getName() + "a été endormi");
+                    Http.syslog.trace(this.thread.getName() + "a été endormi");
                     Thread.sleep(100000);
                 } catch (InterruptedException ex) {
                     this.free = false; //le client devient occupé
                     break; // Sortie de la boucle infinie attendre
                 }
             }
-            //Trace.trace(this.thread.getName() + "a été réveillé");
+            Http.syslog.trace(this.thread.getName() + "a été réveillé");
             //le thread est réveillé
             try { //création des reader et writer
                 InputStreamReader is;
@@ -75,8 +74,8 @@ public class Client implements Runnable {
                 out = new DataOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 String msg;
-                msg = "stream in/out incréable in  client" +  e.getMessage();
-                Log.ajouterEntree(msg, LogLevel.SYSTEM);
+                msg = "stream in/out incréable" +  e.getMessage();
+                Http.syslog.error(msg);
             }
             try { //lecture dans le socket
                 while ((line = in.readLine()) != null && line.length() > 0) {
@@ -92,7 +91,7 @@ public class Client implements Runnable {
             } catch (IOException ex) {
                     String msg;
                     msg = "Err lecture socket / client.java" + ex.getMessage();
-                    Log.ajouterEntree(msg, LogLevel.SYSTEM);
+                    Http.syslog.error(msg);
             }
 
             //construction de la reponse (en fonction du header de la requete)
@@ -110,8 +109,8 @@ public class Client implements Runnable {
                 this.socket = null;
             } catch (IOException ex) {
                 String msg;
-                msg = "erreur de fermeture stream / client" + ex.getMessage();
-                Log.ajouterEntree(msg, LogLevel.ERROR);
+                msg = "erreur de fermeture stream" + ex.getMessage();
+                Http.syslog.fatal(msg);
             }
         }
     }
@@ -137,18 +136,18 @@ public class Client implements Runnable {
                 stream.close();
             } else {
                 if (data[1] != null) {
-                    //Trace.trace(data[1]);
+                    Http.syslog.trace(data[1]);
                     out.writeBytes(data[1]);
                 } else {
                 out.writeBytes("<h1>404 Not Found</h1>");
                 }
             }
             out.flush();
-            //Trace.trace("envoyé : " + data);
+            Http.syslog.trace("envoyé : " + data);
         } catch (IOException ex) {
             String msg;
             msg = "erreur envoyer socket" + ex.getMessage();
-            Log.ajouterEntree(msg, LogLevel.SYSTEM);
+            Http.syslog.fatal(msg);
         }
     }
 
