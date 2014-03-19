@@ -2,22 +2,18 @@ package http;
 import java.io.IOException;
 import log.Log;
 import log.LogLevel;
-/**
+/** Charge la configuration, démarre les log puis le serveur.
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel
  */
 public class Http {
-    /**.
-     * log : représente les fichiers de log
-     */
+    /**représente les fichiers de log.*/
     private static Log log;
 
-    /**.
-     * config : représente la configuration
-     */
+    /** représente la configuration.*/
     private static Configuration config;
 
-    /**
+    /** Fonction de démarrage de l'application.
      * @param args the command line arguments
      */
     public static void main(final String[] args) {
@@ -37,17 +33,13 @@ public class Http {
         console = new Console(serveur);
         serveur.start();
     }
-    /**.
-     * getter des fichiers de log
-     * @return les fichiers de log
+    /** @return les fichiers de log.
      */
     public static Log getLog() {
         return log;
     }
 
-    /**.
-     * Getter de la configuration
-     * @return la configuration actuelle
+    /** @return la configuration actuelle.
      */
     public static Configuration getConfig() {
         return config;

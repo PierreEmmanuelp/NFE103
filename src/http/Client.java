@@ -10,58 +10,42 @@ import java.util.ArrayList;
 import log.Log;
 import log.LogLevel;
 
-/**.
- * Représente un client et réagit au requêtes reçues par celui-ci
+/** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
  * @version 2.0
  */
 public class Client implements Runnable {
-    /**.
-     * le thread
-     */
+    /** Le thread.*/
     private final Thread thread;
 
-    /**.
-     * la socket liante au client
-     */
-
+    /** La socket liante au client.*/
     private Socket socket;
-    /**.
-     * le stream d'écriture dans la socket
-     */
+
+    /** Le stream d'écriture dans la socket.*/
     private DataOutputStream out = null;
 
-    /**.
-     * le stream de lecture dans le socket
-     */
+    /** Le stream de lecture dans le socket.*/
     private BufferedReader in;
 
-    /**.
-     * si le thread est libre
-     */
+    /** Si le thread est libre.*/
     private Boolean free = true;
 
-    /**.
-     * créer le client et démarre le thread
-     */
+    /** Créer le client et démarre le thread.*/
     public Client() {
         this.thread = new Thread(this);
         this.thread.start();
     }
 
-    /**.
-     * Si le client est libre, il peut traiter une requête
-     * @param psocket le socket serveur
-     */
+    /** Si le client est libre, il peut traiter une requête.
+     * @param psocket le socket serveur*/
     public final void traiteRequete(final Socket psocket) {
         this.free = false; // le client va être occupé
         this.socket = psocket;
     }
 
-    /**.
-     * démarre le thread
+    /** démarre le thread.
      */
-        @Override
+    @Override
     public final void run() {
         String line;
         ArrayList<String> header = new ArrayList();
@@ -130,8 +114,7 @@ public class Client implements Runnable {
     }
 
 
-    /**.
-     * Envoie un message sur le socket du client
+    /** Envoie un message sur le socket du client.
      * @param data texte a envoyer
      * @param stream le stream à envoyer
      */
@@ -166,8 +149,7 @@ public class Client implements Runnable {
         }
     }
 
-    /**.
-     * Lit les données dans la socket
+    /** Lit les données dans la socket.
      * @return le message reçu sur la socket
      * @throws IOException lecture socket impossible
      */
@@ -177,15 +159,13 @@ public class Client implements Runnable {
             return message;
     }
 
-    /**.
-     * @return the socket
+    /** @return the socket.
      */
     public final Socket getSocket() {
             return this.socket;
     }
 
-    /**.
-     * @return si le socket est libre
+    /** @return si le socket est libre.
      */
     public final Boolean getFree() {
         return this.free;
@@ -195,8 +175,7 @@ public class Client implements Runnable {
     public final String toString() {
             return this.socket.getInetAddress().toString();
     }
-    /**.
-     * @return le thread de ce client
+    /** @return le thread de ce client.
      */
     public final Thread getThread() {
         return thread;
