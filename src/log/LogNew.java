@@ -29,7 +29,7 @@ public final class LogNew {
 
     /** Constructeur.*/
     public LogNew() {
-        this.lvlconsole = Level.DEBUG;
+        this.lvlconsole = Level.TRACE;
         this.lvlRequest = Level.TRACE;
         this.syslog = Logger.getLogger("system");
         syslog.setLevel(Level.ALL);
