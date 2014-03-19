@@ -23,7 +23,7 @@ public class Header {
     private Version version;
 
     /**Paramètres de ce header.*/
-    private HashMap parametres;
+    private final HashMap parametres;
 
     /**Constructeur de la classe.*/
     public Header() {
@@ -45,7 +45,7 @@ public class Header {
     }
 
      /**Enregistre l'action dans ce header.
-      *@param action l'action à enrigstrer.
+      *@param paction l'action à enrigstrer.
      */
     public final void setAction(final Action paction) {
         this.action = paction;
@@ -59,7 +59,7 @@ public class Header {
     }
 
     /** Enregistre le host de ce header.
-     * @param host l'host à enregistrer
+     * @param phost l'host à enregistrer
      */
     public final void setHost(final Host phost) {
         this.host = phost;
@@ -73,14 +73,14 @@ public class Header {
     }
 
     /** Enregistre la cible de ce header.
-     * @param cible la cible à enregistrer
+     * @param pcible la cible à enregistrer
      */
     public final void setCible(final String pcible) {
         this.cible = pcible;
     }
 
-    /**Enregistre la version de ce header. 
-     * @param version la version à enregistrer
+    /**Enregistre la version de ce header.
+     * @param pversion la version à enregistrer
      */
     public final void setVersion(final Version pversion) {
         this.version = pversion;
@@ -94,6 +94,7 @@ public class Header {
 
     @Override
     public final String toString() {
-        return "Header{" + "action=" + action + ", host=" + host + ", cible=" + cible + ", version=" + version + '}';
+        return "Header{" + "action=" + action + ", host="
+                + host + ", cible=" + cible + ", version=" + version + '}';
     }
 }
