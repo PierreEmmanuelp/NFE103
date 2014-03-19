@@ -6,12 +6,18 @@ import log.LogLevel;
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel
  */
-public class Http {
+public final class Http {
     /**représente les fichiers de log.*/
     private static Log log;
 
     /** représente la configuration.*/
     private static Configuration config;
+
+    /** Contructeur par défaut private pour éviter les erreurs.
+     */
+    private Http() {
+        throw new AssertionError("Instanciation d'une classe utilitaire");
+    }
 
     /** Fonction de démarrage de l'application.
      * @param args the command line arguments
