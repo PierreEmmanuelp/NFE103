@@ -53,19 +53,20 @@ public class Client implements Runnable {
         Request requete = null;
 
         while (true) {
+            this.socket = null;
             Boolean attendre = true;
             //position d'attente. Seul l'interrupt pourra réveiller le thread
             while (attendre) {
                 try {
                     this.free = true; //le thread est libre, il dort
-                    Trace.trace(this.thread.getName() + "a été endormi");
+                    //Trace.trace(this.thread.getName() + "a été endormi");
                     Thread.sleep(100000);
                 } catch (InterruptedException ex) {
                     this.free = false; //le client devient occupé
                     break; // Sortie de la boucle infinie attendre
                 }
             }
-            Trace.trace(this.thread.getName() + "a été réveillé");
+            //Trace.trace(this.thread.getName() + "a été réveillé");
             //le thread est réveillé
             try { //création des reader et writer
                 InputStreamReader is;
@@ -105,9 +106,11 @@ public class Client implements Runnable {
             try {
                 in.close();
                 out.close();
+                this.socket.close();
+                this.socket = null;
             } catch (IOException ex) {
                 String msg;
-                msg = "erreur de fermeture stream / clien" + ex.getMessage();
+                msg = "erreur de fermeture stream / client" + ex.getMessage();
                 Log.ajouterEntree(msg, LogLevel.ERROR);
             }
         }
@@ -134,7 +137,7 @@ public class Client implements Runnable {
                 stream.close();
             } else {
                 if (data[1] != null) {
-                    Trace.trace(data[1]);
+                    //Trace.trace(data[1]);
                     out.writeBytes(data[1]);
                 } else {
                 out.writeBytes("<h1>404 Not Found</h1>");
