@@ -1,15 +1,12 @@
 package http;
 
-import debug.Trace;
 import log.Log;
 import log.LogLevel;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author Marine Nogier
+ * @author Marine Nogier, Pourquier Pierre-Emmanuel
  * @version 1.0
  */
 public class Console implements Runnable {
@@ -98,7 +95,7 @@ public class Console implements Runnable {
                                 "Ce que vous venez de saisir "
                                         + "n'est pas une commande valide ! "
                                         + "Veuillez réessayer en saisissant "
-                                        + "une de ces commandes ! \n");
+                                        + "une de ces commandes !");
                         lsCommande();
                         break;
                 }
