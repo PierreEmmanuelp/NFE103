@@ -49,7 +49,7 @@ public class FileContent extends Content {
     }
 
     /**
-     *
+     * envoyerFichier : envoie le fichier.
      */
     private void envoyerFichier() {
 
