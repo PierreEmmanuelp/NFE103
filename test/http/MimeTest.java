@@ -44,10 +44,13 @@ public class MimeTest {
     @Test
     public void testExtractTypeMime() {
         System.out.println("extractTypeMime");
-        String pFichier = "";
-        String expResult = "";
+        String pFichier = "C:Users/htruchard/Desktop/NFE103/essai.txt";
+        
+        String expResult = "text/html";
         String result = Mime.extractTypeMime(pFichier);
+      
         assertEquals(expResult, result);
+      
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
