@@ -1,7 +1,7 @@
 package http;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
+import java.util.LinkedList;
 /** Serveur http qui attend les connexions.
  * @author Pierre-Emmanuel Pourquier
  * @version 1.0
@@ -16,20 +16,20 @@ public class Serveur {
     /** Socket du serveur.*/
     private ServerSocket servSocket;
 
-    /** Tableau de clients (thread).*/
-    private final ArrayList<Client> clients;
+    /**
+     * file d'attente des threads.
+     */
+    private final LinkedList<Client> threads;
 
     /** Contient les différent host gérés par ce serveur.*/
     private static Hosts hosts;
 
-    /** Dernier thread utilisé.*/
-    private int lastIndex;
-
-    /** onstructeur de la classe serveur.
-    */
+    /**
+     * Constructeur de la classe serveur.
+     */
     public Serveur() {
-        this.lastIndex = 0;
-        clients = new ArrayList();
+       // clients = new ArrayList();
+        threads = new LinkedList();
 
         // récupération de la configuration depuis le fichier XML
         this.port = http.Http.getConfig().getPORT();
@@ -48,8 +48,8 @@ public class Serveur {
         int i;
         //creation du pool de thread
         for (i = 0; i <= this.poolThread; i++) {
-            Client client = new Client();
-            clients.add(client);
+            Client client = new Client(this);
+            threads.add(client);
         }
         Http.syslog.debug("pool de thread créé");
     }
@@ -61,7 +61,7 @@ public class Serveur {
             while (true) { // attente en boucle d'une connexion
                 Client client;
                 // un client se connecte, on le renvoit sur un thread libre
-                client = this.getFreeClient();
+                client = this.getThread();
                 client.traiteRequete(servSocket.accept());
                 client.getThread().interrupt();
             }
@@ -85,27 +85,16 @@ public class Serveur {
         }
     }
 
-    /** Renvoit le premier thread disponible.
-    * @return le thread
-    */
-    private Client getFreeClient() {
-        int i, index;
-        index = -1;
-        boolean trouve = false;
-        i = this.lastIndex + 1;
-        while (!trouve && i < this.clients.size()) {
-            if (clients.get(i).getFree()) {
-                trouve = true;
-                index = i;
-                    this.lastIndex = i;
-            }
-            i = i + 1;
-            if (i >= this.clients.size()) {
-                this.lastIndex = 0;
-                i = 0;
-            }
+    /**
+     * Renvoit le premier thread disponible.
+     * @return le thread
+     */
+    private Client getThread() {
+        Client client = null;
+        while (client == null) {
+           client = this.threads.poll();
         }
-        return clients.get(index);
+        return client;
     }
 
     /** Renvoit le port d'écoute du serveur.
@@ -125,7 +114,15 @@ public class Serveur {
     /** Renvoit le nombre de thread utilisés par ce serveur.
      * @return  le nombre de threads.
      */
-    public final int getPoolThread() {
+    public final synchronized int getPoolThread() {
         return poolThread;
+    }
+
+    /**
+     * Ajoute un thread libre à la fin de la queue.
+     * @param pclient le thread libre
+     */
+    public final synchronized void tailThread(final Client pclient) {
+        this.threads.add(pclient);
     }
 }
