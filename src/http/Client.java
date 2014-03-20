@@ -48,7 +48,7 @@ public class Client implements Runnable {
     @Override
     public final void run() {
         String line;
-        ArrayList<String> header = new ArrayList();
+        ArrayList<String> header;
         String strContent;
         Request requete = null;
 
@@ -59,7 +59,7 @@ public class Client implements Runnable {
             while (attendre) {
                 try {
                     this.free = true; //le thread est libre, il dort
-                    Http.syslog.trace(this.thread.getName() + "a été endormi");
+                    Http.syslog.trace(this.thread.getName() + " sleep");
                     Thread.sleep(tempPause);
                 } catch (InterruptedException ex) {
                     this.free = false; //le client devient occupé
@@ -79,6 +79,7 @@ public class Client implements Runnable {
                 Http.syslog.error(msg);
             }
             try { //lecture dans le socket
+                header = new ArrayList<String>();
                 while ((line = in.readLine())!= null && line.length() > 0 ) {
                     header.add(line);
                 }
@@ -108,13 +109,11 @@ public class Client implements Runnable {
             try {
                 in.close();
                 out.close();
-                this.socket.close();
-                this.socket = null;
             } catch (IOException ex) {
                 String msg;
                 msg = "erreur de fermeture stream" + ex.getMessage();
                 Http.syslog.fatal(msg);
-            }
+            }   
         }
     }
 
@@ -127,7 +126,6 @@ public class Client implements Runnable {
             final BufferedInputStream stream) {
         final int bufferSize = 1024;
         try {
-            // ecriture du header
             out.writeBytes(data[0]);
             if ("OK".equals(data[1])) { // si content
                 byte[] buffer;
@@ -150,7 +148,8 @@ public class Client implements Runnable {
             Http.syslog.trace("envoyé : " + data);
         } catch (IOException ex) {
             String msg;
-            msg = "erreur envoyer socket" + ex.getMessage();
+            ex.printStackTrace();
+            msg = "erreur envoyer socket " + ex.getMessage();
             Http.syslog.fatal(msg);
         }
     }
