@@ -8,37 +8,50 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 /**
- * Gère les fichier et messages de log.
- *
+ * Gère les fichiers et messages de log.
  * @author Pourquier Pierre-Emmanuel
  * @version 1.0
  */
 public final class Log {
 
-    /** Log d'erreur system.*/
+    /**
+     * Log d'erreur system.
+     */
     private final Logger syslog;
 
-    /** Log des requete. */
+    /**
+     * Log des requêtes.
+     */
     private final Logger requestLog;
 
-    /**Level de log pour la console system.*/
+    /**
+     * Level de log pour la console system.
+     */
     private final Level lvlconsole;
 
-    /** Level de log pour la console Request.*/
+    /**
+     * Level de log pour la console Request.
+     */
     private final Level lvlRequest;
 
-    /** Constructeur.*/
+    /**
+     * Constructeur.
+     */
     public Log() {
         this.lvlconsole = Level.DEBUG;
         this.lvlRequest = Level.DEBUG;
         this.syslog = Logger.getLogger("system");
         syslog.setLevel(Level.ALL);
+        
+        //Motif (format) des log dans la sortie console
         StringBuilder motifConsole = new StringBuilder();
         motifConsole.append("%d{HH:mm:ss} - [%p] - %m %n");
 
+        //Motif (format) des log dans la sortie fichier
         StringBuilder motifFichier = new StringBuilder();
         motifFichier.append("%d{yyyy-MM-dd HH:mm:ss:SSS}");
         motifFichier.append(" - [%p] - [%C] - %m %n");
+        
         //paramétrage de ce qui sera visible sur la console
         ConsoleAppender sysOut = new ConsoleAppender();
         sysOut.setName("SysConsole");
@@ -60,20 +73,23 @@ public final class Log {
             syslog.fatal("error log" + ex.getMessage());
         }
 
+        //Paramétrage de la sortie dans la console des evènements requêtes
         requestLog = Logger.getLogger("request");
         String reqpath = http.Http.getConfig().getPathLog() + "/request.log";
         ConsoleAppender reqOut = new ConsoleAppender();
         reqOut.setName("ReqConsole");
         reqOut.setLayout(new PatternLayout(motifConsole.toString()));
         reqOut.activateOptions();
+        //niveau nécessaire pour affichage console :
         reqOut.setThreshold(lvlRequest);
-        requestLog.addAppender(sysOut);
+        requestLog.addAppender(sysOut); //ajout de la console au logger
         try {
             FileAppender reqfileout = new FileAppender(layout, reqpath, true);
-            reqfileout.setName("system.log");
+            reqfileout.setName("request.log");
             reqfileout.activateOptions();
+            //level nécessaire pour log dans fichier :
             reqfileout.setThreshold(Level.INFO);
-            requestLog.addAppender(reqfileout);
+            requestLog.addAppender(reqfileout); //ajout du fichier au logger
         } catch (IOException e) {
             requestLog.error("error request log " + e.getMessage());
         }
@@ -81,21 +97,22 @@ public final class Log {
 
     /**
      * Renvoit le log system.
-     *
-     * @return le log
+     * @return le log system
      */
     public Logger getSyslog() {
         return syslog;
     }
 
-    /** Obtient le log de requete.
+    /**
+     * Obtient le log de requete.
      * @return le log requete
      */
     public Logger getRequestLog() {
         return requestLog;
     }
 
-    /** Obtient le niveau actuel de log dans la console.
+    /**
+     * Obtient le niveau actuel de log dans la console.
      * @return le lvl de log
      */
     public Level getLvlconsole() {
