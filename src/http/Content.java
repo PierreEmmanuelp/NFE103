@@ -30,7 +30,7 @@ public class Content {
 
     @Override
     public final String toString() {
-        return "Content{" + "contenu=" + contenu + '}';
+        return "Content{" + contenu + "}";
     }
 
 }
