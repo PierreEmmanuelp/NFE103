@@ -69,10 +69,15 @@ public class Response {
     private String hostpath;
 
     /**
+     * statut de la réponse.
+     */
+    private String statut;
+    /**
      * Constructeur.
      * @param reqHeader Le header de la requête
      */
     public Response(final Header reqHeader) {
+        this.statut = "500";
         Response.headerQuest = reqHeader;
         try {
             this.hostpath = reqHeader.getHost().getPath(); //ajout du host
@@ -151,30 +156,36 @@ public class Response {
             file.openFile(this.hostpath + request);
 
         switch (file.getStatus()) {
-            case 200:
+            case 200 :
+                this.statut = "200";
                 response[0] = this.headerRep(file.getLength().toString(), OK);
                 response[1] = "OK";
                 setStream(file.getFileContent());
                 break;
-            case 404:
+            case 404 :
+                this.statut = "404";
                 response[0] = this.headerRep("400", NOT_FOUND);
                 response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
                 break;
-            case 403:
+            case 403 :
+                this.statut = "403";
                 response[0] = this.headerRep("400", FORBIDDEN);
                 response[1] = "<h1>" + FORBIDDEN + "</h1>";
                 break;
-            case 500:
+            case 500 :
+                this.statut = "500";
                 response[0] = this.headerRep("400", INTERNAL_ERROR);
                 response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
                 break;
             default:
+                this.statut = "500";
                 response[0] = this.headerRep("400", INTERNAL_ERROR);
                 response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
                 Http.requestlog.error("Erreur interne (response)");
             }
 
         } else {
+            this.statut = "500";
             response[0] = this.headerRep("400", INTERNAL_ERROR);
             response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
         }
@@ -203,5 +214,19 @@ public class Response {
      */
     public final BufferedInputStream getStream() {
         return pstream;
+    }
+
+    /**
+     * @return le header de la reponse
+     */
+    public final HashMap getHeadersRep() {
+        return headersRep;
+    }
+
+    /**
+     * @return le statut de la reponse.
+     */
+    public final String getStatut() {
+        return statut;
     }
 }
