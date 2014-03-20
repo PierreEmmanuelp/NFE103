@@ -41,8 +41,9 @@ public class Serveur {
             servSocket = new ServerSocket(this.port);
         } catch (IOException ex) {
             String msg;
-            msg = "impossible de créer le socket" + ex.getMessage();
+            msg = "impossible de créer le socket " + ex.getMessage();
             Http.syslog.fatal(msg);
+            System.exit(-1);
         }
         int i;
         //creation du pool de thread
