@@ -32,7 +32,6 @@ public class Request {
      * @throws Exception erreur
      */
     private void analyseRequest() throws Exception {
-        //première ligne : action
         if (!this.request.isEmpty()) {
             String premierHead = request.get(0);
             Http.syslog.trace(premierHead);
