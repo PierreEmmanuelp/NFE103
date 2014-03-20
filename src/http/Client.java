@@ -129,27 +129,42 @@ public class Client implements Runnable {
             if (!data[0].isEmpty()) {
                 try {
                     envoyer(data, response.getStream());
-                    Http.syslog.info(requete.toString() + " STATUT : "
-                            +response.getStatut());
+                    Http.requestlog.info(this.socket.getInetAddress() + " - "
+                            + requete.toString() 
+                            + " STATUT : " +response.getStatut());
                 } catch (Exception ex) {
                     Http.syslog.error("impossible d'envoyer la réponse "
                             + ex.getMessage());
                 }
             }
             }
-            /*il n'y a plus de traitements a exécuter => fermeture des streams
+            //il n'y a plus de traitements a exécuter => fermeture des streams
             try {
-                in.close();
-                out.close();
-            } catch (IOException ex) {
+                fermeStream();
+            } catch (Exception ex) {
                 String msg;
                 msg = "erreur de fermeture stream" + ex.getMessage();
-                Http.syslog.fatal(msg);
-            }*/
+                Http.syslog.warn(msg);
+            }
+            finally{
+                try {
+                    this.socket.close();
+                } catch (Exception ex) {
+                    Http.syslog.warn("l152 - close impossible");
+                }
+            }
+            
         }
     }
 
-
+    /**
+     * Ferme les stream in et out.
+     * @throws Exception erreur de fermeture du stream
+     */
+    private void fermeStream() throws Exception {
+        this.in.close();
+        this.out.close();
+    }
     /** Envoie un message sur le socket du client.
      * @param pData texte a envoyer
      * @param stream le stream à envoyer
@@ -182,8 +197,8 @@ public class Client implements Runnable {
         } catch (IOException ex) {
             String msg;
             //ex.printStackTrace();
-            msg = "erreur envoyer socket " + ex.getMessage();
-            Http.syslog.fatal(msg);
+            msg = ex.getMessage();
+            Http.syslog.error(msg);
         }
     }
 
