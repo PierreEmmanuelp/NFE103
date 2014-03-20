@@ -39,10 +39,9 @@ public final class Log {
      */
     public Log() {
         this.lvlconsole = Level.DEBUG;
-        this.lvlRequest = Level.DEBUG;
+        this.lvlRequest = Level.ERROR;
         this.syslog = Logger.getLogger("system");
-        syslog.setLevel(Level.ALL);
-        
+
         //Motif (format) des log dans la sortie console
         StringBuilder motifConsole = new StringBuilder();
         motifConsole.append("%d{HH:mm:ss} - [%p] - %m %n");
@@ -51,7 +50,7 @@ public final class Log {
         StringBuilder motifFichier = new StringBuilder();
         motifFichier.append("%d{yyyy-MM-dd HH:mm:ss:SSS}");
         motifFichier.append(" - [%p] - [%C] - %m %n");
-        
+
         //paramétrage de ce qui sera visible sur la console
         ConsoleAppender sysOut = new ConsoleAppender();
         sysOut.setName("SysConsole");
@@ -82,7 +81,7 @@ public final class Log {
         reqOut.activateOptions();
         //niveau nécessaire pour affichage console :
         reqOut.setThreshold(lvlRequest);
-        requestLog.addAppender(sysOut); //ajout de la console au logger
+        requestLog.addAppender(reqOut); //ajout de la console au logger
         try {
             FileAppender reqfileout = new FileAppender(layout, reqpath, true);
             reqfileout.setName("request.log");
