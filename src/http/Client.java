@@ -92,10 +92,11 @@ public class Client implements Runnable {
                 }
             } catch (IOException ex) {
                     String msg;
-                    msg = "Err lecture socket" + ex.getMessage();
+                    msg = "Err lecture socket " + ex.getMessage();
                     Http.syslog.error(msg);
             }
-
+            Http.requestlog.info(this.socket.getInetAddress()
+                    + " - " + requete);
             //construction de la reponse (en fonction du header de la requete)
             Response response = new Response(requete.getHeader());
             String cible;
