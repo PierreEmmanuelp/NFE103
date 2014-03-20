@@ -1,7 +1,5 @@
 package http;
 
-import log.Log;
-import log.LogLevel;
 import java.util.Scanner;
 
 /**
@@ -148,7 +146,7 @@ public class Console implements Runnable {
                 System.out.println("Il n'y a aucun host sur le système");
             }
         } catch (Exception e) {
-            Log.ajouterEntree(e.toString(), LogLevel.SYSTEM);
+            Http.syslog.error(e.toString());
         }
     }
 
@@ -179,10 +177,8 @@ public class Console implements Runnable {
                         + " a bien été ajouté \n ");
             }
         } catch (Exception e) {
-            Log.ajouterEntree("Le lecteur de la console ne fonctionne pas",
-                    LogLevel.SYSTEM);
-            Log.ajouterEntree("L'ajout du host n'a donc pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("Le lecteur de la console ne fonctionne pas");
+            Http.syslog.error("L'ajout du host n'a donc pas fonctionné");
         }
     }
 
@@ -227,8 +223,7 @@ public class Console implements Runnable {
                 supprimerHost();
             }
         } catch (Exception e) {
-            Log.ajouterEntree("La lecture de la console ne fonctionne pas",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("La lecture de la console ne fonctionne pas");
         }
     }
 
@@ -243,8 +238,7 @@ public class Console implements Runnable {
                     + port
                     + "\n");
         } catch (Exception e) {
-            Log.ajouterEntree("Récupération du port d'écoute impossible",
-                    LogLevel.ERROR);
+            Http.syslog.error("Récupération du port d'écoute impossible");
         }
     }
 
@@ -266,10 +260,8 @@ public class Console implements Runnable {
                     + port
                     + " : enregistrement dans la configuration OK !");
         } catch (NumberFormatException e) {
-            Log.ajouterEntree(
-                    "L'enregistrement du nouveau port "
-                            + "d'écoute n'as pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("L'enregistrement du nouveau port "
+                    + "d'écoute n'as pas fonctionné");
         }
     }
 
@@ -283,9 +275,8 @@ public class Console implements Runnable {
                     + poolThread
                     + " thread de démarrés sur le serveur. \n");
         } catch (Exception e) {
-            Log.ajouterEntree("Récupération du nombre de thread "
-                    + "démarré sur le serveur n'a pas fonctionné",
-                    LogLevel.ERROR);
+            Http.syslog.error("Récupération du nombre de thread "
+                    + "démarré sur le serveur n'a pas fonctionné");
         }
     }
 
@@ -309,9 +300,8 @@ public class Console implements Runnable {
                     + nbThread
                     + " : enregistrement dans la configuration OK !");
         } catch (NumberFormatException e) {
-            Log.ajouterEntree("L'enregistrement du nouveau nombre "
-                    + "de thread à démarré n'as pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("L'enregistrement du nouveau nombre "
+                    + "de thread à démarré n'as pas fonctionné");
         }
     }
 
@@ -339,9 +329,8 @@ public class Console implements Runnable {
                 System.out.println("Le serveur est déjà démarré");
             }
         } catch (Exception e) {
-            Log.ajouterEntree("La connexion du serveur "
-                    + "n'a pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("La connexion du serveur "
+                    + "n'a pas fonctionné");
         }
     }
 
@@ -353,9 +342,8 @@ public class Console implements Runnable {
             serveur.stop();
             serveur.start();
         } catch (Exception e) {
-            Log.ajouterEntree("Le redémarrage du serveur "
-                    + "n'a pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("Le redémarrage du serveur "
+                    + "n'a pas fonctionné");
         }
     }
 
@@ -371,8 +359,7 @@ public class Console implements Runnable {
                 System.out.println("Le système est déjà arrêté");
             }
         } catch (Exception e) {
-            Log.ajouterEntree("L'arrêt du serveur n'a pas fonctionné",
-                    LogLevel.SYSTEM);
+            Http.syslog.error("L'arrêt du serveur n'a pas fonctionné");
         }
     }
 }
