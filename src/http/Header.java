@@ -94,7 +94,7 @@ public class Header {
 
     @Override
     public final String toString() {
-        return "Header{" + "action=" + action + ", host="
-                + host + ", cible=" + cible + ", version=" + version + '}';
+        return "Header{" + action + " "
+                + host + " " + cible + " " + version + '}';
     }
 }
