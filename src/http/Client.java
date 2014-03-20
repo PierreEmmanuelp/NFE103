@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
- * @version 2.0
+ * @version 2.1
  */
 public class Client implements Runnable {
     /** Le thread.*/
@@ -24,14 +24,18 @@ public class Client implements Runnable {
     /** Le stream de lecture dans le socket.*/
     private BufferedReader in;
 
-    /** Si le thread est libre.*/
-    private Boolean free = true;
-
     /** Temp de pause du thread.*/
     private final int tempPause = 100000;
 
-    /** Créer le client et démarre le thread.*/
-    public Client() {
+    /** server de ce client.*/
+    private final Serveur server;
+
+    /**
+     * Créer le client et démarre le thread.
+     * @param psrv le serveur de ce client
+     */
+    public Client(final Serveur psrv) {
+        this.server = psrv;
         this.thread = new Thread(this);
         this.thread.start();
     }
@@ -39,7 +43,6 @@ public class Client implements Runnable {
     /** Si le client est libre, il peut traiter une requête.
      * @param psocket le socket serveur*/
     public final void traiteRequete(final Socket psocket) {
-        this.free = false; // le client va être occupé
         this.socket = psocket;
     }
 
@@ -58,33 +61,28 @@ public class Client implements Runnable {
             //position d'attente. Seul l'interrupt pourra réveiller le thread
             while (attendre) {
                 try {
-                    this.free = true; //le thread est libre, il dort
+                    //le thread est libre, retour dans la liste
+                    this.server.tailThread(this);
                     Http.syslog.trace(this.thread.getName() + " sleep");
                     Thread.sleep(tempPause);
                 } catch (InterruptedException ex) {
-                    this.free = false; //le client devient occupé
                     break; // Sortie de la boucle infinie attendre
                 }
             }
             Http.syslog.trace(this.thread.getName() + " a été réveillé");
+            InputStreamReader is;
             //le thread est réveillé
             try { //création des reader et writer
-                InputStreamReader is;
                 is = new InputStreamReader(this.socket.getInputStream());
                 in = new BufferedReader(is);
                 out = new DataOutputStream(socket.getOutputStream());
-            } catch (IOException e) {
-                String msg;
-                msg = "imposible de créer le stream in/out " +  e.getMessage();
-                Http.syslog.error(msg);
-            }
-            try { //lecture dans le socket
-                header = new ArrayList<String>();
-                while ((line = in.readLine())!= null && line.length() > 0 ) {
-                    header.add(line);
-                }
+                try { //lecture dans le socket
+                    header = new ArrayList<>();
+                    while ((line = in.readLine())!= null && line.length() > 0 ) {
+                        header.add(line);
+                    }
                 requete = new Request(header);
-                header = null;
+                //header = null;
                 //lecture du content (en cas de post) :
                 if (requete.besoinContent()) {
                     line = in.readLine();
@@ -96,7 +94,7 @@ public class Client implements Runnable {
                     msg = "Err lecture socket " + ex.getMessage();
                     Http.syslog.error(msg);
             }
-            Http.requestlog.info(this.socket.getInetAddress()
+                 Http.requestlog.info(this.socket.getInetAddress()
                     + " - " + requete);
             //construction de la reponse (en fonction du header de la requete)
             Response response = new Response(requete.getHeader());
@@ -113,7 +111,12 @@ public class Client implements Runnable {
                 String msg;
                 msg = "erreur de fermeture stream" + ex.getMessage();
                 Http.syslog.fatal(msg);
-            }   
+            }
+            } catch (IOException e) {
+                String msg;
+                msg = "imposible de créer le stream in/out " +  e.getMessage();
+                Http.syslog.error(msg);
+            }
         }
     }
 
@@ -148,7 +151,7 @@ public class Client implements Runnable {
             Http.syslog.trace("envoyé : " + data);
         } catch (IOException ex) {
             String msg;
-            ex.printStackTrace();
+            //ex.printStackTrace();
             msg = "erreur envoyer socket " + ex.getMessage();
             Http.syslog.fatal(msg);
         }
@@ -168,12 +171,6 @@ public class Client implements Runnable {
      */
     public final Socket getSocket() {
             return this.socket;
-    }
-
-    /** @return si le socket est libre.
-     */
-    public final Boolean getFree() {
-        return this.free;
     }
 
     @Override
