@@ -1,69 +1,104 @@
 package log;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
-/** Représente un système de fichiers de log.
- * @author Pierre-Emmanuel.Pourquier
- * @version 1.1
+/**
+ * Gère les fichier et messages de log.
+ *
+ * @author Pourquier Pierre-Emmanuel
+ * @version 1.0
  */
-public class Log {
-    /** chemin du dossier contenant les fichier de log. */
-    private static String path = "/var/log/http/";
+public final class Log {
 
-    /** Initialise le chemin des fichiers.
-    * @throws IOException problème de chargement de la configuration
-    */
-    public Log() throws IOException {
-        path = http.Http.getConfig().getPathLog();
-    }
+    /** Log d'erreur system.*/
+    private final Logger syslog;
 
+    /** Log des requete. */
+    private final Logger requestLog;
 
-    /** Renvoit le chemin des fichiers de log.
-    * @return the path.
-    */
-    public static String getPath() {
-        return path;
-    }
+    /**Level de log pour la console system.*/
+    private final Level lvlconsole;
 
-    /** Ajoute une entrée à la fin du fichier de log.
-    * @param pligne correspond à la ligne à écrire.
-    * @param pLvl correspond au niveau du fichier à écrire.
-    */
-    public static synchronized void ajouterEntree(final String pligne, final LogLevel pLvl) {
-        FileWriter fw;
+    /** Level de log pour la console Request.*/
+    private final Level lvlRequest;
+
+    /** Constructeur.*/
+    public Log() {
+        this.lvlconsole = Level.DEBUG;
+        this.lvlRequest = Level.DEBUG;
+        this.syslog = Logger.getLogger("system");
+        syslog.setLevel(Level.ALL);
+        StringBuilder motifConsole = new StringBuilder();
+        motifConsole.append("%d{HH:mm:ss} - [%p] - %m %n");
+
+        StringBuilder motifFichier = new StringBuilder();
+        motifFichier.append("%d{yyyy-MM-dd HH:mm:ss:SSS}");
+        motifFichier.append(" - [%p] - [%C] - %m %n");
+        //paramétrage de ce qui sera visible sur la console
+        ConsoleAppender sysOut = new ConsoleAppender();
+        sysOut.setName("SysConsole");
+        sysOut.setLayout(new PatternLayout(motifConsole.toString()));
+        sysOut.activateOptions();
+        sysOut.setThreshold(lvlconsole);
+        syslog.addAppender(sysOut);
+
+        //paramétrage de ce qui sera visible dans le fichier de log
+        PatternLayout layout = new PatternLayout(motifFichier.toString());
+        String syspath = http.Http.getConfig().getPathLog() + "/system.log";
         try {
-            fw = new FileWriter(path + pLvl + ".log", true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter fichier;
-            fichier = new PrintWriter(bw);
-            String format = "dd/MM/yy H:mm:ss";
-            SimpleDateFormat formater;
-            formater = new SimpleDateFormat(format);
-            java.util.Date date;
-            date = new java.util.Date();
-            fichier.println(formater.format(date) + " : " + pligne);
-            fichier.close();
+            FileAppender sysfileout = new FileAppender(layout, syspath, true);
+            sysfileout.setName("system.log");
+            sysfileout.activateOptions();
+            sysfileout.setThreshold(Level.INFO);
+            syslog.addAppender(sysfileout);
+        } catch (IOException ex) {
+            syslog.fatal("error log" + ex.getMessage());
+        }
+
+        requestLog = Logger.getLogger("request");
+        String reqpath = http.Http.getConfig().getPathLog() + "/request.log";
+        ConsoleAppender reqOut = new ConsoleAppender();
+        reqOut.setName("ReqConsole");
+        reqOut.setLayout(new PatternLayout(motifConsole.toString()));
+        reqOut.activateOptions();
+        reqOut.setThreshold(lvlRequest);
+        requestLog.addAppender(sysOut);
+        try {
+            FileAppender reqfileout = new FileAppender(layout, reqpath, true);
+            reqfileout.setName("system.log");
+            reqfileout.activateOptions();
+            reqfileout.setThreshold(Level.INFO);
+            requestLog.addAppender(reqfileout);
         } catch (IOException e) {
-            debug.Trace.trace(e.getMessage());
-            System.out.println("erreur dans les fichiers de log");
+            requestLog.error("error request log " + e.getMessage());
         }
     }
 
-    /** Termine la session des log et ferme les flux.
+    /**
+     * Renvoit le log system.
+     *
+     * @return le log
      */
-    public static synchronized void terminerSessionLog() {
-        FileWriter fw;
-        try {
-            fw = new FileWriter(path, true);
-            BufferedWriter bw;
-            bw = new BufferedWriter(fw);
-            PrintWriter fichier = new PrintWriter(bw);
-            fichier.println("\n\n");
-        } catch (IOException e) {
-            e.getMessage();
-        }
+    public Logger getSyslog() {
+        return syslog;
+    }
+
+    /** Obtient le log de requete.
+     * @return le log requete
+     */
+    public Logger getRequestLog() {
+        return requestLog;
+    }
+
+    /** Obtient le niveau actuel de log dans la console.
+     * @return le lvl de log
+     */
+    public Level getLvlconsole() {
+        return lvlconsole;
     }
 }
