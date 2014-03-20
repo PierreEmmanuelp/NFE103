@@ -1,9 +1,10 @@
 package http;
 
 import java.io.BufferedInputStream;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * Correspond à un réponse HTTP.
@@ -61,7 +62,7 @@ public class Response {
     /**
      * Current header.
      */
-    private Hashtable HeadersRep = new Hashtable();
+    private final HashMap headersRep = new HashMap();
     /**
      * hostpath : path du host.
      */
@@ -102,22 +103,24 @@ public class Response {
          mimetostring = "text/html";
         }
 
-        this.HeadersRep.put("Date", date);
-        this.HeadersRep.put("Server", "CNAM_NFE103/1.0"); // see param
-        this.HeadersRep.put("Content-Type", mimetostring); // Mime type
-        //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
-        this.HeadersRep.put("Content-Length", pLength); // length of chain
-        //this.HeadersRep.put("Content-Length", Length); // length of chain
-        //this.HeadersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
+        this.headersRep.put("Date", date);
+        this.headersRep.put("Server", "CNAM_NFE103/1.0"); // see param
+        this.headersRep.put("Content-Type", mimetostring); // Mime type
+        //this.headersRep.put("Content-Encoding", "gzip"); // Charset
+        this.headersRep.put("Content-Length", pLength); // length of chain
+        //this.headersRep.put("Content-Length", Length); // length of chain
+        //this.headersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
         // length of chain
-        this.HeadersRep.put("Connection", "close"); // length of chain
+        this.headersRep.put("Connection", "close"); // length of chain
 
         String line = "HTTP/1.1 " + pCode + CRLF;
         String key;
-        Enumeration e = this.HeadersRep.keys();
+
+    final Enumeration<String> e = Collections.enumeration(headersRep.keySet());
+
         while (e.hasMoreElements()) {
             key = (String) e.nextElement();
-            line += key + ":" + this.HeadersRep.get(key) + CRLF;
+            line += key + ":" + this.headersRep.get(key) + CRLF;
         }
         line += CRLF;
         return line;
