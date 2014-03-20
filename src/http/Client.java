@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
@@ -51,19 +49,19 @@ public class Client implements Runnable {
         try {
             is = new InputStreamReader(psocket.getInputStream());
         } catch (IOException ex) {
-            Http.syslog.error("impossible de recup  le socket inputstream "
-            + ex.getMessage());
+            Http.syslog.error("Err52 -  socket.inputstream " + ex.getMessage());
         }
         in = new BufferedReader(is);
         try {
             out = new DataOutputStream(psocket.getOutputStream());
         } catch (IOException ex) {
-            Http.syslog.error("impossible de recup  le socket outputstream "
-            + ex.getMessage());
+            Http.syslog.error("Err58 - socket.OutputStream + "
+                    + ex.getMessage());
         }
     }
 
-    /** démarre le thread.
+    /**
+     * démarre le thread.
      */
     @Override
     public final void run() {
@@ -73,9 +71,6 @@ public class Client implements Runnable {
         Request requete = null;
 
         while (true) {
-            this.socket = null;
-            this.in = null;
-            this.out = null;
             Boolean attendre = true;
             //position d'attente. Seul l'interrupt pourra réveiller le thread
             while (attendre) {
@@ -89,7 +84,6 @@ public class Client implements Runnable {
                 }
             }
             Http.syslog.trace(this.thread.getName() + " a été réveillé");
-
             try { //lecture dans le socket
                 header = new ArrayList<>();
                 while (in != null && (line = in.readLine()) != null) {
@@ -97,63 +91,43 @@ public class Client implements Runnable {
                         break;
                     }
                     header.add(line);
-                }
-                try {
-                    requete = new Request(header);
-                    //lecture du content (en cas de post) :
-                    if (requete.besoinContent()) {
-                        line = in.readLine();
-                        strContent = (line);
-                        requete.setContent(new Content());
+                    try {
+                        requete = new Request(header);
+                        //lecture du content (en cas de post) :
+                        if (requete.besoinContent()) {
+                            line = in.readLine();
+                            strContent = (line);
+                            requete.setContent(new Content());
+                        }
+                    } catch (Exception ex) {
+                        Http.syslog.error("Err103 - " + ex.getMessage()
+                                + requete.toString());
                     }
-                } catch (Exception ex) {
-                    Http.syslog.error(ex.getMessage());
                 }
-
-
-//                Http.requestlog.info(this.socket.getInetAddress()
-                       // + " - " + requete);
             } catch (IOException ex) {
                     String msg;
-                    msg = "Err lecture socket " + ex.getMessage();
-                    Http.syslog.error(msg);
+                    msg = "Lecture socket : " + ex.getMessage();
+                    Http.syslog.error("Err110 - " + msg);
             }
-
 
             if (requete != null) {
-            Response response = new Response(requete.getHeader());
-            String cible;
-            cible = requete.getHeader().getCible();
-            //envoi de la réponse dans le socket
-            String[] data = response.genereResponse(cible);
-            if (!data[0].isEmpty()) {
-                try {
-                    envoyer(data, response.getStream());
-                    Http.requestlog.info(this.socket.getInetAddress() + " - "
-                            + requete.toString() 
-                            + " STATUT : " +response.getStatut());
-                } catch (Exception ex) {
-                    Http.syslog.error("impossible d'envoyer la réponse "
-                            + ex.getMessage());
+                Response response = new Response(requete.getHeader());
+                String cible;
+                cible = requete.getHeader().getCible();
+                //envoi de la réponse dans le socket
+                String[] data = response.genereResponse(cible);
+                if (!data[0].isEmpty()) {
+                    try {
+                        envoyer(data, response.getStream());
+                        Http.requestlog.info(this.socket.getInetAddress()
+                                + " - "
+                                + requete.toString()
+                                + " STATUT : " + response.getStatut());
+                    } catch (Exception ex) {
+                        Http.syslog.error("Err127 - " + ex.getMessage());
+                    }
                 }
             }
-            }
-            //il n'y a plus de traitements a exécuter => fermeture des streams
-            try {
-                fermeStream();
-            } catch (Exception ex) {
-                String msg;
-                msg = "erreur de fermeture stream" + ex.getMessage();
-                Http.syslog.warn(msg);
-            }
-            finally{
-                try {
-                    this.socket.close();
-                } catch (Exception ex) {
-                    Http.syslog.warn("l152 - close impossible");
-                }
-            }
-            
         }
     }
 
@@ -172,9 +146,10 @@ public class Client implements Runnable {
      */
     protected final void envoyer(final String[] pData,
             final BufferedInputStream stream) throws Exception {
-        final int bufferSize = 1024;
+        final int bufferSize = 2048;
         try {
-            out.writeBytes(pData[0]);
+            byte[] line1 = pData[0].getBytes();
+            out.write(line1);
             if ("OK".equals(pData[1])) { // si content
                 byte[] buffer;
                 buffer = new byte[bufferSize];
@@ -187,7 +162,7 @@ public class Client implements Runnable {
             } else {
                 if (pData[1] != null) {
                     Http.syslog.trace(pData[1]);
-                    out.writeBytes(pData[1]);
+                    out.write(pData[1].getBytes());
                 } else {
                 out.writeBytes("<h1>404 Not Found</h1>");
                 }
@@ -198,7 +173,8 @@ public class Client implements Runnable {
             String msg;
             //ex.printStackTrace();
             msg = ex.getMessage();
-            Http.syslog.error(msg);
+            Http.syslog.error("Err179 - " + msg);
+            out.flush();
         }
     }
 
