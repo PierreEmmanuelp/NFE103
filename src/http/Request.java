@@ -46,9 +46,6 @@ public class Request {
                 this.parseArgument(request.get(i));
             }
         }
-        String msg;
-        msg = "Req{" + this.header.toString() + this.content.toString() + "}";
-        Http.requestlog.info(msg);
     }
 
     /** Vérifie si la requete nécessite du contenu.
@@ -202,4 +199,16 @@ public class Request {
         this.header.getParametres().put(key, value);
         }
     }
+
+    @Override
+    public final String toString() {
+        String msg;
+        if (content.getContenu().isEmpty()) {
+            msg = "Request{" + header + "}";
+        } else {
+            msg = "Request{" + header + " content : " + content+"}";
+        }
+        return msg;
+    }
+
 }
