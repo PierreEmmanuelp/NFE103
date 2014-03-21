@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.apache.tika.Tika;
 
 /**
  *
@@ -32,6 +33,7 @@ public class MimeTest {
     
     @Before
     public void setUp() {
+     
     }
     
     @After
@@ -44,15 +46,14 @@ public class MimeTest {
     @Test
     public void testExtractTypeMime() {
         System.out.println("extractTypeMime");
-        String pFichier = "C:Users/htruchard/Desktop/NFE103/essai.txt";
+        String pFichier = "/Users/htruchard/Desktop/NFE103/essai.txt";
+        Tika tika = new Tika();
+        String expResult = "text/plain";
+        String result = tika.detect(pFichier);
         
-        String expResult = "text/html";
-        String result = Mime.extractTypeMime(pFichier);
+        assertEquals(expResult,result);
       
-        assertEquals(expResult, result);
-      
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
     
 }
