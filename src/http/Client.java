@@ -41,12 +41,27 @@ public class Client implements Runnable {
     }
 
     /** Si le client est libre, il peut traiter une requête.
+     * Ouverture des flux d'entré et sortie
      * @param psocket le socket serveur*/
     public final void traiteRequete(final Socket psocket) {
         this.socket = psocket;
+        InputStreamReader is = null;
+        try {
+            is = new InputStreamReader(psocket.getInputStream());
+        } catch (IOException ex) {
+            Http.syslog.error("Err52 -  socket.inputstream " + ex.getMessage());
+        }
+        in = new BufferedReader(is);
+        try {
+            out = new DataOutputStream(psocket.getOutputStream());
+        } catch (IOException ex) {
+            Http.syslog.error("Err58 - socket.OutputStream + "
+                    + ex.getMessage());
+        }
     }
 
-    /** démarre le thread.
+    /**
+     * démarre le thread.
      */
     @Override
     public final void run() {
@@ -56,7 +71,6 @@ public class Client implements Runnable {
         Request requete = null;
 
         while (true) {
-            this.socket = null;
             Boolean attendre = true;
             //position d'attente. Seul l'interrupt pourra réveiller le thread
             while (attendre) {
@@ -70,67 +84,73 @@ public class Client implements Runnable {
                 }
             }
             Http.syslog.trace(this.thread.getName() + " a été réveillé");
-            InputStreamReader is;
-            //le thread est réveillé
-            try { //création des reader et writer
-                is = new InputStreamReader(this.socket.getInputStream());
-                in = new BufferedReader(is);
-                out = new DataOutputStream(socket.getOutputStream());
-                try { //lecture dans le socket
-                    header = new ArrayList<>();
-                    while ((line = in.readLine())!= null && line.length() > 0 ) {
-                        header.add(line);
+            try { //lecture dans le socket
+                header = new ArrayList<>();
+                while (in != null && (line = in.readLine()) != null) {
+                    if (line.length() == 0) {
+                        break;
                     }
-                requete = new Request(header);
-                //header = null;
-                //lecture du content (en cas de post) :
-                if (requete.besoinContent()) {
-                    line = in.readLine();
-                    strContent = (line);
-                    requete.setContent(new Content());
+                    header.add(line);
+                    try {
+                        requete = new Request(header);
+                        //lecture du content (en cas de post) :
+                        if (requete.besoinContent()) {
+                            line = in.readLine();
+                            strContent = (line);
+                            requete.setContent(new Content());
+                        }
+                    } catch (Exception ex) {
+                        Http.syslog.error("Err103 - " + ex.getMessage()
+                                + requete.toString());
+                    }
                 }
             } catch (IOException ex) {
                     String msg;
-                    msg = "Err lecture socket " + ex.getMessage();
-                    Http.syslog.error(msg);
+                    msg = "Lecture socket : " + ex.getMessage();
+                    Http.syslog.error("Err110 - " + msg);
             }
-                 Http.requestlog.info(this.socket.getInetAddress()
-                    + " - " + requete);
-            //construction de la reponse (en fonction du header de la requete)
-            Response response = new Response(requete.getHeader());
-            String cible;
-            cible = requete.getHeader().getCible();
-            //envoi de la réponse dans le socket
-            envoyer(response.genereResponse(cible), response.getStream());
 
-            //il n'y a plus de traitements a exécuter => fermeture des streams
-            try {
-                in.close();
-                out.close();
-            } catch (IOException ex) {
-                String msg;
-                msg = "erreur de fermeture stream" + ex.getMessage();
-                Http.syslog.fatal(msg);
-            }
-            } catch (IOException e) {
-                String msg;
-                msg = "imposible de créer le stream in/out " +  e.getMessage();
-                Http.syslog.error(msg);
+            if (requete != null) {
+                Response response = new Response(requete.getHeader());
+                String cible;
+                cible = requete.getHeader().getCible();
+                //envoi de la réponse dans le socket
+                String[] data = response.genereResponse(cible);
+                if (!data[0].isEmpty()) {
+                    try {
+                        envoyer(data, response.getStream());
+                        Http.requestlog.info(this.socket.getInetAddress()
+                                + " - "
+                                + requete.toString()
+                                + " STATUT : " + response.getStatut());
+                    } catch (Exception ex) {
+                        Http.syslog.error("Err127 - " + ex.getMessage());
+                    }
+                }
             }
         }
     }
 
-
-    /** Envoie un message sur le socket du client.
-     * @param data texte a envoyer
-     * @param stream le stream à envoyer
+    /**
+     * Ferme les stream in et out.
+     * @throws Exception erreur de fermeture du stream
      */
-    protected final void envoyer(final String[] data,
-            final BufferedInputStream stream) {
-        final int bufferSize = 1024;
+    private void fermeStream() throws Exception {
+        this.in.close();
+        this.out.close();
+    }
+    /** Envoie un message sur le socket du client.
+     * @param pData texte a envoyer
+     * @param stream le stream à envoyer
+     * @throws java.lang.Exception erreur
+     */
+    protected final void envoyer(final String[] pData,
+            final BufferedInputStream stream) throws Exception {
+        final int bufferSize = 2048;
         try {
-            out.writeBytes(data[0]);
-            if ("OK".equals(data[1])) { // si content
+            byte[] line1 = pData[0].getBytes();
+            out.write(line1);
+            if ("OK".equals(pData[1])) { // si content
                 byte[] buffer;
                 buffer = new byte[bufferSize];
                 int cpt; // compteur
@@ -140,20 +160,21 @@ public class Client implements Runnable {
                 }
                 stream.close();
             } else {
-                if (data[1] != null) {
-                    Http.syslog.trace(data[1]);
-                    out.writeBytes(data[1]);
+                if (pData[1] != null) {
+                    Http.syslog.trace(pData[1]);
+                    out.write(pData[1].getBytes());
                 } else {
                 out.writeBytes("<h1>404 Not Found</h1>");
                 }
             }
             out.flush();
-            Http.syslog.trace("envoyé : " + data);
+            Http.syslog.trace("envoyé : " + pData);
         } catch (IOException ex) {
             String msg;
             //ex.printStackTrace();
-            msg = "erreur envoyer socket " + ex.getMessage();
-            Http.syslog.fatal(msg);
+            msg = ex.getMessage();
+            Http.syslog.error("Err179 - " + msg);
+            out.flush();
         }
     }
 

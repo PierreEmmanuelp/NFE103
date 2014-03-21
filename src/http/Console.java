@@ -188,7 +188,8 @@ public class Console implements Runnable {
     private void supprimerHost() {
         Scanner sc = new Scanner(System.in);
         try {
-            System.out.println("Quel host souhaitez-vous supprimer : taper son nom ");
+            System.out.println("Quel host souhaitez-vous supprimer :"
+                    + " taper son nom ");
             String nomHost = sc.nextLine();
 
             // on recherche si le nom saisi appartient bien a un host
@@ -212,7 +213,8 @@ public class Console implements Runnable {
                                 + " a été annulée \n");
                         break;
                     default:
-                        System.out.println("Ce caractère n'est pas pris en compte ! "
+                        System.out.println("Ce caractère n'est pas "
+                                + "pris en compte ! "
                                 + "Veuillez recommencez !  \n");
                         supprimerHost();
                         break;
@@ -249,7 +251,8 @@ public class Console implements Runnable {
         Scanner sc = new Scanner(System.in);
         try {
             int portActuel = Http.getConfig().getPORT();
-            System.out.println("Le port d'écoute du serveur est actuellement le "
+            System.out.println("Le port d'écoute du serveur "
+                    + "est actuellement le "
                     + portActuel);
             System.out.println("Sur quel port d'écoute voulez vous connecté "
                     + "le serveur pour les connexions futures ? ");
