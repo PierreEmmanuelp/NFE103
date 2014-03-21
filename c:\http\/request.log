@@ -1,0 +1,2 @@
+2014-03-21 15:02:30:661 - [INFO] - [http.Client] - /127.0.0.1 - Request{Header{GET localhost:8081 / HTTP_1_1}} STATUT : 404 
+2014-03-21 15:05:37:960 - [INFO] - [http.Client] - /127.0.0.1 - Request{Header{GET localhost:8081 / HTTP_1_1}} STATUT : 200 

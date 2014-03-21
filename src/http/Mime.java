@@ -1,6 +1,5 @@
 package http;
 
-import debug.Trace;
 import org.apache.tika.Tika;
 
 /**
@@ -28,9 +27,9 @@ public final class Mime {
 
         try {
             mediaType = tika.detect(pFichier);
-            Trace.trace(mediaType);
+            Http.syslog.trace(mediaType);
         } catch (Exception e) {
-            Trace.trace(e.getMessage());
+           Http.syslog.error(e.getMessage());
         }
 
         if (mediaType.equals("application/octet-stream")) {

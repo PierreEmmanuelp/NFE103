@@ -1,32 +1,36 @@
 package http;
 
-/**
- *récupère contenue requete
+/**récupère contenue requete.
  * @author Pierre-Emmanuel Pourquier,Herve Truchard, Benjamin Pierrot
  * @version 1.2
- * @return void
  */
 public class Content {
-    
-    protected String contenu;
 
-    public Content() { // Constructeur de Content (enlever null)
-        
+    /**Le contenu d'une requete http.*/
+    private String contenu;
+
+    /** Constructeur.*/
+    public Content() {
         contenu = "";
-        
-    }   
-    
-    public String getContenu() {
+    }
+
+    /** Obtient le contenu.
+     * @return le contenu
+     */
+    public final String getContenu() {
         return contenu;
     }
 
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
+    /** Enregistre le contenu de la requete.
+     * @param pcontenu le contenu
+     */
+    public final void setContenu(final String pcontenu) {
+        this.contenu = pcontenu;
     }
 
     @Override
-    public String toString() {
-        return "Content{" + "contenu=" + contenu + '}';
+    public final String toString() {
+        return "Content{" + contenu + "}";
     }
-   
+
 }

@@ -1,10 +1,10 @@
 package http;
 
-import debug.Trace;
 import java.io.BufferedInputStream;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * Correspond à un réponse HTTP.
@@ -62,22 +62,27 @@ public class Response {
     /**
      * Current header.
      */
-    private Hashtable HeadersRep = new Hashtable();
+    private final HashMap headersRep = new HashMap();
     /**
      * hostpath : path du host.
      */
     private String hostpath;
 
     /**
+     * statut de la réponse.
+     */
+    private String statut;
+    /**
      * Constructeur.
      * @param reqHeader Le header de la requête
      */
     public Response(final Header reqHeader) {
+        this.statut = "500";
         Response.headerQuest = reqHeader;
         try {
             this.hostpath = reqHeader.getHost().getPath(); //ajout du host
         } catch (Exception e) { // TODO
-            Trace.trace("Class response error ligne 80: " + e);
+            Http.syslog.error("error ligne 79: " + e);
         }
         this.pstream = null;
     }
@@ -103,22 +108,24 @@ public class Response {
          mimetostring = "text/html";
         }
 
-        this.HeadersRep.put("Date", date);
-        this.HeadersRep.put("Server", "CNAM_NFE103/1.0"); // see param
-        this.HeadersRep.put("Content-Type", mimetostring); // Mime type
-        //this.HeadersRep.put("Content-Encoding", "gzip"); // Charset
-        this.HeadersRep.put("Content-Length", pLength); // length of chain
-        //this.HeadersRep.put("Content-Length", Length); // length of chain
-        //this.HeadersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
+        this.headersRep.put("Date", date);
+        this.headersRep.put("Server", "CNAM_NFE103/1.0"); // see param
+        this.headersRep.put("Content-Type", mimetostring); // Mime type
+        //this.headersRep.put("Content-Encoding", "gzip"); // Charset
+        this.headersRep.put("Content-Length", pLength); // length of chain
+        //this.headersRep.put("Content-Length", Length); // length of chain
+        //this.headersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
         // length of chain
-        this.HeadersRep.put("Connection", "close"); // length of chain
+        this.headersRep.put("Connection", "close"); // length of chain
 
         String line = "HTTP/1.1 " + pCode + CRLF;
         String key;
-        Enumeration e = this.HeadersRep.keys();
+
+    final Enumeration<String> e = Collections.enumeration(headersRep.keySet());
+
         while (e.hasMoreElements()) {
             key = (String) e.nextElement();
-            line += key + ":" + this.HeadersRep.get(key) + CRLF;
+            line += key + ":" + this.headersRep.get(key) + CRLF;
         }
         line += CRLF;
         return line;
@@ -141,9 +148,7 @@ public class Response {
 // Si rien on met index.html  (add to param + path recupéré de host + header)
             if (Response.headerQuest.getCible().equals("/")) {
                 request = request + "index.html";
-                if (Trace.isDebug()) {
-                    Trace.trace("Acces racine launch index.html");
-                }
+                Http.requestlog.trace("Acces racine launch index.html");
             }
 
             FileContent file = new FileContent();
@@ -151,30 +156,36 @@ public class Response {
             file.openFile(this.hostpath + request);
 
         switch (file.getStatus()) {
-            case 200:
+            case 200 :
+                this.statut = "200";
                 response[0] = this.headerRep(file.getLength().toString(), OK);
                 response[1] = "OK";
                 setStream(file.getFileContent());
                 break;
-            case 404:
+            case 404 :
+                this.statut = "404";
                 response[0] = this.headerRep("400", NOT_FOUND);
                 response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
                 break;
-            case 403:
+            case 403 :
+                this.statut = "403";
                 response[0] = this.headerRep("400", FORBIDDEN);
                 response[1] = "<h1>" + FORBIDDEN + "</h1>";
                 break;
-            case 500:
+            case 500 :
+                this.statut = "500";
                 response[0] = this.headerRep("400", INTERNAL_ERROR);
                 response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
                 break;
             default:
+                this.statut = "500";
                 response[0] = this.headerRep("400", INTERNAL_ERROR);
                 response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
-                Trace.trace("Erreur interne (response)");
+                Http.requestlog.error("Erreur interne (response)");
             }
 
         } else {
+            this.statut = "500";
             response[0] = this.headerRep("400", INTERNAL_ERROR);
             response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
         }
@@ -203,5 +214,19 @@ public class Response {
      */
     public final BufferedInputStream getStream() {
         return pstream;
+    }
+
+    /**
+     * @return le header de la reponse
+     */
+    public final HashMap getHeadersRep() {
+        return headersRep;
+    }
+
+    /**
+     * @return le statut de la reponse.
+     */
+    public final String getStatut() {
+        return statut;
     }
 }

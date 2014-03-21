@@ -1,7 +1,4 @@
 package http;
-import log.Log;
-import log.LogLevel;
-import debug.Trace;
 import http.headers.Action;
 import http.headers.Version;
 import java.util.ArrayList;
@@ -22,8 +19,9 @@ public class Request {
 
     /** Constructeur de la requete.
      * @param pRequete requete http à analyser
+     * @throws java.lang.Exception requete vide
      */
-    public Request(final ArrayList<String> pRequete) {
+    public Request(final ArrayList<String> pRequete) throws Exception {
         this.request = pRequete;
         this.header = new Header();
         this.content = new Content();
@@ -31,27 +29,28 @@ public class Request {
     }
 
     /** Parse request pour créer un header et un content.
+     * @throws Exception erreur
      */
-    private void analyseRequest() {
-        //première ligne : action
-        String premierHead = request.get(0);
-        Trace.trace(premierHead);
-        this.header.setAction(parseActionHTTP(premierHead));
-        this.header.setCible(parseCibleHTTP(premierHead));
-        this.header.setVersion(parseVersionHTTP(premierHead));
+    private void analyseRequest() throws Exception {
+        if (!this.request.isEmpty()) {
+            String premierHead = request.get(0);
+            Http.syslog.trace(premierHead);
+            this.header.setAction(parseActionHTTP(premierHead));
+            this.header.setCible(parseCibleHTTP(premierHead));
+            this.header.setVersion(parseVersionHTTP(premierHead));
 
-        for (int i = 1; i < request.size(); i++) {
-            if (request.get(i).startsWith("Host:")) { //si c'est un host
-                String nameHost = this.parseHostHTTP(request.get(i));
-                Host host = http.Serveur.getHost().getHost(nameHost);
-                this.header.setHost(host);
-            } else {
-                this.parseArgument(request.get(i));
+            for (int i = 1; i < request.size(); i++) {
+                if (request.get(i).startsWith("Host:")) { //si c'est un host
+                    String nameHost = this.parseHostHTTP(request.get(i));
+                    Host host = http.Serveur.getHost().getHost(nameHost);
+                    this.header.setHost(host);
+                } else {
+                    this.parseArgument(request.get(i));
+                }
             }
+        } else {
+            throw new Exception("requete vide");
         }
-        String msg;
-        msg = "Req{" + this.header.toString() + this.content.toString() + "}";
-        Log.ajouterEntree(msg, LogLevel.REQUEST);
     }
 
     /** Vérifie si la requete nécessite du contenu.
@@ -205,4 +204,16 @@ public class Request {
         this.header.getParametres().put(key, value);
         }
     }
+
+    @Override
+    public final String toString() {
+        String msg;
+        if (content.getContenu().isEmpty()) {
+            msg = "Request{" + header + "}";
+        } else {
+            msg = "Request{" + header + " content : " + content + "}";
+        }
+        return msg;
+    }
+
 }
