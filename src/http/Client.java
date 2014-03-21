@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Représente un client et réagit au requêtes reçues par celui-ci.
  * @author Pourquier Pierre-Emmanuel
@@ -38,6 +40,7 @@ public class Client implements Runnable {
         this.server = psrv;
         this.thread = new Thread(this);
         this.thread.start();
+        this.in = null;
     }
 
     /** Si le client est libre, il peut traiter une requête.
@@ -48,10 +51,10 @@ public class Client implements Runnable {
         InputStreamReader is = null;
         try {
             is = new InputStreamReader(psocket.getInputStream());
+        in = new BufferedReader(is);
         } catch (IOException ex) {
             Http.syslog.error("Err52 -  socket.inputstream " + ex.getMessage());
         }
-        in = new BufferedReader(is);
         try {
             out = new DataOutputStream(psocket.getOutputStream());
         } catch (IOException ex) {
@@ -76,8 +79,8 @@ public class Client implements Runnable {
             while (attendre) {
                 try {
                     //le thread est libre, retour dans la liste
-                    this.server.tailThread(this);
-                    Http.syslog.trace(this.thread.getName() + " sleep");
+                    //this.server.tailThread(this);
+                    Http.syslog.debug(this.thread.getName() + " sleep");
                     Thread.sleep(tempPause);
                 } catch (InterruptedException ex) {
                     break; // Sortie de la boucle infinie attendre
@@ -86,7 +89,21 @@ public class Client implements Runnable {
             Http.syslog.trace(this.thread.getName() + " a été réveillé");
             try { //lecture dans le socket
                 header = new ArrayList<>();
-                while (in != null && (line = in.readLine()) != null) {
+                
+                
+                    Http.syslog.debug(">>>in>>>" + this.thread.getName() + socket.toString());
+                
+                while (!in.ready()) {                    
+                    in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+                }
+                
+              if (!in.ready()) {
+                  Http.syslog.debug("Not ready");
+              } else {
+                  Http.syslog.debug("Ready" + this.thread.getName());
+              }
+                
+                while ( in != null && (line = in.readLine()) != null) {
                     if (line.length() == 0) {
                         break;
                     }
@@ -98,6 +115,7 @@ public class Client implements Runnable {
                             line = in.readLine();
                             strContent = (line);
                             requete.setContent(new Content());
+                            in.close();
                         }
                     } catch (Exception ex) {
                         Http.syslog.error("Err103 - " + ex.getMessage()
@@ -106,7 +124,8 @@ public class Client implements Runnable {
                 }
             } catch (IOException ex) {
                     String msg;
-                    msg = "Lecture socket : " + ex.getMessage();
+                     ex.printStackTrace();
+                    msg = "Lecture socket : " + ex.getMessage() + requete.toString();
                     Http.syslog.error("Err110 - " + msg);
             }
 
@@ -128,7 +147,9 @@ public class Client implements Runnable {
                     }
                 }
             }
-        }
+        this.server.tailThread(this);
+        Http.syslog.debug(">>>retour OK>>>" + this.thread.getName());
+                } 
     }
 
     /**
@@ -146,32 +167,58 @@ public class Client implements Runnable {
      */
     protected final void envoyer(final String[] pData,
             final BufferedInputStream stream) throws Exception {
-        final int bufferSize = 2048;
+       
         try {
             byte[] line1 = pData[0].getBytes();
-            out.write(line1);
+
+            
+            
             if ("OK".equals(pData[1])) { // si content
+                
+             final int bufferSize = 2048;
                 byte[] buffer;
                 buffer = new byte[bufferSize];
-                int cpt; // compteur
-
+                int cpt=0; // compteur
+                
+                Http.syslog.debug(">>>out>>>" + this.thread.getName() + socket.toString());
+                
+                out.write(line1);
+                //out.flush();
+                
                 while ((cpt = stream.read(buffer, 0, bufferSize)) != -1) {
-                    out.write(buffer);
-                }
-                stream.close();
+                    out.write(buffer,0,cpt);
+                    } 
+
+                 if (stream.available()<-1){
+                     stream.reset();
+                 }
+                 stream.close();
+                 out.flush();
+              //  socket.close();
             } else {
                 if (pData[1] != null) {
+                    out.write(line1);
+                    out.flush();
                     Http.syslog.trace(pData[1]);
-                    out.write(pData[1].getBytes());
+                    out.writeBytes(pData[1]);
+                    out.flush();
+                  //  socket.close();
                 } else {
+                out.write(line1);
                 out.writeBytes("<h1>404 Not Found</h1>");
+              //  out.flush();
+    //            socket.close();
                 }
             }
-            out.flush();
+              out.flush();
+             // in.close();
+              out.close();
+              Http.syslog.debug(">>>Out%%%%>>>" + this.thread.getName() + socket.toString());
+        //    out.close();
             Http.syslog.trace("envoyé : " + pData);
         } catch (IOException ex) {
             String msg;
-            //ex.printStackTrace();
+            ex.printStackTrace();
             msg = ex.getMessage();
             Http.syslog.error("Err179 - " + msg);
             out.flush();
@@ -185,6 +232,7 @@ public class Client implements Runnable {
     protected final String recevoir() throws IOException {
             String message;
             message = in.readLine();
+            in.close();
             return message;
     }
 

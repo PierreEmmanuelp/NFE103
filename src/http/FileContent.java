@@ -44,6 +44,7 @@ public class FileContent extends Content {
         this.pCheminCible = cheminCible;
         this.filestream = null;
         this.fileLenght = null;
+        this.mime = null;
         envoyerFichier();
 
     }
@@ -56,18 +57,21 @@ public class FileContent extends Content {
         try {
 
             File file = new File(this.pCheminCible); // Ouverture file
-
+                 
             if (file.exists() && file.canRead()) {
                 //file dans stream
+                Http.syslog.info("file content:" + this.pCheminCible);
                 this.filestream = new BufferedInputStream(new FileInputStream(file));
                 setLength(file.length());
                 setStatus(200);
                 setMime();
             } else {
                 if (file.exists() && !file.canRead()) {
+               Http.syslog.warn("403");
                     setStatus(403);
                 } else {
-                    setStatus(404);
+               Http.syslog.warn("404");
+               setStatus(404);
                 }
             }
         } catch (FileNotFoundException e) {
