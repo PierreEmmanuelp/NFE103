@@ -10,7 +10,7 @@
   <!-- Chemin du fichier de log -->
   <pathlog>c:\http\</pathlog>
   <hosts>
-    <host name="localhost:8081" path="c:\http\" />
+    <host name="localhost:8081" path="/home/marine/www" />
     <host name="www2.fr:8081" path="c:\http\" />
   </hosts>
 </configuration>
