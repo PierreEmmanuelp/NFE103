@@ -48,22 +48,11 @@ public class RequestTest {
         boolean expResult = false;
         boolean result = instance.besoinContent();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
     }
 
-    /**
-     * Test of analyseContent method, of class Request.
-     */
-    @Test
-    public void testAnalyseContent() {
-        System.out.println("analyseContent");
-        String pContenu = "";
-        Request instance = null;
-        instance.analyseContent(pContenu);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+   
+   
 
     /**
      * Test of getHeader method, of class Request.
@@ -75,8 +64,7 @@ public class RequestTest {
         Header expResult = null;
         Header result = instance.getHeader();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -89,8 +77,7 @@ public class RequestTest {
         Content expResult = null;
         Content result = instance.getContent();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
     }
     
 }
