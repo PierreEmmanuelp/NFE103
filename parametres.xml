@@ -13,8 +13,4 @@
     <host name="localhost:8081" path="dist/javadoc" />
     <host name="www2.fr:8081" path="dist/javadoc" />
   </hosts>
-  
-  <detail>
-  
-  </detail>
 </configuration>
