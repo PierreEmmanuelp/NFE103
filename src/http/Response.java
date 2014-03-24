@@ -167,23 +167,28 @@ public class Response {
                 break;
             case 404 :
                 this.statut = "404";
-                response[0] = this.headerRep("400", NOT_FOUND);
-                response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), NOT_FOUND);
+               // response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
+                response[1] = "OK";
+                setStream(file.getFileContent());
                 break;
             case 403 :
                 this.statut = "403";
-                response[0] = this.headerRep("400", FORBIDDEN);
-                response[1] = "<h1>" + FORBIDDEN + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), FORBIDDEN);
+               // response[1] = "<h1>" + FORBIDDEN + "</h1>";
+                response[1] = "OK";
                 break;
             case 500 :
                 this.statut = "500";
-                response[0] = this.headerRep("400", INTERNAL_ERROR);
-                response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), INTERNAL_ERROR);
+              //  response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[1] = "OK";
                 break;
             default:
                 this.statut = "500";
-                response[0] = this.headerRep("400", INTERNAL_ERROR);
-                response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), INTERNAL_ERROR);
+               // response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[1] = "OK";
                 Http.requestlog.error("Erreur interne (response)");
             }
 

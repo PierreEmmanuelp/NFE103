@@ -1,5 +1,6 @@
 package http;
 
+import http.headers.CodeResponse;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,30 +58,36 @@ public class FileContent extends Content {
         try {
 
             File file = new File(this.pCheminCible); // Ouverture file
-                 
+
             if (file.exists() && file.canRead()) {
                 //file dans stream
                 Http.syslog.info("file content:" + this.pCheminCible);
-                this.filestream = new BufferedInputStream(new FileInputStream(file));
-                setLength(file.length());
-                setStatus(200);
-                setMime();
+                setStatus(CodeResponse.OK.getCode());
             } else {
                 if (file.exists() && !file.canRead()) {
-               Http.syslog.warn("403");
-                    setStatus(403);
+                    Http.syslog.warn("403");
+                    setStatus(CodeResponse.FORBIDDEN.getCode());
+                    this.pCheminCible = "./Error.html/HTTP_FORBIDDEN.html";
+                    file = new File(this.pCheminCible);
                 } else {
-               Http.syslog.warn("404");
-               setStatus(404);
+                    Http.syslog.warn("404");
+                    setStatus(CodeResponse.NOT_FOUND.getCode());
+                    this.pCheminCible = "./Error.html/HTTP_NOT_FOUND.html";
+                    file = new File(this.pCheminCible);
                 }
             }
+            this.filestream = new BufferedInputStream(
+                    new FileInputStream(file));
+            setLength(file.length());
+            setMime();
+
         } catch (FileNotFoundException e) {
-            setStatus(404);
+            setStatus(CodeResponse.NOT_FOUND.getCode());
             this.filestream = null;
             System.out.println(e);
         } catch (Exception e) {
             this.filestream = null;
-            setStatus(500);
+            setStatus(CodeResponse.INTERNAL_ERROR.getCode());
             System.out.println(e);
         }
 
