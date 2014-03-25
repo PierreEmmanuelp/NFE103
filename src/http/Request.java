@@ -4,22 +4,29 @@ import http.headers.Version;
 import java.util.ArrayList;
 
 /** Requete HTTP.
- * @author Pierre-Emmanuel Pourquier
+ * @author Pierre-Emmanuel Pourquier.
  * @version 1.1
  */
 public class Request {
-    /** Header de la requete HTTP.*/
+    /**
+     * Header de la requete HTTP.
+     */
     private final Header header;
 
-    /** Contenu de la requete HTTP.*/
+    /**
+     * Contenu de la requete HTTP.
+     */
     private Content content;
 
-    /** Requete brute à analyser.*/
+    /**
+     * Requete brute à analyser.
+     */
     private final ArrayList<String> request;
 
-    /** Constructeur de la requete.
-     * @param pRequete requete http à analyser
-     * @throws java.lang.Exception requete vide
+    /**
+     * Constructeur de la requete.
+     * @param pRequete requete http à analyser.
+     * @throws java.lang.Exception requete vide.
      */
     public Request(final ArrayList<String> pRequete) throws Exception {
         this.request = pRequete;
@@ -28,13 +35,15 @@ public class Request {
         analyseRequest();
     }
 
-    /** Parse request pour créer un header et un content.
-     * @throws Exception erreur
+    /**
+     * Parse request pour créer un header et un content.
+     * @throws Exception erreur.
      */
     private void analyseRequest() throws Exception {
         if (!this.request.isEmpty()) {
-            String premierHead = request.get(0);
+            String premierHead = request.get(0); //on va parser la 1ere ligne
             Http.syslog.trace(premierHead);
+            //Remplissage du header en fonction des infos parsées :
             this.header.setAction(parseActionHTTP(premierHead));
             this.header.setCible(parseCibleHTTP(premierHead));
             this.header.setVersion(parseVersionHTTP(premierHead));
@@ -44,7 +53,7 @@ public class Request {
                     String nameHost = this.parseHostHTTP(request.get(i));
                     Host host = http.Dispatcher.getHosts().getHost(nameHost);
                     this.header.setHost(host);
-                } else {
+                } else { //sinon on ajoute les parametres/valeurs au tableau
                     this.parseArgument(request.get(i));
                 }
             }
@@ -53,8 +62,9 @@ public class Request {
         }
     }
 
-    /** Vérifie si la requete nécessite du contenu.
-     * @return true si besoin d'un content
+    /**
+     * Vérifie si la requete nécessite du contenu.
+     * @return true si besoin d'un content.
      */
     public final boolean besoinContent() {
       //if(header.getContentLength > 0){
@@ -64,37 +74,42 @@ public class Request {
       //}
     }
 
-    /** Analyse le contenu.
-     * @param pContenu le contenu au format string de la requete http initiale
+    /**
+     * Analyse le contenu.
+     * @param pContenu le contenu au format string de la requete http initiale.
      */
     public final void analyseContent(final String pContenu) {
 
     }
 
-    /** Renvoit le Header correspondant à cette requête.
+    /**
+     * Renvoit le Header correspondant à cette requête.
      * @return le Header.
      */
     public final Header getHeader() {
         return header;
     }
 
-    /** Renvoit le Content correspondant à cette requête.
+    /**
+     * Renvoit le Content correspondant à cette requête.
      * @return le content.
      */
     public final Content getContent() {
         return content;
     }
 
-    /** Ajoute le contenu à la requete.
-     * @param pcontent le contenu
+    /**
+     * Ajoute le contenu à la requete.
+     * @param pcontent le contenu.
      */
     public final void setContent(final Content pcontent) {
         this.content = pcontent;
     }
 
-    /** Parse la première ligne http et en extrait l'action.
-     * @param pHeaderHTTP la première ligne du header contenant l'action
-     * @return le type d'action | null si aucune action
+    /**
+     * Parse la première ligne http et en extrait l'action.
+     * @param pHeaderHTTP la première ligne du header contenant l'action.
+     * @return le type d'action | null si aucune action.
      */
     private Action parseActionHTTP(final String pHeaderHTTP) {
         String headerHTTP = "";
@@ -131,15 +146,15 @@ public class Request {
                 action = Action.TRACE;
                 break;
             default:
-                //TODO ERROR REQUETE MAL FORMEE
                 action = null;
         }
         return action;
     }
 
-    /** Parse la première enête http et extrait la cible de celle-ci.
-     * @param pHeaderHTTP la première entête d'une requête HTTP
-     * @return la cible de la requête http
+    /**
+     * Parse la première enête http et extrait la cible de celle-ci.
+     * @param pHeaderHTTP la première entête d'une requête HTTP.
+     * @return la cible de la requête http.
      */
     private String parseCibleHTTP(final String pHeaderHTTP) {
         String cible = "";
@@ -151,9 +166,10 @@ public class Request {
         return cible;
     }
 
-    /** Parse la première entête http et extrait la version de celle-ci.
-     * @param pHeaderHTTP la première entête d'une requête HTTP
-     * @return la version du protocole de la requête http
+    /**
+     * Parse la première entête http et extrait la version de celle-ci.
+     * @param pHeaderHTTP la première entête d'une requête HTTP.
+     * @return la version du protocole de la requête http.
      */
     private Version parseVersionHTTP(final String pHeaderHTTP) {
         Version version;
@@ -178,8 +194,8 @@ public class Request {
     }
 
     /** Parse la première entête http et extrait le host de celle-ci.
-     * @param pHeaderHTTP la première entête d'une requête HTTP
-     * @return le host de la requête http
+     * @param pHeaderHTTP la première entête d'une requête HTTP.
+     * @return le host de la requête http.
      */
     private String parseHostHTTP(final String pHeaderHTTP) {
         String nomHost = "";
@@ -189,19 +205,20 @@ public class Request {
         return nomHost;
     }
 
-    /** Parse une ligne de requête http et l'ajoute au hastable.
-     * @param pHeaderHTTP la ligne de requête à parser
-    */
+    /**
+     * Parse une ligne de requête http et l'ajoute au tableau header.
+     * @param pHeaderHTTP la ligne de requête à parser.
+     */
     private void parseArgument(final String pHeaderHTTP) {
         String key;
         String value;
         if (pHeaderHTTP.contains(":")) {
-        key = pHeaderHTTP.substring(0, pHeaderHTTP.indexOf(":"));
-        int index, length;
-        index = pHeaderHTTP.indexOf(":");
-        length = pHeaderHTTP.length();
-        value = pHeaderHTTP.substring(index, length);
-        this.header.getParametres().put(key, value);
+            key = pHeaderHTTP.substring(0, pHeaderHTTP.indexOf(":"));
+            int index, length;
+            index = pHeaderHTTP.indexOf(":");
+            length = pHeaderHTTP.length();
+            value = pHeaderHTTP.substring(index, length);
+            this.header.getParametres().put(key, value);
         }
     }
 
