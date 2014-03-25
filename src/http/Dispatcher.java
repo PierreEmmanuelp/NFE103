@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * Serveur attend les requetes d'un port et les dispatche à un pool de worker.
  * @author Pourquier Pierre-Emmanuel
  * @version 1.0
  */
@@ -40,7 +38,6 @@ public class Dispatcher {
         this.port = http.Http.getConfig().getPORT();
         this.poolThread = http.Http.getConfig().getPoolThread();
         hosts = http.Http.getConfig().getHosts();
-
         try {
             //creation de la socket
             servSocket = new ServerSocket(this.port);
@@ -58,14 +55,13 @@ public class Dispatcher {
      */
     public final void start() {
         Http.syslog.info("server online");
-        while (true) { 
+        while (true) {
             try {
                 JobRequest job = new JobRequest(this, servSocket.accept());
                 this.pool.execute(job);
             } catch (IOException ex) {
                 Http.syslog.error(ex.getMessage());
             }
-                
         }
     }
 
@@ -95,7 +91,7 @@ public class Dispatcher {
      * Obtient le port d'écoute du sevreur.
      * @return le port
      */
-    public final int getPort() {
+    public final synchronized int getPort() {
         return port;
     }
 
@@ -103,7 +99,7 @@ public class Dispatcher {
      * Obtient le nombres de thread du pool.
      * @return le nombre de thread
      */
-    public int getPoolThread() {
+    public final synchronized int getPoolThread() {
         return poolThread;
     }
 }
