@@ -67,11 +67,7 @@ public class Request {
      * @return true si besoin d'un content.
      */
     public final boolean besoinContent() {
-      //if(header.getContentLength > 0){
-      //    return true;
-      //}else{
-        return false; //si il y a du contenu. Je l'ai mis a des fins de tests
-      //}
+        return header.getParametres().containsKey("Content");
     }
 
     /**

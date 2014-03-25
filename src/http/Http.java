@@ -2,7 +2,7 @@ package http;
 import log.Log;
 import org.apache.log4j.Logger;
 
-/** 
+/**
  * Charge la configuration, démarre les log puis le serveur.
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel

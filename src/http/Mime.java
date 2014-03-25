@@ -19,7 +19,7 @@ public final class Mime {
     /**
      * Extrait le type mime d'un fichier.
      * @param pFichier String Url du fichier en entrée.
-     * @return String Type mime
+     * @return String Type mime.
      */
     public static String extractTypeMime(final String pFichier) {
 

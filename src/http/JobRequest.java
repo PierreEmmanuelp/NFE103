@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package http;
 
 import java.io.BufferedInputStream;
@@ -15,7 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- *
+ * Job qui lie la requete http et génère la réponse adéquate.
  * @author Pourquier Pierre-Emmanuel
  * @version 1.0
  */
@@ -70,6 +64,7 @@ public class JobRequest implements Runnable {
     /**
      * démarre le thread.
      */
+    @Override
     public final void run() {
         String line;
         ArrayList<String> header;
@@ -88,7 +83,7 @@ public class JobRequest implements Runnable {
                 if (!in.ready()) {
                     Http.syslog.debug("Not ready");
                 } else {
-                    Http.syslog.debug("Ready" 
+                    Http.syslog.debug("Ready "
                             + Thread.currentThread().getName());
                 }
 
@@ -100,12 +95,12 @@ public class JobRequest implements Runnable {
                     try {
                         requete = new Request(header);
                         //lecture du content (en cas de post) :
-                        /*if (requete.besoinContent()) {
+                        if (requete.besoinContent()) {
                             line = in.readLine();
                             strContent = (line);
                             requete.setContent(new Content());
                             in.close();
-                        }*/
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         Http.syslog.error("Err103 - " + ex.getMessage()
@@ -166,7 +161,7 @@ public class JobRequest implements Runnable {
                 byte[] buffer;
                 buffer = new byte[bufferSize];
                 int cpt = 0; // compteur
-                Http.syslog.debug(">>out>>" + Thread.currentThread().getName() 
+                Http.syslog.debug(">>out>>" + Thread.currentThread().getName()
                         + socket.toString());
                 out.write(line1);
                 while ((cpt = stream.read(buffer, 0, bufferSize)) != -1) {
