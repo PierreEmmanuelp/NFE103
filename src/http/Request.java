@@ -42,7 +42,7 @@ public class Request {
             for (int i = 1; i < request.size(); i++) {
                 if (request.get(i).startsWith("Host:")) { //si c'est un host
                     String nameHost = this.parseHostHTTP(request.get(i));
-                    Host host = http.Serveur.getHost().getHost(nameHost);
+                    Host host = http.Dispatcher.getHosts().getHost(nameHost);
                     this.header.setHost(host);
                 } else {
                     this.parseArgument(request.get(i));

@@ -17,7 +17,7 @@ public class Console implements Runnable {
     /**.
      * Le serveur
      */
-    private final Serveur serveur;
+    private final Dispatcher serveur;
     /**.
      *
      * Temps de sleep du thread
@@ -30,7 +30,7 @@ public class Console implements Runnable {
      * @param pServeur
      *      Le serveur
      */
-    public Console(final Serveur pServeur) {
+    public Console(final Dispatcher pServeur) {
         thread = new Thread(this);
         thread.start();
         this.serveur = pServeur;
@@ -126,20 +126,20 @@ public class Console implements Runnable {
     private void listerHost() {
         try {
             System.out.println("Voici les hosts déjà connus :");
-            if (Serveur.getHost().getHostList() != null
-                    && Serveur.getHost().getHostList().size() > 0) {
+            if (Dispatcher.getHosts().getHostList() != null
+                    && Dispatcher.getHosts().getHostList().size() > 0) {
                 int i;
 
                 System.out.println("Il y a actuellement "
-                        + Serveur.getHost().getHostList().size()
+                        + Dispatcher.getHosts().getHostList().size()
                         + " host(s) dans le système.\n");
 
-                for (i = 0; i < Serveur.getHost().getHostList().size(); i++) {
+                for (i = 0; i < Dispatcher.getHosts().getHostList().size(); i++) {
                     System.out.println(i
                             + ": Nom : "
-                            + Serveur.getHost().getHostList().get(i).getName()
+                            + Dispatcher.getHosts().getHostList().get(i).getName()
                             + " - Chemin : "
-                            + Serveur.getHost().getHostList().get(i).getPath()
+                            + Dispatcher.getHosts().getHostList().get(i).getPath()
                             + "\n");
                 }
             } else {
@@ -167,9 +167,9 @@ public class Console implements Runnable {
                     + "\n");
 
             Host host = new Host(nomHost, pathHost);
-            Serveur.getHost().addHost(host);
+            Dispatcher.getHosts().addHost(host);
 
-            if (Serveur.getHost().getHostList().size() > 0) {
+            if (Dispatcher.getHosts().getHostList().size() > 0) {
                 System.out.println("Le host "
                         + nomHost
                         + " qui a comme chemin "
@@ -193,7 +193,7 @@ public class Console implements Runnable {
             String nomHost = sc.nextLine();
 
             // on recherche si le nom saisi appartient bien a un host
-            Host host = Serveur.getHost().getHost(nomHost);
+            Host host = Dispatcher.getHosts().getHost(nomHost);
             if (host != null) {
                 System.out.println("\nEst ce que vous êtes sur "
                         + "de vouloir supprimer le host "
@@ -202,7 +202,7 @@ public class Console implements Runnable {
                     case "o":
                         // si le systeme a bien un host pour le nom saisi
                         //on supprime le host
-                        Serveur.getHost().removeHost(host);
+                        Dispatcher.getHosts().removeHost(host);
                         System.out.println("Le host "
                                 + nomHost
                                 + " a bien été supprimé \n");
@@ -234,7 +234,7 @@ public class Console implements Runnable {
      */
     private void listerPort() {
         try {
-            int port = serveur.getPORT();
+            int port = serveur.getPort();
             System.out.println("Actuellement le serveur est connecté "
                     + "sur le port d'écoute "
                     + port

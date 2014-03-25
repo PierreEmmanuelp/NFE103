@@ -35,9 +35,9 @@ public final class Http {
 
         syslog.info("Démarrage du serveur");
         //Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
-        Serveur serveur = new Serveur();
+        Dispatcher serveur = new Dispatcher();
         Console console;
-        console = new Console(serveur);
+        //console = new Console(serveur);
         serveur.start();
     }
 
