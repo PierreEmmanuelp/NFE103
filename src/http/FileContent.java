@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
  *
  * @version 1.999
  * @author htruchard + pierrot
- * @return contenu
  */
 public class FileContent extends Content {
 
