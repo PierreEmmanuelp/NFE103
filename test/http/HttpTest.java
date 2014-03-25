@@ -46,8 +46,6 @@ public class HttpTest {
         System.out.println("main");
         String[] args = null;
         Http.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -59,8 +57,6 @@ public class HttpTest {
         Configuration expResult = null;
         Configuration result = Http.getConfig();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
