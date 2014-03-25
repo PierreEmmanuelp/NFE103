@@ -19,8 +19,8 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.output.Format;
 
 /**
- * @author Morgan Pinatel
- * @version 2.1
+ * @author Morgan Pinatel, Pourquier Pierre-Emmanuel
+ * @version 1.2
  */
 public class Configuration {
 
@@ -92,7 +92,7 @@ public class Configuration {
         try {
             sortie.output(document, new FileOutputStream(pathParametres));
         } catch (IOException e) {
-            System.out.println(e);
+            Http.syslog.error(e.getMessage());
         }
     }
 
@@ -107,10 +107,8 @@ public class Configuration {
         SAXBuilder sxb = new SAXBuilder();
         try {
             document = sxb.build(new File(pathParametres));
-        } catch (JDOMException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (JDOMException | IOException e) {
+            Http.syslog.error(e.getMessage());
         }
         racine = document.getRootElement();
         Element base = racine.getChild(englobe);
@@ -142,7 +140,7 @@ public class Configuration {
     /**
      * permet d'enregistrer les paramètres dans le fichier de paramètres.
      */
-    public final void updateDetail() {
+    public final void updateParam() {
         Element racine = parser("detail");
         List<Element> paramList = racine.getChildren();
         Iterator<Element> i = paramList.iterator();
@@ -172,7 +170,7 @@ public class Configuration {
         try {
             sortie.output(document, new FileOutputStream(pathParametres));
         } catch (IOException e) {
-            System.out.println(e);
+            Http.syslog.error(e.getMessage());
         }
     }
 
@@ -181,7 +179,7 @@ public class Configuration {
      * @param key clef du paramètre
      * @return existe
      */
-    public final Boolean existeDetail(final String key) {
+    public final Boolean existeParam(final String key) {
        Boolean existe = this.detail.containsKey(key);
        return existe;
     }
@@ -192,8 +190,8 @@ public class Configuration {
      * @param key clef du paramètre
      * @param value valeur du paramètre
      */
-    public final void addDetail(final String key, final String value) {
-        if (existeDetail(key)) {
+    public final void addParam(final String key, final String value) {
+        if (existeParam(key)) {
             this.detail.remove(key);
         }
         this.detail.put(key, value);
@@ -236,7 +234,7 @@ public class Configuration {
      * @return la valeur du paramètre "détail".
      * @param pKey nom du paramètre
      */
-    public final String getDetail(final String pKey) {
+    public final String getParam(final String pKey) {
         return (String) this.detail.get(pKey);
     }
 
