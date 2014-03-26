@@ -62,7 +62,7 @@ public class Response {
     /**
      * Current header.
      */
-    private final HashMap headersRep = new HashMap();
+    private final HashMap<String,Object> headersRep = new HashMap<>();
     /**
      * hostpath : path du host.
      */
@@ -121,10 +121,11 @@ public class Response {
         String line = "HTTP/1.1 " + pCode + CRLF;
         String key;
 
-    final Enumeration<String> e = Collections.enumeration(headersRep.keySet());
+    final Enumeration<String> e;
+        e = Collections.enumeration(headersRep.keySet());
 
         while (e.hasMoreElements()) {
-            key = (String) e.nextElement();
+            key = e.nextElement();
             line += key + ":" + this.headersRep.get(key) + CRLF;
         }
         line += CRLF;
@@ -140,19 +141,21 @@ public class Response {
     public final String[] genereResponse(final String pRequest) {
 
         String request = pRequest;
+  //      System.out.println(pRequest.toString());
         String[] response;
         response = new String[2];
 
         if (request == null || Response.INTERNAL_ERROR != null
                                       || !request.equals(INTERNAL_ERROR)) {
 // Si rien on met index.html  (add to param + path recupéré de host + header)
-            if (Response.headerQuest.getCible().equals("/")) {
+            if (Response.headerQuest.getCible().equals("/")|| Response.headerQuest.getCible().equals("")) {
                 request = request + "index.html";
-                Http.requestlog.trace("Acces racine launch index.html");
+              //  Http.requestlog.trace("Acces racine launch index.html");
             }
 
             FileContent file = new FileContent();
-
+ //           System.out.println( this.hostpath + request.toString());
+            Http.syslog.debug("Response>>>>>>"+this.hostpath + request );
             file.openFile(this.hostpath + request);
 
         switch (file.getStatus()) {
@@ -164,23 +167,28 @@ public class Response {
                 break;
             case 404 :
                 this.statut = "404";
-                response[0] = this.headerRep("400", NOT_FOUND);
-                response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), NOT_FOUND);
+               // response[1] = "<h1>" + Response.NOT_FOUND + "</h1>";
+                response[1] = "OK";
+                setStream(file.getFileContent());
                 break;
             case 403 :
                 this.statut = "403";
-                response[0] = this.headerRep("400", FORBIDDEN);
-                response[1] = "<h1>" + FORBIDDEN + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), FORBIDDEN);
+               // response[1] = "<h1>" + FORBIDDEN + "</h1>";
+                response[1] = "OK";
                 break;
             case 500 :
                 this.statut = "500";
-                response[0] = this.headerRep("400", INTERNAL_ERROR);
-                response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), INTERNAL_ERROR);
+              //  response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[1] = "OK";
                 break;
             default:
                 this.statut = "500";
-                response[0] = this.headerRep("400", INTERNAL_ERROR);
-                response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[0] = this.headerRep(file.getLength().toString(), INTERNAL_ERROR);
+               // response[1] = "<h1>" + INTERNAL_ERROR + "</h1>";
+                response[1] = "OK";
                 Http.requestlog.error("Erreur interne (response)");
             }
 
@@ -219,7 +227,7 @@ public class Response {
     /**
      * @return le header de la reponse
      */
-    public final HashMap getHeadersRep() {
+    public final HashMap<String,Object> getHeadersRep() {
         return headersRep;
     }
 
