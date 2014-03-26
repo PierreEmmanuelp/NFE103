@@ -52,12 +52,12 @@ public class JobRequest implements Runnable {
             is = new InputStreamReader(this.socket.getInputStream());
             in = new BufferedReader(is);
         } catch (IOException ex) {
-            Http.syslog.error("Err59 -  socket.inputstream " + ex.getMessage());
+            Http.syslog.error("Err55 -  socket.inputstream " + ex.getMessage());
         }
         try {
             out = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException ex) {
-            Http.syslog.error("Err64 - socket.OutputStream + "
+            Http.syslog.error("Err60 - socket.OutputStream + "
                     + ex.getMessage());
         }
     }
@@ -83,17 +83,16 @@ public class JobRequest implements Runnable {
             if (!in.ready()) {
                 Http.syslog.debug("Not ready");
             } else {
-                /*Http.syslog.debug("Ready "
-                        + Thread.currentThread().getName());*/
+                Http.syslog.debug("Ready "
+                        + Thread.currentThread().getName());
             }
             while (in != null && (line = in.readLine()) != null && line.length() > 0) {
                 if (line.length() == 0) {
-                    Http.syslog.warn("in the break");
+                    Http.syslog.warn("ERR91 - in the break");
                     break;
                 }
                 header.add(line);
             }
-                
             try {
                 requete = new Request(header);
                 //lecture du content (en cas de post) :
@@ -112,39 +111,38 @@ public class JobRequest implements Runnable {
                     requete.setContent(content);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
-                Http.syslog.error("Err103 - " + ex.getMessage()
+                Http.syslog.error("Err114 - " + ex.getMessage()
                         + requete.toString());
-            }            
+            }
         } catch (IOException ex) {
                 String msg;
-                msg = "Lecture socket : " + ex.getMessage() + requete.toString();
-                Http.syslog.error("Err110 - " + msg);
+                msg = "Lecture socket : " + ex.getMessage()
+                        + requete.toString();
+                Http.syslog.error("Err121 - " + msg);
         }
 
-        if (requete != null) {
-            Response response = new Response(requete.getHeader());
-            String cible;
-            cible = requete.getHeader().getCible();
-            //envoi de la réponse dans le socket
-            String[] data = response.genereResponse(cible);
-            if (!data[0].isEmpty()) {
-                try {
-                    envoyer(data, response.getStream());
-                    Http.requestlog.info(this.socket.getInetAddress()
-                            + " - "
-                            + requete.toString()
-                            + " STATUT : " + response.getStatut());
-                } catch (Exception ex) {
-                    Http.syslog.error("Err127 - " + ex.getMessage());
-                }
+
+        Response response = new Response(requete.getHeader());
+        String cible;
+        cible = requete.getHeader().getCible();
+        //envoi de la réponse dans le socket
+        String[] data = response.genereResponse(cible);
+        if (!data[0].isEmpty()) {
+            try {
+                envoyer(data, response.getStream());
+                Http.requestlog.info(this.socket.getInetAddress()
+                        + " - "
+                        + requete.toString()
+                        + " STATUT : " + response.getStatut());
+            } catch (Exception ex) {
+                Http.syslog.error("Err138 - " + ex.getMessage());
             }
         }
         Http.syslog.debug(">>>retour OK>>>" + Thread.currentThread().getName());
         try {
             fermeStream();
         } catch (Exception ex) {
-            Http.syslog.error(ex.getMessage());
+            Http.syslog.error("Err145 - close stream - " + ex.getMessage());
         }
     }
 
@@ -169,7 +167,7 @@ public class JobRequest implements Runnable {
                 final int bufferSize = 2048;
                 byte[] buffer;
                 buffer = new byte[bufferSize];
-                int cpt = 0; // compteur
+                int cpt; // compteur
                 Http.syslog.debug(">>out>>" + Thread.currentThread().getName()
                         + socket.toString());
                 out.write(line1);
@@ -194,16 +192,14 @@ public class JobRequest implements Runnable {
                 }
             }
               out.flush();
-             // in.close();
               out.close();
-              Http.syslog.debug(">>>Out%%%%>>>" 
+              Http.syslog.debug(">>>Out%%%%>>>"
                       + Thread.currentThread().getName() + socket.toString());
-        //    out.close();
             Http.syslog.trace("envoyé : " + pData);
         } catch (IOException ex) {
             String msg;
             msg = ex.getMessage();
-            Http.syslog.error("Err179 - " + msg);
+            Http.syslog.error("Err202 - " + msg);
             out.flush();
         }
     }
