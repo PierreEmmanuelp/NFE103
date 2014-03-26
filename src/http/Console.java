@@ -318,7 +318,7 @@ public class Console implements Runnable {
      */
     private void start() {
         try {
-            if (serveur == null) {
+            if (!serveur.isOnline()) {
                 serveur.start();
                 System.out.println("Le serveur vient d'être démarré");
             } else {

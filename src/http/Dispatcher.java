@@ -32,6 +32,10 @@ public class Dispatcher {
      */
     private ExecutorService pool;
     /**
+     * si le serveur est en ligne.
+     */
+    private Boolean online;
+    /**
      * Constructeur.
      */
     public Dispatcher() {
@@ -55,7 +59,8 @@ public class Dispatcher {
      */
     public final void start() {
         Http.syslog.info("server online");
-        while (true) {
+        online = true;
+        while (online) {
             try {
                 JobRequest job = new JobRequest(this, servSocket.accept());
                 this.pool.execute(job);
@@ -69,14 +74,10 @@ public class Dispatcher {
      * Arrête le serveur.
      */
     public final void stop() {
-        try {
-            this.servSocket.close();
-            Http.syslog.info("extinction du serveur");
-        } catch (IOException ex) {
-            String msg;
-            msg = "Impossible de stopper le serveur" + ex.getMessage();
-            Http.syslog.error(msg);
-        }
+            online = false;
+            this.pool.shutdown();
+            Http.syslog.warn("extinction du serveur");
+            System.exit(0);
     }
 
     /**
@@ -101,5 +102,13 @@ public class Dispatcher {
      */
     public final synchronized int getPoolThread() {
         return poolThread;
+    }
+
+    /**
+     * Obtient l'état du serveur.
+     * @return true si en ligne
+     */
+    public Boolean isOnline() {
+        return online;
     }
 }
