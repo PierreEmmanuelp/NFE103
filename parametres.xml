@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE parametres[
+	<!ELEMENT parametres (configuration, detail) >
+	<!ELEMENT configuration (port, threadpool, pathlog, hosts) >
+	<!ELEMENT port (#PCDATA) >
+	<!ELEMENT threadpool (#PCDATA) >
+	<!ELEMENT pathlog (#PCDATA) >
+	<!ELEMENT hosts (host+)>
+	<!ELEMENT host (EMPTY) >
+	<!ATTLIST host name CDATA #REQUIRED >
+	<!ATTLIST host path CDATA #REQUIRED>
+	<!ELEMENT detail (ANY) >
+]>
 
 <!-- Paramètres de configuration du serveur HTTP multi-thread -->
 
