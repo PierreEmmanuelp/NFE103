@@ -42,7 +42,6 @@ public class Request {
     private void analyseRequest() throws Exception {
         if (!this.request.isEmpty()) {
             String premierHead = request.get(0); //on va parser la 1ere ligne
-            Http.syslog.trace(premierHead);
             //Remplissage du header en fonction des infos parsées :
             this.header.setAction(parseActionHTTP(premierHead));
             this.header.setCible(parseCibleHTTP(premierHead));
@@ -67,7 +66,11 @@ public class Request {
      * @return true si besoin d'un content.
      */
     public final boolean besoinContent() {
-        return header.getParametres().containsKey("Content");
+        boolean besoin = false;
+        if (header.getParametres().containsKey("Content-Length")) {
+            besoin = true;
+        }
+        return besoin;
     }
 
     /**

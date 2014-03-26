@@ -38,7 +38,7 @@ public final class Log {
      * Constructeur.
      */
     public Log() {
-        this.lvlconsole = Level.INFO;
+        this.lvlconsole = Level.ALL;
         this.lvlRequest = Level.ERROR;
         this.syslog = Logger.getLogger("system");
 

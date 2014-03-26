@@ -34,7 +34,9 @@ public class JobRequest implements Runnable {
      */
     private final int tempPause = 100000;
 
-    /** server de ce client.*/
+    /**
+     * server de ce client.
+     */
     private final Dispatcher server;
 
     /**
@@ -68,69 +70,76 @@ public class JobRequest implements Runnable {
     public final void run() {
         String line;
         ArrayList<String> header;
-        String strContent;
         Request requete = null;
 
-        Http.syslog.trace(Thread.currentThread().getName() + " réveillé");
-            try { //lecture dans le socket
-                header = new ArrayList<>();
-                Http.syslog.debug(">>>in>>>" + Thread.currentThread().getName()
-                        + socket.toString());
-                while (!in.ready()) {
-                    in = new BufferedReader(new InputStreamReader(
-                            this.socket.getInputStream()));
-                }
-                if (!in.ready()) {
-                    Http.syslog.debug("Not ready");
-                } else {
-                    Http.syslog.debug("Ready "
-                            + Thread.currentThread().getName());
-                }
-
-                while (in != null && (line = in.readLine()) != null) {
-                    if (line.length() == 0) {
-                        break;
-                    }
-                    header.add(line);
-                    try {
-                        requete = new Request(header);
-                        //lecture du content (en cas de post) :
-                        if (requete.besoinContent()) {
-                            line = in.readLine();
-                            strContent = (line);
-                            requete.setContent(new Content());
-                            in.close();
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Http.syslog.error("Err103 - " + ex.getMessage()
-                                + requete.toString());
-                    }
-                }
-            } catch (IOException ex) {
-                    String msg;
-                    msg = "Lecture socket : " + ex.getMessage() + requete.toString();
-                    Http.syslog.error("Err110 - " + msg);
+        try { //lecture dans le socket
+            header = new ArrayList<>();
+            Http.syslog.debug(">>>in>>>" + Thread.currentThread().getName()
+                    + socket.toString());
+            while (!in.ready()) {
+                in = new BufferedReader(new InputStreamReader(
+                        this.socket.getInputStream()));
             }
-
-            if (requete != null) {
-                Response response = new Response(requete.getHeader());
-                String cible;
-                cible = requete.getHeader().getCible();
-                //envoi de la réponse dans le socket
-                String[] data = response.genereResponse(cible);
-                if (!data[0].isEmpty()) {
-                    try {
-                        envoyer(data, response.getStream());
-                        Http.requestlog.info(this.socket.getInetAddress()
-                                + " - "
-                                + requete.toString()
-                                + " STATUT : " + response.getStatut());
-                    } catch (Exception ex) {
-                        Http.syslog.error("Err127 - " + ex.getMessage());
+            if (!in.ready()) {
+                Http.syslog.debug("Not ready");
+            } else {
+                /*Http.syslog.debug("Ready "
+                        + Thread.currentThread().getName());*/
+            }
+            while (in != null && (line = in.readLine()) != null && line.length() > 0) {
+                if (line.length() == 0) {
+                    Http.syslog.warn("in the break");
+                    break;
+                }
+                header.add(line);
+            }
+                
+            try {
+                requete = new Request(header);
+                //lecture du content (en cas de post) :
+                if (requete.besoinContent()) {
+                    Object strlength = requete.getHeader().getParametres().get("Content-Length");
+                    int length = Integer.parseInt(strlength.toString().substring(2));
+                    StringBuilder contenu = new StringBuilder();
+                    char[] buffer = new char[1];
+                    int i;
+                    for (i = 0; i < length; i++) {
+                        in.read(buffer, 0, 1);
+                        contenu.append(buffer);
                     }
+                    Content content = new Content();
+                    content.setContenu(contenu.toString());
+                    requete.setContent(content);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Http.syslog.error("Err103 - " + ex.getMessage()
+                        + requete.toString());
+            }            
+        } catch (IOException ex) {
+                String msg;
+                msg = "Lecture socket : " + ex.getMessage() + requete.toString();
+                Http.syslog.error("Err110 - " + msg);
+        }
+
+        if (requete != null) {
+            Response response = new Response(requete.getHeader());
+            String cible;
+            cible = requete.getHeader().getCible();
+            //envoi de la réponse dans le socket
+            String[] data = response.genereResponse(cible);
+            if (!data[0].isEmpty()) {
+                try {
+                    envoyer(data, response.getStream());
+                    Http.requestlog.info(this.socket.getInetAddress()
+                            + " - "
+                            + requete.toString()
+                            + " STATUT : " + response.getStatut());
+                } catch (Exception ex) {
+                    Http.syslog.error("Err127 - " + ex.getMessage());
                 }
             }
+        }
         Http.syslog.debug(">>>retour OK>>>" + Thread.currentThread().getName());
         try {
             fermeStream();
