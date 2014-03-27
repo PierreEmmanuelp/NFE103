@@ -157,10 +157,14 @@ public class Request {
      */
     private String parseCibleHTTP(final String pHeaderHTTP) {
         String cible = "";
+        String param;
         String headerHTTP;
         if (pHeaderHTTP.indexOf("/") != -1 && pHeaderHTTP.indexOf(" ") != -1) {
             headerHTTP = pHeaderHTTP.substring(pHeaderHTTP.indexOf("/"));
             cible = headerHTTP.substring(0, headerHTTP.indexOf(" "));
+        }
+        if (cible.indexOf("?") != -1) {
+            cible = cible.substring(0, cible.indexOf("?"));
         }
         return cible;
     }
