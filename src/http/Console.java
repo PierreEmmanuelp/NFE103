@@ -3,34 +3,30 @@ package http;
 import java.util.Scanner;
 
 /**
- *
+ * Console de gestion du server.
  * @author Marine Nogier, Pourquier Pierre-Emmanuel
  * @version 1.0
  */
 public class Console implements Runnable {
 
-    /**.
-     *
-     * Le thread
+    /**
+     * Fil d'exécution de la console.
      */
     private final Thread thread;
-    /**.
-     * Le serveur
+    /**
+     * Le serveur à gérer.
      */
-    private final Serveur serveur;
-    /**.
-     *
-     * Temps de sleep du thread
+    private final Dispatcher serveur;
+    /**
+     * Temps de sleep du thread.
      */
     private final int tempPause = 100;
 
-    /**.
-     *
-     * Constructeur de la classe console
-     * @param pServeur
-     *      Le serveur
+    /**
+     * Constructeur de la classe console.
+     * @param pServeur Le serveur à gérer
      */
-    public Console(final Serveur pServeur) {
+    public Console(final Dispatcher pServeur) {
         thread = new Thread(this);
         thread.start();
         this.serveur = pServeur;
@@ -42,11 +38,11 @@ public class Console implements Runnable {
         try {
             Thread.sleep(tempPause);
         } catch (InterruptedException ex) {
-            Http.syslog.error("Mise en pause impossible");
+            Http.syslog.error("Mise en pause impossible" + ex.getMessage());
         }
         String commande;
-        Http.syslog.info(
-                "tapez /? pour une liste des commandes supportées \n");
+        System.out.println(
+                "tapez /? pour une liste des commandes supportées");
         Scanner sconsole;
         sconsole = new Scanner(System.in);
         try {
@@ -83,7 +79,7 @@ public class Console implements Runnable {
                         stop();
                         break;
                     default:
-                        Http.syslog.trace(
+                        System.out.println(
                                 "Ce que vous venez de saisir "
                                         + "n'est pas une commande valide ! "
                                         + "Veuillez réessayer en saisissant "
@@ -94,7 +90,8 @@ public class Console implements Runnable {
             }
 
         } catch (Exception e) {
-            Http.syslog.error("Le lecteur de la console ne fonctionne pas");
+            Http.syslog.error("Err99 - scanner non fonctionnel "
+                    + e.getMessage());
         }
     }
 
@@ -108,8 +105,8 @@ public class Console implements Runnable {
         System.out.println("/rmHost : Supprimer un host");
         System.out.println("/getPort : Affiche le port d'écoute du serveur");
         System.out.println("/setPort : Modifier le port d'écoute du serveur");
-        System.out.println("/getThread : Affiche le nombre de thread démarré");
-        System.out.println("/setThread : Modifier le nombre de thread démarré");
+        System.out.println("/getThread : Affiche le nombre de thread");
+        System.out.println("/setThread : Modifier le nombre de thread");
         System.out.println("/quit : Quitter le serveur");
         System.out.println("/author : Auteurs de l'application");
     }
@@ -120,21 +117,21 @@ public class Console implements Runnable {
     private void listerHost() {
         try {
             System.out.println("Voici les hosts déjà connus :");
-            if (Serveur.getHost().getHostList() != null
-                    && Serveur.getHost().getHostList().size() > 0) {
+            if (Dispatcher.getHosts().getHostList() != null
+                    && Dispatcher.getHosts().getHostList().size() > 0) {
                 int i;
 
                 System.out.println("Il y a actuellement "
-                        + Serveur.getHost().getHostList().size()
+                        + Dispatcher.getHosts().getHostList().size()
                         + " host(s) dans le système.\n");
-
-                for (i = 0; i < Serveur.getHost().getHostList().size(); i++) {
+                int size = Dispatcher.getHosts().getHostList().size();
+                for (i = 0; i < size; i++) {
                     System.out.println(i
-                            + ": Nom : "
-                            + Serveur.getHost().getHostList().get(i).getName()
-                            + " - Chemin : "
-                            + Serveur.getHost().getHostList().get(i).getPath()
-                            + "\n");
+                        + ": Nom : "
+                        + Dispatcher.getHosts().getHostList().get(i).getName()
+                        + " - Chemin : "
+                        + Dispatcher.getHosts().getHostList().get(i).getPath()
+                        + "\n");
                 }
             } else {
                 System.out.println("Il n'y a aucun host sur le système");
@@ -195,7 +192,7 @@ public class Console implements Runnable {
             String nomHost = sc.nextLine();
 
             // on recherche si le nom saisi appartient bien a un host
-            Host host = Serveur.getHost().getHost(nomHost);
+            Host host = Dispatcher.getHosts().getHost(nomHost);
             if (host != null) {
                 System.out.println("\nEst ce que vous êtes sur "
                         + "de vouloir supprimer le host "
@@ -204,7 +201,7 @@ public class Console implements Runnable {
                     case "o":
                         // si le systeme a bien un host pour le nom saisi
                         //on supprime le host
-                        Serveur.getHost().removeHost(host);
+                        Dispatcher.getHosts().removeHost(host);
                         System.out.println("Le host "
                                 + nomHost
                                 + " a bien été supprimé \n");
@@ -237,7 +234,7 @@ public class Console implements Runnable {
      */
     private void listerPort() {
         try {
-            int port = serveur.getPORT();
+            int port = serveur.getPort();
             System.out.println("Actuellement le serveur est connecté "
                     + "sur le port d'écoute "
                     + port
@@ -247,8 +244,8 @@ public class Console implements Runnable {
         }
     }
 
-    /**.
-     * Modifier le port d'écoute du système
+    /**
+     * Modifie le port d'écoute du système.
      */
     private void modifierPort() {
         Scanner sc = new Scanner(System.in);
@@ -273,8 +270,8 @@ public class Console implements Runnable {
             }
             
         } catch (NumberFormatException e) {
-            Http.syslog.error("L'enregistrement du nouveau port "
-                    + "d'écoute n'as pas fonctionné");
+            Http.syslog.error("Err261 - Port non sauvegardé "
+                    + e.getMessage());
         }
     }
 
@@ -288,8 +285,7 @@ public class Console implements Runnable {
                     + poolThread
                     + " thread de démarrés sur le serveur. \n");
         } catch (Exception e) {
-            Http.syslog.error("Récupération du nombre de thread "
-                    + "démarré sur le serveur n'a pas fonctionné");
+            Http.syslog.error("Err276 - " + e.getMessage());
         }
     }
 
@@ -319,8 +315,7 @@ public class Console implements Runnable {
                 modifierThread();
             }
         } catch (NumberFormatException e) {
-            Http.syslog.error("L'enregistrement du nouveau nombre "
-                    + "de thread à démarré n'as pas fonctionné");
+            Http.syslog.error("Err300 - " + e.getMessage());
         }
     }
 
@@ -348,7 +343,8 @@ public class Console implements Runnable {
                 System.out.println("Le système est déjà arrêté");
             }
         } catch (Exception e) {
-            Http.syslog.error("L'arrêt du serveur n'a pas fonctionné");
+            Http.syslog.error("Err 357 - Stop serveur n'a pas fonctionné "
+                + e.getMessage());
         }
     }
 }

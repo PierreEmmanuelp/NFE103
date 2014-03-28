@@ -38,8 +38,8 @@ public final class Log {
      * Constructeur.
      */
     public Log() {
-        this.lvlconsole = Level.DEBUG;
-        this.lvlRequest = Level.ERROR;
+        this.lvlconsole = Level.INFO;
+        this.lvlRequest = Level.WARN;
         this.syslog = Logger.getLogger("system");
 
         //Motif (format) des log dans la sortie console
