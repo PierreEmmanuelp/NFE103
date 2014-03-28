@@ -6,54 +6,55 @@ package http;
  * @version 1.1
  */
 public class Host {
-
+    /**
+     * Nom du Host.
+     */
     private String name;
+    /**
+     * Chemin du Host.
+     */
     private String path;
 
     /**
     * contructeur de la classe.
-    * @param pName
-    * @param pPath
+    * @param pName nom du host.
+    * @param pPath chemin du host.
     */
-    public Host(String pName, String pPath){
+    public Host(final String pName, final String pPath) {
         this.name = pName;
         this.path = pPath;
     }
 
     /**
     * permet de récupérer le nom de l'hôte.
-    * @return le nom de l'hôte
+    * @return le nom de l'hôte.
     */
-    public String getName()
-    {
+    public final String getName() {
         return name;
     }
 
-     /**
+   /**
     * permet de récupérer le chemin de l'hôte.
-    * @return le chemin de l'hôte
+    * @return le chemin de l'hôte.
     */
-    public String getPath()
-    {
+    public final String getPath() {
         return path;
     }
 
-     /**
+    /**
     * permet de définir le nom de l'hôte.
-    * @param pName
+    * @param pName nom de l'hote.
     */
-    public void setName(String pName)
-    {
-        this.name=pName;
+    public final void setName(final String pName) {
+        this.name = pName;
     }
 
-     /**
-    * permet de définir le chemin de l'hôte.
-    * @param pPath
-    */
-    public void setPath(String pPath)
-    {
-        this.path=pPath;
+    /**
+     * permet de définir le chemin de l'hôte.
+     * @param pPath chemin de l'hote.
+     */
+    public final void setPath(final String pPath) {
+        this.path = pPath;
     }
 
     @Override

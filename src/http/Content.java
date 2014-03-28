@@ -1,6 +1,6 @@
 package http;
 
-/**récupère contenue requete.
+/** récupère le contenu d'une requete HTTP.
  * @author Pierre-Emmanuel Pourquier,Herve Truchard, Benjamin Pierrot
  * @version 1.2
  */

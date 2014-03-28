@@ -3,8 +3,8 @@ package http;
 import org.apache.tika.Tika;
 
 /**
- *
- * @author Pierre-Emmanuel Pourquier, Benjamin Pierrot
+ * Correspond au type mime d'un fichier.
+ * @author Benjamin Pierrot
  * @version 2.0
  */
 public final class Mime {
@@ -17,8 +17,9 @@ public final class Mime {
     }
 
     /**
+     * Extrait le type mime d'un fichier.
      * @param pFichier String Url du fichier en entrée.
-     * @return String Type mime
+     * @return String Type mime.
      */
     public static String extractTypeMime(final String pFichier) {
 

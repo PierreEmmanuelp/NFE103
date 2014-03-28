@@ -5,7 +5,7 @@ import http.headers.Version;
 import java.util.HashMap;
 
 /**
- *
+ * Représente un Header Http.
  * @author Pierre-Emmanuel Pourquier, Hervé TRUCHARD
  * @version 1.1
  */
