@@ -1,0 +1,75 @@
+Scénario de test : Classe console : 
+
+Fonction run : 
+- Au lancement de la console:
+    *Le message suivant s'affiche : "tapez /? pour une liste des commandes supportées" ==> OK
+- Si l'utilisateur saisi autre chose que /? : 
+    *Les commandes s'affichent ==> OK
+- Si l'utilisateur saisi /? :
+    *Les commandes s'affichent ==> OK
+
+- Si l'utilisateur saisi /getHost :
+    => On entre dans la fonction "listerHost" 
+    *La console affiche la liste des hosts déjà connu par le serveur (nom et chemin de chacun) ==> OK
+    *Si aucun host n'est connu, la console affiche "Il n'y a aucun host sur le système" ==> OK
+
+- Si l'utilisateur saisi /addHost : 
+    => on entre dans la fonction "ajouterHost"
+    *La console demande le nom du host à ajouter ==> OK
+    *Lorsque l'utilisateur a saisi le nom
+        La console le li et le confirme avec un message précisant le nom ==> OK
+    *La console demande ensuite le chemin du host à ajouter ==> OK
+    *Lorsque l'utilisateur a saisi le chemin    
+        La console le li et le confirme avec un message précisant le chemin ==> OK
+    *La classe console ajoute le host et confirme cet ajout avec un message 
+        donnant le nom et le chemin du host à ajouter ==> OK 
+    *La classe console enregistre le host dans le fichier de paramètre ==> OK
+    *Si l'utilisateur saisi un nom qui appartient déjà à un autre host 
+        La console écrit un message qui dit que le nom existe déjà ==> OK
+        La console propose de ressaisir le nom ==> OK
+
+- Si l'utilisateur saisi /rmHost : 
+    => on entre dans la fonction "supprimerHost"
+    *La console demande le nom du host à supprimer ==> OK
+    *Lorsque l'utilisateur a saisi le nom
+        La console le li et demande une confirmation de la suppression, l'utilisateur a le choix entre o ou n ==> OK
+    *Si l'utilisateur saisi "n", la suppression est annulée ==> OK
+    *Si l'utilisateur saisi "o"
+        Si l'utilisateur saisi un nom d'un host qui n'existe pas la console le dit ==> OK
+        La suppression se fait et la console écrit un message qui le confirme ==> OK
+        La classe console enregistre cette suppression dans le fichier de paramètre ==> OK
+    *Si l'utilisateur saisi autre chose que "n" et "o" 
+        La console affiche un message pour dire que le caractère n'est pas pris en compte ==> OK
+
+- Si l'utilisateur saisi /getPort : 
+    => on entre dans la fonction "listerPort"
+    *La console affiche le port d'écoute du serveur ==> OK
+
+- Si l'utilisateur saisi /setPort :
+    => on entre dans la fonction "modifierPort"
+    *La console affiche le port d'écoute du serveur ==> OK
+    *La console demande à l'utilisateur sur quel port le serveur doit écouter ==> OK
+    *Une fois que l'utilisateur a saisi le port, la console le confirme ==> OK
+    *La classe console enregistre le nouveau port dans le fichier de paramètre ==> OK
+
+- Si l'utilisateur saisi /getThread : 
+    => on entre dans la fonction "listerThread"
+    *La console affiche le nombre de thread qui sont démarré sur le serveur ==> OK
+
+- si l'utilisateur saisi /setThread : 
+    => on entre dans la fonction "modifierThread"
+    *La console affiche le nombre de thread qui sont démarré sur le serveur ==> OK
+    *La console demande à l'utilisateur combien de thread le serveur devra démarré pour les connexions future==> OK
+    *Une fois que l'utilisateur a saisi le nombre de thread, le console le confirme ==> OK
+    *La classe console enregistre le nouveau nombre de thread dans le fichier de paramètre ==> OK
+
+- Si l'utilisateur saisi /author : 
+    => on entre dans la fonction "lsAutor"
+    *La console écrit les auteurs de l'application ==> OK
+
+- Si l'utilisateur saisi /stop : 
+    => on entre dans la fonction "stop"
+    *La console arrête le serveur ==> KO
+
+
+

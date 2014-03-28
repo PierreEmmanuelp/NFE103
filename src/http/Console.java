@@ -79,14 +79,8 @@ public class Console implements Runnable {
                     case "/author":
                         lsAuthor();
                         break;
-                    case "/start":
-                        start();
-                        break;
                     case "/stop":
                         stop();
-                        break;
-                    case "/restart":
-                        restart();
                         break;
                     default:
                         Http.syslog.trace(
@@ -158,23 +152,31 @@ public class Console implements Runnable {
         try {
             System.out.println("Veuillez saisir le nom du host à ajouter");
             String nomHost = sc.nextLine();
-            System.out.println("Le nom du host que vous aller créer est : "
-                    + nomHost + "\n");
-            System.out.println("Veuillez saisir le chemin du host");
-            String pathHost = sc.nextLine();
-            System.out.println("Le chemin du host que vous aller créer est : "
-                    + pathHost
-                    + "\n");
-
-            Host host = new Host(nomHost, pathHost);
-            Serveur.getHost().addHost(host);
-
-            if (Serveur.getHost().getHostList().size() > 0) {
-                System.out.println("Le host "
-                        + nomHost
-                        + " qui a comme chemin "
+            Host host = Serveur.getHost().getHost(nomHost);
+            if (host == null) {
+                System.out.println("Le nom du host que vous aller créer est : "
+                        + nomHost + "\n");
+                System.out.println("Veuillez saisir le chemin du host");
+                String pathHost = sc.nextLine();
+                System.out.println("Le chemin du host "
+                        + "que vous aller créer est : "
                         + pathHost
-                        + " a bien été ajouté \n ");
+                        + "\n");
+                host = new Host(nomHost, pathHost);
+                Serveur.getHost().addHost(host);
+
+                if (Serveur.getHost().getHostList().size() > 0) {
+                    System.out.println("Le host "
+                            + nomHost
+                            + " qui a comme chemin "
+                            + pathHost
+                            + " a bien été ajouté \n ");
+                    Http.getConfig().updateHosts();
+                }
+            } else {
+                System.out.println("Le host " + nomHost + " existe déjà ! "
+                        + "Veuillez choisir un autre nom");
+                ajouterHost();
             }
         } catch (Exception e) {
             Http.syslog.error("Le lecteur de la console ne fonctionne pas");
@@ -206,6 +208,7 @@ public class Console implements Runnable {
                         System.out.println("Le host "
                                 + nomHost
                                 + " a bien été supprimé \n");
+                        Http.getConfig().updateHosts();
                         break;
                     case "n":
                         System.out.println("Suppression du host "
@@ -318,36 +321,6 @@ public class Console implements Runnable {
                 + "\nPourquier Pierre-Emmanuel"
                 + "\nPierrot Benjamin"
                 + "\nNogier Marine");
-    }
-
-    /**.
-     * Démmaré le serveur
-     */
-    private void start() {
-        try {
-            if (serveur == null) {
-                serveur.start();
-                System.out.println("Le serveur vient d'être démarré");
-            } else {
-                System.out.println("Le serveur est déjà démarré");
-            }
-        } catch (Exception e) {
-            Http.syslog.error("La connexion du serveur "
-                    + "n'a pas fonctionné");
-        }
-    }
-
-    /**.
-     * Redémarré le serveur
-     */
-    private void restart() {
-        try {
-            serveur.stop();
-            serveur.start();
-        } catch (Exception e) {
-            Http.syslog.error("Le redémarrage du serveur "
-                    + "n'a pas fonctionné");
-        }
     }
 
     /**.
