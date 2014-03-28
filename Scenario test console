@@ -49,7 +49,10 @@ Fonction run :
     => on entre dans la fonction "modifierPort"
     *La console affiche le port d'écoute du serveur ==> OK
     *La console demande à l'utilisateur sur quel port le serveur doit écouter ==> OK
-    *Une fois que l'utilisateur a saisi le port, la console le confirme ==> OK
+    *Une fois que l'utilisateur a saisi le port
+        La console vérifie que le port d'écoute soit entre 1024 et 65353 ==> OK
+        Si c'est le cas, la console le confirme ==> OK
+        Sinon la console demande de ressaisir le port ==> OK
     *La classe console enregistre le nouveau port dans le fichier de paramètre ==> OK
 
 - Si l'utilisateur saisi /getThread : 
@@ -60,7 +63,10 @@ Fonction run :
     => on entre dans la fonction "modifierThread"
     *La console affiche le nombre de thread qui sont démarré sur le serveur ==> OK
     *La console demande à l'utilisateur combien de thread le serveur devra démarré pour les connexions future==> OK
-    *Une fois que l'utilisateur a saisi le nombre de thread, le console le confirme ==> OK
+    *Une fois que l'utilisateur a saisi le nombre de thread
+        La console vérifie que le nombre de thread saisi est inférieur à 150 ==> OK
+        Si c'est le cas, la console le confirme ==> OK
+        Sinon la console demande de ressaisir le nombre de thread ==> OK
     *La classe console enregistre le nouveau nombre de thread dans le fichier de paramètre ==> OK
 
 - Si l'utilisateur saisi /author : 

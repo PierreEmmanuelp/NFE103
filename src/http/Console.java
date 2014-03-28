@@ -261,10 +261,17 @@ public class Console implements Runnable {
                     + "le serveur pour les connexions futures ? ");
             String port = sc.nextLine();
 
-            Http.getConfig().setPort(Integer.parseInt(port));
-            System.out.println("Le nouveau port d'écoute est "
+            if (Integer.parseInt(port) >= 1024 & Integer.parseInt(port) <= 65535) {
+              Http.getConfig().setPort(Integer.parseInt(port));
+              System.out.println("Le nouveau port d'écoute est "
                     + port
                     + " : enregistrement dans la configuration OK !");
+            } else {
+                System.out.println("Le port doit être compris "
+                        + "entre 1024 et 65535 !");
+                modifierPort();
+            }
+            
         } catch (NumberFormatException e) {
             Http.syslog.error("L'enregistrement du nouveau port "
                     + "d'écoute n'as pas fonctionné");
@@ -300,11 +307,17 @@ public class Console implements Runnable {
                     + "pour les connexions futures ? ");
             String nbThread = sc.nextLine();
 
-            Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
-            System.out.println("Le nombre de thread qui se démarrera "
+            if (Integer.parseInt(nbThread) <= 150) {
+                Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
+                System.out.println("Le nombre de thread qui se démarrera "
                     + "à la connexion du serveur sera dorénavant de "
                     + nbThread
                     + " : enregistrement dans la configuration OK !");
+            } else {
+                System.out.println("Le serveur ne peut "
+                        + "pas démarrer plus de 150 thread !");
+                modifierThread();
+            }
         } catch (NumberFormatException e) {
             Http.syslog.error("L'enregistrement du nouveau nombre "
                     + "de thread à démarré n'as pas fonctionné");

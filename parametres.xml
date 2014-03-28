@@ -1,34 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!DOCTYPE parametres[
-	<!ELEMENT parametres (configuration, detail) >
-	<!ELEMENT configuration (port, threadpool, pathlog, hosts) >
-	<!ELEMENT port (#PCDATA) >
-	<!ELEMENT threadpool (#PCDATA) >
-	<!ELEMENT pathlog (#PCDATA) >
-	<!ELEMENT hosts (host+)>
-	<!ELEMENT host (EMPTY) >
-	<!ATTLIST host name CDATA #REQUIRED >
-	<!ATTLIST host path CDATA #REQUIRED>
-	<!ELEMENT detail (ANY) >
-]>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE parametres>
 <!-- Paramètres de configuration du serveur HTTP multi-thread -->
-
 <parametres>
-	<configuration>
-		<!-- Port d'écoute du serveur -->
-		<port>8081</port>
-		<!-- Nombre de thread dans le pool -->
-		<threadpool>50</threadpool>
-		<!-- Chemin du fichier de log -->
-		<pathlog>logfolder</pathlog>
-		<hosts>
-			<host name="localhost:8081" path="c:\www\" />
-			<host name="www2.fr:8081" path="" />
-  		</hosts>
-	</configuration>
-	<detail>
-		
-	</detail>
+  <configuration>
+    <!-- Port d'écoute du serveur -->
+    <port>0</port>
+    <!-- Nombre de thread dans le pool -->
+    <threadpool>50</threadpool>
+    <!-- Chemin du fichier de log -->
+    <pathlog>logfolder</pathlog>
+    <hosts>
+      <host name="localhost:8081" path="c:\www\" />
+      <host name="www2.fr:8081" path="" />
+    </hosts>
+  </configuration>
+  <detail />
 </parametres>
-	
