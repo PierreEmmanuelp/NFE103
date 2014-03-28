@@ -1,0 +1,10 @@
+Scénario de test : Classe Http : 
+
+Fonction main :
+- Instanciation de la classe configuration ==> OK
+- Instanciation de la classe log ==> OK
+- Récupération des logs ==> OK
+- Instanciation du serveur ==> OK
+- Instanciation de la console ==> OK
+- Démarrage du serveur ==> OK
+- La console affiche que le serveur est démarré ==> OK

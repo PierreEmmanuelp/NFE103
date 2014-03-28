@@ -75,14 +75,8 @@ public class Console implements Runnable {
                     case "/author":
                         lsAuthor();
                         break;
-                    case "/start":
-                        start();
-                        break;
                     case "/stop":
                         stop();
-                        break;
-                    case "/restart":
-                        restart();
                         break;
                     default:
                         System.out.println(
@@ -155,23 +149,31 @@ public class Console implements Runnable {
         try {
             System.out.println("Veuillez saisir le nom du host à ajouter");
             String nomHost = sc.nextLine();
-            System.out.println("Le nom du host que vous aller créer est : "
-                    + nomHost + "\n");
-            System.out.println("Veuillez saisir le chemin du host");
-            String pathHost = sc.nextLine();
-            System.out.println("Le chemin du host que vous aller créer est : "
-                    + pathHost
-                    + "\n");
-
-            Host host = new Host(nomHost, pathHost);
-            Dispatcher.getHosts().addHost(host);
-
-            if (Dispatcher.getHosts().getHostList().size() > 0) {
-                System.out.println("Le host "
-                        + nomHost
-                        + " qui a comme chemin "
+            Host host = Serveur.getHost().getHost(nomHost);
+            if (host == null) {
+                System.out.println("Le nom du host que vous aller créer est : "
+                        + nomHost + "\n");
+                System.out.println("Veuillez saisir le chemin du host");
+                String pathHost = sc.nextLine();
+                System.out.println("Le chemin du host "
+                        + "que vous aller créer est : "
                         + pathHost
-                        + " a bien été ajouté \n ");
+                        + "\n");
+                host = new Host(nomHost, pathHost);
+                Serveur.getHost().addHost(host);
+
+                if (Serveur.getHost().getHostList().size() > 0) {
+                    System.out.println("Le host "
+                            + nomHost
+                            + " qui a comme chemin "
+                            + pathHost
+                            + " a bien été ajouté \n ");
+                    Http.getConfig().updateHosts();
+                }
+            } else {
+                System.out.println("Le host " + nomHost + " existe déjà ! "
+                        + "Veuillez choisir un autre nom");
+                ajouterHost();
             }
         } catch (Exception e) {
             Http.syslog.error("Le lecteur de la console ne fonctionne pas");
@@ -203,6 +205,7 @@ public class Console implements Runnable {
                         System.out.println("Le host "
                                 + nomHost
                                 + " a bien été supprimé \n");
+                        Http.getConfig().updateHosts();
                         break;
                     case "n":
                         System.out.println("Suppression du host "
@@ -255,8 +258,17 @@ public class Console implements Runnable {
                     + "le serveur pour les connexions futures ? ");
             String port = sc.nextLine();
 
-            Http.getConfig().setPort(Integer.parseInt(port));
-            System.out.println("Le nouveau port d'écoute est " + port);
+            if (Integer.parseInt(port) >= 1024 & Integer.parseInt(port) <= 65535) {
+              Http.getConfig().setPort(Integer.parseInt(port));
+              System.out.println("Le nouveau port d'écoute est "
+                    + port
+                    + " : enregistrement dans la configuration OK !");
+            } else {
+                System.out.println("Le port doit être compris "
+                        + "entre 1024 et 65535 !");
+                modifierPort();
+            }
+            
         } catch (NumberFormatException e) {
             Http.syslog.error("Err261 - Port non sauvegardé "
                     + e.getMessage());
@@ -291,11 +303,17 @@ public class Console implements Runnable {
                     + "pour les connexions futures ? ");
             String nbThread = sc.nextLine();
 
-            Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
-            System.out.println("Le nombre de thread qui se démarrera "
+            if (Integer.parseInt(nbThread) <= 150) {
+                Http.getConfig().setPoolThread(Integer.parseInt(nbThread));
+                System.out.println("Le nombre de thread qui se démarrera "
                     + "à la connexion du serveur sera dorénavant de "
                     + nbThread
                     + " : enregistrement dans la configuration OK !");
+            } else {
+                System.out.println("Le serveur ne peut "
+                        + "pas démarrer plus de 150 thread !");
+                modifierThread();
+            }
         } catch (NumberFormatException e) {
             Http.syslog.error("Err300 - " + e.getMessage());
         }
@@ -311,35 +329,6 @@ public class Console implements Runnable {
                 + "\nPourquier Pierre-Emmanuel"
                 + "\nPierrot Benjamin"
                 + "\nNogier Marine");
-    }
-
-    /**
-     * Démmarre le serveur.
-     */
-    private void start() {
-        try {
-            if (!serveur.isOnline()) {
-                serveur.start();
-                System.out.println("Le serveur vient d'être démarré");
-            } else {
-                System.out.println("Le serveur est déjà démarré");
-            }
-        } catch (Exception e) {
-            Http.syslog.error("Err328 - " + e.getMessage());
-        }
-    }
-
-    /**
-     * Redémarre le serveur.
-     */
-    private void restart() {
-        try {
-            serveur.stop();
-            serveur.start();
-        } catch (Exception e) {
-            Http.syslog.error("Err340 - Le redémarrage du serveur "
-                    + "n'a pas fonctionné" + e.getMessage());
-        }
     }
 
     /**.
