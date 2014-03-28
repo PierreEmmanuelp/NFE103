@@ -19,6 +19,7 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.output.Format;
 
 /**
+ * Gère la configuration du serveur http.
  * @author Morgan Pinatel, Pourquier Pierre-Emmanuel
  * @version 1.2
  */
@@ -92,7 +93,7 @@ public class Configuration {
         try {
             sortie.output(document, new FileOutputStream(pathParametres));
         } catch (IOException e) {
-            Http.syslog.error(e.getMessage());
+            Http.syslog.error("Err96 - " + e.getMessage());
         }
     }
 
@@ -170,7 +171,7 @@ public class Configuration {
         try {
             sortie.output(document, new FileOutputStream(pathParametres));
         } catch (IOException e) {
-            Http.syslog.error(e.getMessage());
+            Http.syslog.error("Err174 - " + e.getMessage());
         }
     }
 

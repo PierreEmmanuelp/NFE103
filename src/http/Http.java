@@ -1,7 +1,9 @@
 package http;
 import log.Log;
 import org.apache.log4j.Logger;
-/** Charge la configuration, démarre les log puis le serveur.
+
+/**
+ * Charge la configuration, démarre les log puis le serveur.
  * @version 1.1
  * @author Pourquier Pierre-Emmanuel
  */
@@ -35,7 +37,7 @@ public final class Http {
 
         syslog.info("Démarrage du serveur");
         //Log.ajouterEntree("Démarrage du serveur", LogLevel.SYSTEM);
-        Serveur serveur = new Serveur();
+        Dispatcher serveur = new Dispatcher();
         Console console;
         console = new Console(serveur);
         serveur.start();
