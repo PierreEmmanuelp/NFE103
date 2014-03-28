@@ -120,24 +120,25 @@ public class JobRequest implements Runnable {
                         + requete.toString();
                 Http.syslog.error("Err121 - " + msg);
         }
-
-
-        Response response = new Response(requete.getHeader());
-        String cible;
-        cible = requete.getHeader().getCible();
-        //envoi de la réponse dans le socket
-        String[] data = response.genereResponse(cible);
-        if (!data[0].isEmpty()) {
-            try {
-                envoyer(data, response.getStream());
-                Http.requestlog.info(this.socket.getInetAddress()
-                        + " - "
-                        + requete.toString()
-                        + " STATUT : " + response.getStatut());
-            } catch (Exception ex) {
-                Http.syslog.error("Err138 - " + ex.getMessage());
+ 
+           if (requete != null) {
+                Response response = new Response(requete.getHeader());
+                String cible;
+                cible = requete.getHeader().getCible();
+                //envoi de la réponse dans le socket
+                String data = response.genereResponse(cible);
+                if (!data.isEmpty()) {
+                    try {
+                        envoyer(data, response.getStream());
+                        Http.requestlog.info(this.socket.getInetAddress()
+                                + " - "
+                                + requete.toString()
+                                + " STATUT : " + response.getStatut());
+                    } catch (Exception ex) {
+                        Http.syslog.error("Err127 - " + ex.getMessage());
+                    }
+                }
             }
-        }
         Http.syslog.debug(">>>retour OK>>>" + Thread.currentThread().getName());
         try {
             fermeStream();
@@ -159,47 +160,33 @@ public class JobRequest implements Runnable {
      * @param stream le stream à envoyer
      * @throws java.lang.Exception erreur
      */
-    protected final synchronized void envoyer(final String[] pData,
+    protected final synchronized void envoyer(final String pData,
             final BufferedInputStream stream) throws Exception {
         try {
-            byte[] line1 = pData[0].getBytes();
-            if ("OK".equals(pData[1])) { // si content
-                final int bufferSize = 2048;
+         byte[] line1 = pData.getBytes();
+
+             final int bufferSize = 2048;
                 byte[] buffer;
                 buffer = new byte[bufferSize];
-                int cpt; // compteur
-                Http.syslog.debug(">>out>>" + Thread.currentThread().getName()
-                        + socket.toString());
-                out.write(line1);
+                int cpt=0; // compteur
+                
+                out.write(line1);                
                 while ((cpt = stream.read(buffer, 0, bufferSize)) != -1) {
-                    out.write(buffer, 0, cpt);
-                }
-                 if (stream.available() < -1) {
+                    out.write(buffer,0,cpt);
+                    } 
+
+                 if (stream.available()<-1){
                      stream.reset();
                  }
                  stream.close();
                  out.flush();
-            } else {
-                if (pData[1] != null) {
-                    out.write(line1);
-                    out.flush();
-                    Http.syslog.trace(pData[1]);
-                    out.writeBytes(pData[1]);
-                    out.flush();
-                } else {
-                    out.write(line1);
-                    out.writeBytes("<h1>404 Not Found</h1>");
-                }
-            }
-              out.flush();
-              out.close();
-              Http.syslog.debug(">>>Out%%%%>>>"
-                      + Thread.currentThread().getName() + socket.toString());
+                 out.close();
             Http.syslog.trace("envoyé : " + pData);
         } catch (IOException ex) {
             String msg;
+            ex.printStackTrace();
             msg = ex.getMessage();
-            Http.syslog.error("Err202 - " + msg);
+            Http.syslog.error("Err179 - " + msg);
             out.flush();
         }
     }

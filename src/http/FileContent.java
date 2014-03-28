@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
  *
  * @version 1.999
  * @author htruchard + pierrot
+ * @return contenu
  */
 public class FileContent extends Content {
 
@@ -60,15 +61,16 @@ public class FileContent extends Content {
 
             if (file.exists() && file.canRead()) {
                 //file dans stream
+                Http.syslog.info("file content:" + this.pCheminCible);
                 setStatus(CodeResponse.OK.getCode());
             } else {
                 if (file.exists() && !file.canRead()) {
-                    //Http.requestlog.warn("403");
+                    Http.syslog.warn("403");
                     setStatus(CodeResponse.FORBIDDEN.getCode());
                     this.pCheminCible = "./Error.html/HTTP_FORBIDDEN.html";
                     file = new File(this.pCheminCible);
                 } else {
-                    //Http.syslog.warn("404");
+                    Http.syslog.warn("404");
                     setStatus(CodeResponse.NOT_FOUND.getCode());
                     this.pCheminCible = "./Error.html/HTTP_NOT_FOUND.html";
                     file = new File(this.pCheminCible);

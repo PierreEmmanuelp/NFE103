@@ -1,6 +1,5 @@
 package http.headers;
 
-import http.FileContent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,23 +12,23 @@ public enum CodeResponse {
     /**
      *
      */
-    OK(200, "OK", "200 OK", "HELLO"),
+    OK(200, "OK", "200 OK", ""),
     /**
      *
      */
-    BAD_REQUEST(400, "BAD_REQUEST", "400 Bad Request", ""),
+    BAD_REQUEST(400, "BAD_REQUEST", "400 Bad Request", "HTTP_BAD_REQUEST.html"),
     /**
      *
      */
-    FORBIDDEN(403, "FORBIDDEN", "403 Forbidden", ""),
+    FORBIDDEN(403, "FORBIDDEN", "403 Forbidden", "HTTP_FORBIDDEN.html"),
     /**
      *
      */
-    NOT_FOUND(404, "NOT_FOUND", "404 Not Found", ""),
+    NOT_FOUND(404, "NOT_FOUND", "404 Not Found", "HTTP_NOT_FOUND.html"),
     /**
      *
      */
-    INTERNAL_ERROR(500, "INTERNAL_ERROR", "500 Internal Server Error", "");
+    INTERNAL_ERROR(500, "INTERNAL_ERROR", "500 Internal Server Error", "HTTP_INTERNAL_SERVER_ERROR.html");
     /**
      *
      */
@@ -46,6 +45,7 @@ public enum CodeResponse {
      *
      */
     private String content;
+
     /**
      * A mapping between the integer code and its corresponding CodeResponse to
      * facilitate lookup by code.
