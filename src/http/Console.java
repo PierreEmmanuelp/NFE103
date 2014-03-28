@@ -149,7 +149,7 @@ public class Console implements Runnable {
         try {
             System.out.println("Veuillez saisir le nom du host à ajouter");
             String nomHost = sc.nextLine();
-            Host host = Serveur.getHost().getHost(nomHost);
+            Host host = serveur.getHosts().getHost(nomHost);
             if (host == null) {
                 System.out.println("Le nom du host que vous aller créer est : "
                         + nomHost + "\n");
@@ -160,9 +160,9 @@ public class Console implements Runnable {
                         + pathHost
                         + "\n");
                 host = new Host(nomHost, pathHost);
-                Serveur.getHost().addHost(host);
+                serveur.getHosts().addHost(host);
 
-                if (Serveur.getHost().getHostList().size() > 0) {
+                if (serveur.getHosts().getHostList().size() > 0) {
                     System.out.println("Le host "
                             + nomHost
                             + " qui a comme chemin "
