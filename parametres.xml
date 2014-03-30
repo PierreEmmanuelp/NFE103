@@ -1,18 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE parametres>
-<!-- Paramètres de configuration du serveur HTTP multi-thread -->
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!DOCTYPE parametres SYSTEM "./param/parametres.dtd">
+
+<!-- Paramètres de conlfiguration du serveur HTTP multi-thread -->
+
 <parametres>
-  <configuration>
-    <!-- Port d'écoute du serveur -->
-    <port>0</port>
-    <!-- Nombre de thread dans le pool -->
-    <threadpool>50</threadpool>
-    <!-- Chemin du fichier de log -->
-    <pathlog>logfolder</pathlog>
-    <hosts>
-      <host name="localhost:8081" path="c:\www\" />
-      <host name="www2.fr:8081" path="" />
-    </hosts>
-  </configuration>
-  <detail />
+	<configuration>
+		<!-- Port d'écoute du serveur -->
+		<port>8081</port>
+		<!-- Nombre de thread dans le pool -->
+		<threadpool>50</threadpool>
+		<!-- Chemin du fichier de log -->
+		<pathlog>logfolder</pathlog>
+		<hosts>
+			<host name="localhost:8081" path="c:\www\" />
+			<host name="www2.fr:8081" path="" />
+  		</hosts>
+	</configuration>
+	<detail>
+		
+	</detail>
 </parametres>
+	
