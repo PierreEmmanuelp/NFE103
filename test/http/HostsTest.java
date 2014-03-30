@@ -6,6 +6,7 @@
 
 package http;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author morgan
+ * @author Morgan Pinatel
  */
 public class HostsTest {
     
@@ -45,11 +46,9 @@ public class HostsTest {
     @Test
     public void testAddHost() {
         System.out.println("addHost");
-        Host pHost = null;
+        Host pHost = new Host("myName", "myPath");
         Hosts instance = new Hosts();
         instance.addHost(pHost);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -58,11 +57,9 @@ public class HostsTest {
     @Test
     public void testRemoveHost() {
         System.out.println("removeHost");
-        Host phost = null;
+        Host phost = new Host("myName", "myPath");
         Hosts instance = new Hosts();
         instance.removeHost(phost);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -71,13 +68,14 @@ public class HostsTest {
     @Test
     public void testGetHost() {
         System.out.println("getHost");
-        String pName = "";
+        String pName = "myName";
         Hosts instance = new Hosts();
-        Host expResult = null;
+        Host myHost = new Host("myName", "myPath");
+        instance.addHost(myHost);
+        Host expResult = new Host("myName", "myPath");
         Host result = instance.getHost(pName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult.getName(), result.getName());
+        assertEquals(expResult.getPath(), result.getPath());
     }
 
     /**
@@ -86,13 +84,13 @@ public class HostsTest {
     @Test
     public void testGetPath() {
         System.out.println("getPath");
-        String pName = "";
+        String pName = "myName";
         Hosts instance = new Hosts();
-        String expResult = "";
+        Host myHost = new Host("myName", "myPath");
+        instance.addHost(myHost);
+        String expResult = "myPath";
         String result = instance.getPath(pName);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -101,13 +99,13 @@ public class HostsTest {
     @Test
     public void testExiste() {
         System.out.println("existe");
-        Host pHost = null;
+        Host pHost = new Host("myName", "myPath");
         Hosts instance = new Hosts();
-        boolean expResult = false;
+        Host myHost = new Host("myName", "myPath");
+        instance.addHost(myHost);
+        boolean expResult = true;
         boolean result = instance.existe(pHost);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -117,11 +115,11 @@ public class HostsTest {
     public void testGetHostList() {
         System.out.println("getHostList");
         Hosts instance = new Hosts();
-        List<Host> expResult = null;
+        instance.addHost(new Host("myName", "myPath"));
+        List<Host> expResult = new ArrayList();
+        expResult.add(new Host("myName", "myPath"));
         List<Host> result = instance.getHostList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult.toString(), result.toString());
     }
     
 }
