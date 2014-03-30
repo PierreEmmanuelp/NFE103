@@ -103,7 +103,7 @@ public class Configuration {
      * @return racine
      */
     private Element parser(final String englobe) {
-        Element racine = new Element("configuration");
+        Element racine = new Element("parametres");
         document = new Document(racine);
         SAXBuilder sxb = new SAXBuilder();
         try {
