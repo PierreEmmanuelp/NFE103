@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author morgan
+ * @author Morgan Pinatel
  */
 public class HostTest {
     
@@ -44,12 +44,10 @@ public class HostTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        Host instance = null;
-        String expResult = "";
+        Host instance = new Host("myName","myPath");
+        String expResult = "myName";
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -58,12 +56,10 @@ public class HostTest {
     @Test
     public void testGetPath() {
         System.out.println("getPath");
-        Host instance = null;
-        String expResult = "";
+        Host instance = new Host("myName", "myPath");
+        String expResult = "myPath";
         String result = instance.getPath();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -72,11 +68,9 @@ public class HostTest {
     @Test
     public void testSetName() {
         System.out.println("setName");
-        String pName = "";
-        Host instance = null;
+        String pName = "myNewName";
+        Host instance = new Host("myName","myPath");
         instance.setName(pName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -85,11 +79,9 @@ public class HostTest {
     @Test
     public void testSetPath() {
         System.out.println("setPath");
-        String pPath = "";
-        Host instance = null;
+        String pPath = "myNewPath";
+        Host instance = new Host("myName","myPath");
         instance.setPath(pPath);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -98,12 +90,10 @@ public class HostTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Host instance = null;
-        String expResult = "";
+        Host instance = new Host("myName","myPath");
+        String expResult = "myName";
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
