@@ -30,12 +30,7 @@ public class Response {
     /**
      * Content.
      */
-//    private static Content ContentRep;
     private BufferedInputStream pstream;
-    /**
-     *
-     */
-//    private static String request;
     /**
      * CRLF.
      */
@@ -43,7 +38,7 @@ public class Response {
     /**
      * Protocol.
      */
-    public static final String PROTOCOL = "HTTP/1.0 ";
+    public final String PROTOCOL;
     /**
      * Current header.
      */
@@ -59,12 +54,14 @@ public class Response {
 
     /**
      * Constructeur.
-     *
-     * @param reqHeader Le header de la requête
+     * @param  protoRequest String Version du protocole
+     * @param  reqHeader HeaderLe header de la requête
      */
-    public Response(final Header reqHeader) {
+    public Response(final String protoRequest, final Header reqHeader) {
         this.statut = "500";
+        this.PROTOCOL = protoRequest;
         Response.headerQuest = reqHeader;
+
         try {
             this.methode = reqHeader.getAction().toString();
             this.hostpath = reqHeader.getHost().getPath(); //ajout du host
@@ -83,41 +80,43 @@ public class Response {
      */
     private String headerRep(final String pLength, final String pCode) {
 
-        Date date = new Date();
-        String mimetostring;
+    Date date = new Date();
+    String mimetostring;
 
 
-        if (!pCode.substring(0, 1).equals("4")
-                && !pCode.substring(0, 1).equals("5")) { // si erreur
+    if (!pCode.substring(0, 1).equals("4")
+            && !pCode.substring(0, 1).equals("5")) { // si erreur
 
-            mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
-        } else {
-            mimetostring = "text/html";
-        }
-            Http.getConfig().addParam("Serveur","CNAM_NFE103/1.0" );
-            Http.getConfig().updateParam();
-        this.headersRep.put("Date", date);
-        this.headersRep.put("Server","CNAM_NFE103/1.0"); // see param
-        this.headersRep.put("Content-Type", mimetostring); // Mime type
-        //this.headersRep.put("Content-Encoding", "gzip"); // Charset
-        this.headersRep.put("Content-Length", pLength); // length of chain
-        //this.headersRep.put("Content-Length", Length); // length of chain
-        //this.headersRep.put("Connection", "Keep-Alive;timeout=15, max=100");
-        // length of chain
-        this.headersRep.put("Connection", "close"); // length of chain
+        mimetostring = Mime.extractTypeMime(hostpath + headerQuest.getCible());
+    } else {
+        mimetostring = "text/html";
+    }
 
-        String line = "HTTP/1.1 " + " " + pCode + CRLF; // TODO RECUP PROTOCOLE
-        String key;
+    this.headersRep.put("Date", date);
+            if (Http.getConfig().getParam("Serveur") != null) {
+    this.headersRep.put("Server", Http.getConfig().getParam("Serveur"));
+    } else {
+    this.headersRep.put("Server", "CNAM_NFE103/1.0");
+    }
+    this.headersRep.put("Content-Type", mimetostring); // Mime type
+    this.headersRep.put("Content-Length", pLength); // length of chain
+    if (Http.getConfig().getParam("Connection") != null) {
+    this.headersRep.put("Connection", Http.getConfig().getParam("Connection"));
+    } else {
+    this.headersRep.put("Connection", "close"); // length of chain
+    }
+    String line = this.PROTOCOL + " " + pCode + CRLF; // RECUP PROTOCOLE
+    String key;
 
-        final Enumeration<String> e;
-        e = Collections.enumeration(headersRep.keySet());
+    final Enumeration<String> e;
+    e = Collections.enumeration(headersRep.keySet());
 
-        while (e.hasMoreElements()) {
-            key = e.nextElement();
-            line += key + ":" + this.headersRep.get(key) + CRLF;
-        }
-        line += CRLF;
-        return line;
+    while (e.hasMoreElements()) {
+        key = e.nextElement();
+        line += key + ":" + this.headersRep.get(key) + CRLF;
+    }
+    line += CRLF;
+    return line;
 
     }
 
@@ -140,7 +139,6 @@ public class Response {
                 if (Response.headerQuest.getCible().equals("/")
                         || Response.headerQuest.getCible().equals("")) {
                     request = request + "index.html";
-                    //  Http.requestlog.trace("Acces racine launch index.html");
                 }
                 file.openFile(this.hostpath + request);
                 this.statut = String.valueOf(file.getStatus());
@@ -151,7 +149,7 @@ public class Response {
             }
 
             Http.syslog.debug("Response>" + this.hostpath + request);
-            
+
             } else {
                 this.statut = "500";
                 file.openFile("./Error.html/HTTP_INTERNAL_SERVER_ERROR.html");
@@ -159,27 +157,27 @@ public class Response {
             switch (this.statut) {
                 case "200":
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.OK.getDescription());
+                    CodeResponse.OK.getDescription());
                     break;
                 case "404":
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.NOT_FOUND.getDescription().toString());
+                    CodeResponse.NOT_FOUND.getDescription().toString());
                     break;
                 case "403":
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.FORBIDDEN.getDescription().toString());
+                    CodeResponse.FORBIDDEN.getDescription().toString());
                     break;
                 case "500":
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.INTERNAL_ERROR.getDescription().toString());
+                    CodeResponse.INTERNAL_ERROR.getDescription().toString());
                     break;
                 case "400":
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.BAD_REQUEST.getDescription().toString());
+                    CodeResponse.BAD_REQUEST.getDescription().toString());
                     break;
                 default:
                     headerRep = this.headerRep(file.getLength().toString(),
-                            CodeResponse.INTERNAL_ERROR.getDescription().toString());
+                    CodeResponse.INTERNAL_ERROR.getDescription().toString());
                     Http.requestlog.error("Erreur interne (response)");
             }
             // Retour du fichier

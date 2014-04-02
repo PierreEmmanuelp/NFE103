@@ -120,9 +120,11 @@ public class JobRequest implements Runnable {
                         + requete.toString();
                 Http.syslog.error("Err121 - " + msg);
         }
- 
+
            if (requete != null) {
-                Response response = new Response(requete.getHeader());
+
+        Response response;
+        response = new Response(requete.getProtorequest(), requete.getHeader());
                 String cible;
                 cible = requete.getHeader().getCible();
                 //envoi de la réponse dans le socket
@@ -168,12 +170,12 @@ public class JobRequest implements Runnable {
              final int bufferSize = 2048;
                 byte[] buffer;
                 buffer = new byte[bufferSize];
-                int cpt=0; // compteur
-                
-                out.write(line1);                
+                int cpt; // compteur
+
+                out.write(line1);
                 while ((cpt = stream.read(buffer, 0, bufferSize)) != -1) {
-                    out.write(buffer,0,cpt);
-                    } 
+                    out.write(buffer, 0, cpt);
+                    }
 
                  if (stream.available()<-1){
                      stream.reset();
@@ -184,7 +186,6 @@ public class JobRequest implements Runnable {
             Http.syslog.trace("envoyé : " + pData);
         } catch (IOException ex) {
             String msg;
-            ex.printStackTrace();
             msg = ex.getMessage();
             Http.syslog.error("Err179 - " + msg);
             out.flush();

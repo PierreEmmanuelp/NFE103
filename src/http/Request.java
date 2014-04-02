@@ -1,30 +1,37 @@
 package http;
+
 import http.headers.Action;
 import http.headers.Version;
 import java.util.ArrayList;
 
-/** Requete HTTP.
+/**
+ * Requete HTTP.
+ *
  * @author Pierre-Emmanuel Pourquier.
  * @version 1.1
  */
 public class Request {
+
     /**
      * Header de la requete HTTP.
      */
     private final Header header;
-
     /**
      * Contenu de la requete HTTP.
      */
     private Content content;
-
     /**
      * Requete brute à analyser.
      */
     private final ArrayList<String> request;
+    /**
+     * Version du protocole de la request
+     */
+    private String versproto;
 
     /**
      * Constructeur de la requete.
+     *
      * @param pRequete requete http à analyser.
      * @throws java.lang.Exception requete vide.
      */
@@ -32,11 +39,13 @@ public class Request {
         this.request = pRequete;
         this.header = new Header();
         this.content = new Content();
+        this.versproto = "";
         analyseRequest();
     }
 
     /**
      * Parse request pour créer un header et un content.
+     *
      * @throws Exception erreur.
      */
     private void analyseRequest() throws Exception {
@@ -63,6 +72,7 @@ public class Request {
 
     /**
      * Vérifie si la requete nécessite du contenu.
+     *
      * @return true si besoin d'un content.
      */
     public final boolean besoinContent() {
@@ -75,14 +85,15 @@ public class Request {
 
     /**
      * Analyse le contenu.
+     *
      * @param pContenu le contenu au format string de la requete http initiale.
      */
     public final void analyseContent(final String pContenu) {
-
     }
 
     /**
-     * Renvoit le Header correspondant à cette requête.
+     * Renvoi le Header correspondant à cette requête.
+     *
      * @return le Header.
      */
     public final Header getHeader() {
@@ -90,7 +101,8 @@ public class Request {
     }
 
     /**
-     * Renvoit le Content correspondant à cette requête.
+     * Renvoi le Content correspondant à cette requête.
+     *
      * @return le content.
      */
     public final Content getContent() {
@@ -98,7 +110,8 @@ public class Request {
     }
 
     /**
-     * Ajoute le contenu à la requete.
+     * Ajoute le contenu à la requête.
+     *
      * @param pcontent le contenu.
      */
     public final void setContent(final Content pcontent) {
@@ -107,6 +120,7 @@ public class Request {
 
     /**
      * Parse la première ligne http et en extrait l'action.
+     *
      * @param pHeaderHTTP la première ligne du header contenant l'action.
      * @return le type d'action | null si aucune action.
      */
@@ -151,7 +165,7 @@ public class Request {
     }
 
     /**
-     * Parse la première enête http et extrait la cible de celle-ci.
+     * Parse la première entête http et extrait la cible de celle-ci.
      * @param pHeaderHTTP la première entête d'une requête HTTP.
      * @return la cible de la requête http.
      */
@@ -170,23 +184,24 @@ public class Request {
 
     /**
      * Parse la première entête http et extrait la version de celle-ci.
+     *
      * @param pHeaderHTTP la première entête d'une requête HTTP.
      * @return la version du protocole de la requête http.
      */
     private Version parseVersionHTTP(final String pHeaderHTTP) {
         Version version;
-        String lheader = "";
+
         if (pHeaderHTTP.indexOf("HTTP/") != -1) {
-            lheader = pHeaderHTTP.substring(pHeaderHTTP.indexOf("HTTP/"));
+           this.versproto = pHeaderHTTP.substring(pHeaderHTTP.indexOf("HTTP/"));
         }
-        switch (lheader) {
-            case "HTTP/1.1" :
+        switch (versproto) {
+            case "HTTP/1.1":
                 version = Version.HTTP_1_1;
                 break;
-            case "HTTP/1.0" :
+            case "HTTP/1.0":
                 version = Version.HTTP_1_0;
                 break;
-            case "HTTP/0.9" :
+            case "HTTP/0.9":
                 version = Version.HTTP_0_9;
                 break;
             default:
@@ -195,7 +210,9 @@ public class Request {
         return version;
     }
 
-    /** Parse la première entête http et extrait le host de celle-ci.
+    /**
+     * Parse la première entête http et extrait le host de celle-ci.
+     *
      * @param pHeaderHTTP la première entête d'une requête HTTP.
      * @return le host de la requête http.
      */
@@ -209,6 +226,7 @@ public class Request {
 
     /**
      * Parse une ligne de requête http et l'ajoute au tableau header.
+     *
      * @param pHeaderHTTP la ligne de requête à parser.
      */
     private void parseArgument(final String pHeaderHTTP) {
@@ -224,6 +242,14 @@ public class Request {
         }
     }
 
+    /**
+     * Retourne la version du protocole demandé par le client.
+     * @return String (HTTP/1.1,HTTP/1.0...)
+     */
+    public final String getProtorequest() {
+        return this.versproto;
+    }
+
     @Override
     public final String toString() {
         String msg;
@@ -234,5 +260,4 @@ public class Request {
         }
         return msg;
     }
-
 }
