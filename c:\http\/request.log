@@ -1,6 +1,0 @@
-2014-03-21 15:02:59:671 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 / HTTP_1_1}} 
-2014-03-21 15:02:59:708 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 /favicon.ico HTTP_1_1}} 
-2014-03-21 15:03:22:260 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 /essai.txt HTTP_1_1}} 
-2014-03-21 15:03:22:277 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 /favicon.ico HTTP_1_1}} 
-2014-03-21 15:04:29:286 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 /essai.txt HTTP_1_1}} 
-2014-03-21 15:04:29:589 - [INFO] - [http.Client] - /0:0:0:0:0:0:0:1 - Request{Header{GET localhost:8081 /favicon.ico HTTP_1_1}} 
