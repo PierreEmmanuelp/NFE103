@@ -133,7 +133,7 @@ public class Response {
 
         if (!request.equals(
                 CodeResponse.INTERNAL_ERROR.getDescription().toString())) {
-            if (Response.methode.equals("GET")) {
+            if (Response.methode.equals("GET") || Response.methode.equals("POST")) {
 
 // Si rien on met index.html  (add to param + path recupéré de host + header)
                 if (Response.headerQuest.getCible().equals("/")
